@@ -2,9 +2,15 @@ import React from "react";
 import { useState, useRef } from "react";
 const images: string[] = [];
 
+function randomInteger(min, max) {
+  let rand = min - 0.5 + Math.random() * (max - min + 1);
+  return Math.round(rand);
+}
+
 export const LoginCard = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [avatar, setAvatar] = useState(1);
+  const [avatar, setAvatar] = useState(randomInteger(1, 25));
+  const [nickname, setNickname] = useState("");
 
   const refreshAvatar = () => {
     let newIdx = avatar == 25 ? 1 : avatar + 1;
@@ -12,16 +18,12 @@ export const LoginCard = () => {
   };
 
   const login = () => {
-    const nickname = inputRef?.current?.value;
-    if (nickname && nickname.length > 3) {
-      // login logic
-    }
+    // login logic
+    console.log(nickname, " login..");
   };
 
   return (
     <div className="login_card">
-      <img src="./img/1.jpg" alt="" style={{height: '200px', width: '200px'}} />
-
       <div className="heading">
         <p>СОЗДАТЬ КОМНАТУ!</p>
       </div>
@@ -34,12 +36,18 @@ export const LoginCard = () => {
         </div>
         <div className="flex-col">
           <p>ВЫБЕРИ АВАТАР И ИМЯ</p>
-          <input placeholder="ВАШЕ ИМЯ" ref={inputRef} />
+          <input
+            placeholder="ВАШЕ ИМЯ"
+            onChange={(e) => setNickname(e.target.value)}
+          />
         </div>
       </div>
       <div className="footer">
-        <button onClick={() => login()}>
-          <span>◁</span> ВОЙТИ
+        <button
+          onClick={() => login()}
+          disabled={nickname.length > 0 ? false : true}
+        >
+          ▶ ВОЙТИ
         </button>
       </div>
     </div>

@@ -1,5 +1,6 @@
 .login_card {
   border-radius: 15px;
+  overflow: hidden;
   width: 450px;
 
   .avatar {
@@ -8,7 +9,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
+    margin-left: 15px;
     .wrapper {
       position: relative;
       height: 100px;
@@ -25,6 +26,10 @@
       font-size: 2rem;
       height: 20px;
       width: 20px;
+
+      &:disabled {
+        color: blue !important
+      }
     }
   }
 
@@ -34,7 +39,16 @@
     align-items: center;
     justify-content: center;
     gap: 20%;
-    text-align: center;
+    text-align: left;
+    margin-left: 15px;
+
+    * {
+      width: 220px;
+    }
+
+    input {
+      border-bottom: 2px $black solid;
+    }
   }
 
   .flex {
@@ -42,11 +56,30 @@
     background: $white;
     display: flex;
   }
+
+  .heading {
+    padding: 20px 0;
+  }
   .heading,
   .footer {
     width: 100%;
     background-color: $black;
     color: $white;
     text-align: center;
+  }
+
+  .footer button {
+    padding: 10px 30px;
+    margin: 10px 0;
+    border-radius: 10px;
+    transition: 0.3s;
+    background: $lightgray;
+    color: $black;
+    outline: unset;
+
+    &:hover {
+      color: $darkgray;
+      transition: 0.3s;
+    }
   }
 }
