@@ -1,19 +1,7 @@
 import { nanoid } from "nanoid";
 import React from "react";
 import { Avatar } from "./Avatar";
-
-const players = [
-  {
-    name: "John ZXC",
-    avatarId: "1",
-    type: "host",
-  },
-  {
-    name: "John Doe",
-    avatarId: "2",
-    type: "player",
-  },
-];
+import players from '../utils/players.json'
 
 export const Players = ({ isScoreShow = false }) => {
   return (

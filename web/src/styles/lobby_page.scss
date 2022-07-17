@@ -117,7 +117,6 @@
     border-radius: 15px;
     overflow: hidden;
     font-size: 32px;
-    // height: 100%;
     height: 700px;
     background: $white;
     display: flex;
@@ -136,14 +135,12 @@
     }
 
     .content {
-      min-height: 700px;
-      height: 80%;
       overflow-y: scroll;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 15px;
-      margin: 15px;
       flex: 0 1 auto;
+      padding: 15px;
 
       .game_card {
         border-radius: 15px;
@@ -157,9 +154,13 @@
         justify-content: center;
         transition: 0.3s;
 
+        img {
+          height: 150px;
+          width: 150px;
+        }
+
         &:hover {
           background: $green;
-          // transition: .3s;
         }
       }
     }
@@ -174,6 +175,7 @@
       button {
         margin: 30px;
         transition: 0.3s;
+
 
         &:hover {
           color: $lightgray;

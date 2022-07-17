@@ -1,21 +1,15 @@
 import React from "react";
 import { useState, useRef } from "react";
+import { store } from "../store/store";
 import { randomInteger } from "../utils/helpers";
-const images: string[] = [];
 
 export const LoginCard = () => {
-  const inputRef = useRef<HTMLInputElement>(null);
   const [avatar, setAvatar] = useState(randomInteger(1, 25));
   const [nickname, setNickname] = useState("");
 
   const refreshAvatar = () => {
     let newIdx = avatar == 25 ? 1 : avatar + 1;
     setAvatar(newIdx);
-  };
-
-  const login = () => {
-    // login logic
-    console.log(nickname, " login..");
   };
 
   return (
@@ -34,16 +28,21 @@ export const LoginCard = () => {
           <p>ВЫБЕРИ АВАТАР И ИМЯ</p>
           <input
             placeholder="ВАШЕ ИМЯ"
-            onChange={(e) => setNickname(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") store.auth.login(nickname);
+            }}
+            onChange={(e) => {
+              setNickname(e.target.value);
+            }}
           />
         </div>
       </div>
       <div className="footer">
         <button
-          onClick={() => login()}
+          onClick={() => store.auth.login(nickname)}
           disabled={nickname.length > 0 ? false : true}
         >
-          ▶ ВОЙТИ
+          <img src="/img/play.svg" /> <span> ВОЙТИ</span>
         </button>
       </div>
     </div>

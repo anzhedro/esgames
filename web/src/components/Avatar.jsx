@@ -7,7 +7,11 @@ export const Avatar = ({
 }) => {
   return (
     <div className="avatar">
-      {type === "host" ? <img src="/img/crown.svg" className="host-indicator" /> : false}
+      {type === "host" ? (
+        <img src="/img/crown.svg" className="host-indicator" />
+      ) : (
+        false
+      )}
       <img src={`/img/${avatarId}.jpg`} alt="avatar" />
     </div>
   );
