@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { copyToClipboard } from "../utils/helpers";
@@ -81,8 +82,6 @@ const games = [
   },
 ];
 
-
-
 export const GamesTable = () => {
   const [mode, setMode] = useState("select");
   const params = useParams();
@@ -95,7 +94,11 @@ export const GamesTable = () => {
 
           <div className="content">
             {games.map((game) => (
-              <div className="game_card" onClick={() => setMode("rules")}>
+              <div
+                key={nanoid()}
+                className="game_card"
+                onClick={() => setMode("rules")}
+              >
                 <img src={game.image} />
                 <p>{game.title}</p>
               </div>

@@ -3,6 +3,6 @@ export function randomInteger(min, max) {
   return Math.round(rand);
 }
 
-export function copyToClipboard  (str) {
+export function copyToClipboard(str) {
   navigator.clipboard.writeText(str);
-};
+}

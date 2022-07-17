@@ -7,7 +7,6 @@ export class Auth {
   }
 
   user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
-
   login_status = "none";
 
   login(user) {

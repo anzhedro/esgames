@@ -9,9 +9,9 @@ export const ChatMessage = ({
   return (
     <li className="message">
       <div className="message__meta">
-        <div className="message__avatar">
+        {/* <div className="message__avatar">
           <img src={avatar} alt="avatar" />
-        </div>
+        </div> */}
         <span className="message__text message__text--time">{time}</span>
         <span className="message__text message__text--author">{author}</span>
       </div>

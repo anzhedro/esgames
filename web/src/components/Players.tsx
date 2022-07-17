@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import React from "react";
 import { Avatar } from "./Avatar";
 
@@ -24,7 +25,7 @@ export const Players = ({ isScoreShow = false }) => {
       </div>
       <div className="content">
         {players.map((player, index) => (
-          <div className={index & 2 ? "player bg-dark" : "player "}>
+          <div key={nanoid() } className={index & 2 ? "player bg-dark" : "player "}>
           <Avatar avatarId={player.avatarId} type={player.type} />
           <p>{player.name}</p>
         </div>

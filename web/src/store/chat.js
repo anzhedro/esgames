@@ -32,9 +32,31 @@ export class Chat {
     makeAutoObservable(this);
   }
 
-  messages = localStorage.getItem("messages") ? JSON.parse(localStorage.getItem("messages")) : mockedMessages;
+  message = "";
+
+  messages = localStorage.getItem("messages")
+    ? JSON.parse(localStorage.getItem("messages"))
+    : mockedMessages;
+
+  addSmile(smile) {
+    this.message += " " + smile;
+  }
+
+  clearMessage() {
+    this.message = "";
+  }
+
+  typeMessage = (e = false) => {
+    if (e) {
+      this.message = e.target.value;
+      return;
+    }
+    this.message = "";
+  };
 
   setMessages(newMessages) {
+    console.log("ccccc", this.message);
+    localStorage.setItem("messages", this.messages);
     console.log("messages", newMessages);
     this.messages = newMessages;
     localStorage.setItem("messages", JSON.stringify(newMessages));

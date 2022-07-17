@@ -25,19 +25,26 @@ const monthNames = [
 
 export const formatDate = (date) => {
   // 1 January 2022 12:10
-  return `${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()} ${
+  return `${date.getDate()} ${
+    monthNames[date.getMonth()]
+  } ${date.getFullYear()} ${
     date.getHours() < 10 ? "0" + date.getHours() : date.getHours()
   }:${date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()}`;
 };
 
 export const ChatPage = observer(() => {
+
   const submmitHandler = (e) => {
     e.preventDefault();
     // console.log(e);
 
     const newMessages = [
       ...store.chat.messages,
-      { time: formatDate(new Date()), author: store.auth.user, text: e.target.elements.message.value },
+      {
+        time: formatDate(new Date()),
+        author: store.auth.user,
+        text: e.target.elements.message.value,
+      },
     ];
 
     store.chat.setMessages(newMessages);
@@ -53,11 +60,14 @@ export const ChatPage = observer(() => {
   };
 
   useEffect(() => {
-    document.querySelectorAll(".message")[document.querySelectorAll(".message").length - 1].scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-      inline: "nearest",
-    });
+    document
+      .querySelectorAll(".message")
+      [document.querySelectorAll(".message").length - 1].scrollIntoView({
+        behavior: "auto",
+        block: "end",
+        inline: "nearest",
+      });
+
   }, [store.chat.messages]);
 
   return (
@@ -68,12 +78,22 @@ export const ChatPage = observer(() => {
 
         <ul className="chat__messages">
           {store.chat.messages.map((message) => (
-            <ChatMessage key={nanoid()} time={message.time} author={message.author} text={message.text} />
+            <ChatMessage
+              key={nanoid()}
+              time={message.time}
+              author={message.author}
+              text={message.text}
+            />
           ))}
         </ul>
 
         <form className="chat-form" onSubmit={submmitHandler}>
-          <Input id="message" placeholder="Type a message..." fn={changeHandler} text={message} />
+          <Input
+            id="message"
+            placeholder="Type a message..."
+            fn={changeHandler}
+            text={message}
+          />
           <Button>Send</Button>
         </form>
       </div>
