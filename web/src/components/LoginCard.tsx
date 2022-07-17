@@ -1,11 +1,7 @@
 import React from "react";
 import { useState, useRef } from "react";
+import { randomInteger } from "../utils/helpers";
 const images: string[] = [];
-
-function randomInteger(min, max) {
-  let rand = min - 0.5 + Math.random() * (max - min + 1);
-  return Math.round(rand);
-}
 
 export const LoginCard = () => {
   const inputRef = useRef<HTMLInputElement>(null);
