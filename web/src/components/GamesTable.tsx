@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import { copyToClipboard } from "../utils/helpers";
 
 const games = [
   {
@@ -80,9 +81,7 @@ const games = [
   },
 ];
 
-const copyToClipboard = (str: string) => {
-  navigator.clipboard.writeText(str);
-};
+
 
 export const GamesTable = () => {
   const [mode, setMode] = useState("select");
@@ -115,6 +114,7 @@ export const GamesTable = () => {
       ) : (
         false
       )}
+
       {mode === "rules" ? (
         <>
           <div className="header">НАСТРОЙКА</div>
@@ -126,6 +126,8 @@ export const GamesTable = () => {
       ) : (
         false
       )}
+
+      {mode === "play" ? <></> : false}
     </div>
   );
 };
