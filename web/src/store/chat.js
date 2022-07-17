@@ -27,16 +27,48 @@ const mockedMessages = [
   { time: "12:07", author: "hh", text: "I'm fine too!" },
 ];
 
+export const formatDate = (date) => {
+  return `  ${date.getHours() < 10 ? "0" + date.getHours() : date.getHours()}:${
+    date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()
+  }`;
+};
+
 export class Chat {
   constructor() {
     makeAutoObservable(this);
   }
 
-  messages = localStorage.getItem("messages") ? JSON.parse(localStorage.getItem("messages")) : mockedMessages;
+  message = "";
+  messages = mockedMessages;
+
+  addSmile(smile) {
+    this.message += " " + smile;
+  }
+
+  typeMessage = (e = false) => {
+    if (e) {
+      this.message = e.target.value;
+      return;
+    }
+    this.message = "";
+  };
+
+  addMessage(author, text) {
+    if (!text) return;
+    if (text.length > 100) return;
+
+    this.messages = [
+      ...this.messages,
+      {
+        time: formatDate(new Date()),
+        author: author,
+        text: text,
+      },
+    ];
+    this.message = "";
+  }
 
   setMessages(newMessages) {
-    console.log("messages", newMessages);
     this.messages = newMessages;
-    localStorage.setItem("messages", JSON.stringify(newMessages));
   }
 }

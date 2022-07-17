@@ -1,9 +1,18 @@
 import React from "react";
+import { randomInteger } from "../utils/helpers";
 
-export const Avatar = ({ link = "https://avatars0.githubusercontent.com/u/17098477?s=460&v=4" }) => {
+export const Avatar = ({
+  avatarId = randomInteger().toString(),
+  type = "player",
+}) => {
   return (
     <div className="avatar">
-      <img src={link} alt="avatar" />
+      {type === "host" ? (
+        <img src="/img/crown.svg" className="host-indicator" />
+      ) : (
+        false
+      )}
+      <img src={`/img/${avatarId}.jpg`} alt="avatar" />
     </div>
   );
 };

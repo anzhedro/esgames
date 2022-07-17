@@ -25,10 +25,6 @@ io.on("connection", (socket) => {
     }
   });
 
-  // console.log(socket.handshake.auth);
-  // socket.on("chat_message", (msg) => {
-  //   io.emit("chat_message", msg);
-  // });
 });
 
 server.listen(5000, () => {

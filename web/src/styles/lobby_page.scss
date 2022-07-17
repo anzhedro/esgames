@@ -1,0 +1,191 @@
+.lobby_page {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $green;
+
+  .wrapper {
+    height: 80%;
+    width: 80%;
+    align-items: center;
+    justify-content: center;
+    display: grid;
+    grid-template-columns: 20% 60% 20%;
+    gap: 15px;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .players {
+    border-radius: 15px;
+    display: flex;
+    height: 80%;
+    min-height: 700px;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    background: $white;
+    // height: 90px;
+
+    .header {
+      background: $black;
+      flex: 0 0 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      height: 100px;
+      width: 100%;
+      border-radius: 15px 15px 0 0;
+      color: $white;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .content {
+      height: 80%;
+      width: 100%;
+
+      .avatar {
+        position: relative;
+        .host-indicator {
+          position: absolute;
+          left: -20px;
+          top: -25px;
+          // display: none;
+        }
+
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+
+        //   flex: 1 0 auto;
+
+        img {
+          width: 100%;
+          border-radius: 50%;
+        }
+      }
+
+      .player {
+        width: 100%;
+        height: 90px;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px $black solid;
+
+        p {
+          margin-left: 15px;
+        }
+      }
+
+      .bg-dark {
+        background: $subgray;
+        color: $black;
+        width: 100%;
+      }
+    }
+
+    .footer {
+      margin-bottom: 5px;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+
+      button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 45%;
+        height: 50px;
+        color: $white;
+        background: $gray;
+        border-radius: 15px;
+
+        &.active {
+          background: $black;
+        }
+      }
+    }
+  }
+
+  .games_table {
+    border-radius: 15px;
+    overflow: hidden;
+    font-size: 32px;
+    height: 700px;
+    background: $white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .header {
+      height: 100px;
+      flex: 0 0 100px;
+      background: $black;
+      color: $white;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .content {
+      overflow-y: scroll;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+      flex: 0 1 auto;
+      padding: 15px;
+
+      .game_card {
+        border-radius: 15px;
+        background: white;
+        height: 200px;
+        width: 100%;
+        font-size: 26px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+
+        img {
+          height: 150px;
+          width: 150px;
+        }
+
+        &:hover {
+          background: $green;
+        }
+      }
+    }
+    .footer {
+      height: 100px;
+      background: $black;
+      color: $white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      button {
+        margin: 30px;
+        transition: 0.3s;
+
+
+        &:hover {
+          color: $lightgray;
+          transition: 0.3s;
+        }
+      }
+    }
+  }
+
+  .chat {
+    height: 700px;
+  }
+}

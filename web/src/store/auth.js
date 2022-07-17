@@ -7,11 +7,10 @@ export class Auth {
   }
 
   user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
-
   login_status = "none";
 
   login(user) {
-    console.log("login", user);
+    if (!user) return;
     localStorage.setItem("user", JSON.stringify(user));
     this.user = user;
 
