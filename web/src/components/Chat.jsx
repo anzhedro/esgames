@@ -4,9 +4,6 @@ import { observer } from "mobx-react-lite";
 import { store } from "../store/store";
 
 import { ChatMessage } from "../components/ChatMessage";
-import { Button } from "../components/Button";
-import { Input } from "../components/input";
-import { Title } from "../components/Title";
 
 import emojisIcons from "../utils/smiles.json";
 
@@ -39,7 +36,7 @@ export const Chat = observer(() => {
   return (
     <div className="chat">
       <div className="header">
-        <Title> ЧАТ </Title>
+        <div className="title">ЧАТ</div>
       </div>
 
       <ul className="chat__messages">
@@ -59,9 +56,9 @@ export const Chat = observer(() => {
         <div className="smiles-board">
           <div className="smiles-board-list">
             {emojisIcons.map((icon) => (
-              <Button key={icon} fn={() => store.chat.addSmile(icon)}>
+              <button key={icon} onClick={() => store.chat.addSmile(icon)}>
                 <span>{icon}</span>
-              </Button>
+              </button>
             ))}
           </div>
         </div>
@@ -70,18 +67,22 @@ export const Chat = observer(() => {
       )}
 
       <form className="chat-form" onSubmit={submmitHandler} autoComplete="off">
-        <Input
-          id="message"
+        <input
+          className={"input " + (store.auth.login_status === "fail" ? "input--error" : "")}
+          type="text"
+          id={"message"}
+          value={store.chat.message}
+          onChange={(e) => store.chat.typeMessage(e)}
           placeholder="Ваше сообщение..."
-          fn={store.chat.typeMessage}
-          text={store.chat.message}
         />
-        <Button fn={(e) => toggleSmilesView(e)}>
+
+        <button type="button" className="button" onClick={(e) => toggleSmilesView(e)}>
           <img src="/img/EmojisIcon.svg" />
-        </Button>
-        <Button>
+        </button>
+
+        <button className="button">
           <img src="/img/SendIcon.svg" />
-        </Button>
+        </button>
       </form>
     </div>
   );

@@ -9,10 +9,6 @@ const io = new Server(server, {
   cors: { origin: "*" },
 });
 
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
-});
-
 io.on("connection", (socket) => {
   io.connectedUsers = ["ss", "dd"];
 
@@ -24,7 +20,6 @@ io.on("connection", (socket) => {
       io.emit("login_success", user);
     }
   });
-
 });
 
 server.listen(5000, () => {

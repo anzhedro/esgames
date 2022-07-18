@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import { store } from "../store/store";
 import { randomInteger } from "../utils/helpers";
 
-export const LoginCard = () => {
+export const LoginCard = ({ lang }) => {
   const [avatar, setAvatar] = useState(randomInteger(1, 25));
   const [nickname, setNickname] = useState("");
 
@@ -15,7 +15,7 @@ export const LoginCard = () => {
   return (
     <div className="login_card">
       <div className="heading">
-        <p>СОЗДАТЬ КОМНАТУ!</p>
+        <p>{lang.createRoom}</p>
       </div>
       <div className="flex">
         <div className="avatar">
@@ -25,9 +25,9 @@ export const LoginCard = () => {
           </div>
         </div>
         <div className="flex-col">
-          <p>ВЫБЕРИ АВАТАР И ИМЯ</p>
+          <p>{lang.selectAvatar}</p>
           <input
-            placeholder="ВАШЕ ИМЯ"
+            placeholder={lang.yorName}
             onKeyDown={(e) => {
               if (e.key === "Enter") store.auth.login(nickname);
             }}
@@ -38,11 +38,8 @@ export const LoginCard = () => {
         </div>
       </div>
       <div className="footer">
-        <button
-          onClick={() => store.auth.login(nickname)}
-          disabled={nickname.length > 0 ? false : true}
-        >
-          <img src="/img/play.svg" /> <span> ВОЙТИ</span>
+        <button onClick={() => store.auth.login(nickname)} disabled={nickname.length > 0 ? false : true}>
+          <img src="/img/play.svg" /> <span> {lang.join}</span>
         </button>
       </div>
     </div>

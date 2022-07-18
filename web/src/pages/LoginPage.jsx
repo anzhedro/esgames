@@ -2,9 +2,11 @@ import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
 import { LoginCard } from "../components/LoginCard";
+import { store } from "../store/store";
 
 export const LoginPage = observer(() => {
   const navigate = useNavigate();
+  const currentPageLocalization = store.lang.localizationMap[store.lang.currentLanguage]["/"];
 
   useEffect(() => {
     if (store.auth.login_status === "success") {
@@ -14,7 +16,7 @@ export const LoginPage = observer(() => {
 
   return (
     <div className="login__page">
-      <LoginCard />
+      <LoginCard lang={currentPageLocalization} />
     </div>
   );
 });
