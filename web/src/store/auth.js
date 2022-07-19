@@ -1,8 +1,8 @@
 import { makeAutoObservable } from "mobx";
 
 export class Auth {
-  constructor(par) {
-    this.par = par;
+  constructor(store) {
+    this.ws = store.socket;
     makeAutoObservable(this);
   }
 
@@ -11,20 +11,17 @@ export class Auth {
 
   login(user) {
     if (!user) return;
+    console.log("login", user, this.ws);
     localStorage.setItem("user", JSON.stringify(user));
     this.user = user;
 
-    this.par.socket.emit("login", user);
-    this.login_status = "pending";
+    this.ws.send(JSON.stringify({type: "login", user: user}));
+  }
 
-    this.par.socket.on("login_success", (user) => {
-      console.log("login_success", user);
-      this.login_status = "success";
-    });
-
-    this.par.socket.on("login_fail", (user) => {
-      console.log("login_fail", user);
-      this.login_status = "fail";
-    });
+  loginSuccess() {
+    this.login_status = "success";
+  }
+  loginSuccess() {
+    this.login_status = "fail";
   }
 }
