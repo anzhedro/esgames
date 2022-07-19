@@ -20,7 +20,10 @@ export const Chat = observer(() => {
   const submmitHandler = (e) => {
     e.preventDefault();
     setSmilesView(false);
-    store.chat.addMessage(store.auth.user, e.target.elements.message.value);
+
+    console.log("MESSAGE ", e.target.message.value);
+    store.chat.sendMessage(e.target.message.value);
+    // store.chat.addMessage(store.auth.user, e.target.elements.message.value);
   };
 
   useEffect(() => {
@@ -44,8 +47,8 @@ export const Chat = observer(() => {
           store.chat.messages.map((message, index) => (
             <ChatMessage
               key={nanoid()}
-              time={message.time}
-              author={message.author}
+              time={message.created}
+              author={message.user}
               text={message.text}
               ref={lastMessageRef}
             />

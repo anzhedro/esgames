@@ -9,13 +9,12 @@ export class Auth {
   user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
   login_status = "none";
 
-  login(user) {
+  login(user, avatar) {
     if (!user) return;
-    // console.log("login zxc", user, this.ws);
     localStorage.setItem("user", JSON.stringify(user));
     this.user = user;
 
-    this.ws.send(JSON.stringify({type: "login", user: user}));
+    this.ws.send(JSON.stringify({type: "login", user: user, room: "global", avatar: avatar}));
   }
 
   loginSuccess() {

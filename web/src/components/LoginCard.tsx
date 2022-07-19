@@ -38,7 +38,7 @@ export const LoginCard = ({ lang }) => {
         </div>
       </div>
       <div className="footer">
-        <button onClick={() => store.auth.login(nickname)} disabled={nickname.length > 0 ? false : true}>
+        <button onClick={() => store.auth.login(nickname, avatar)} disabled={nickname.length > 0 ? false : true}>
           <img src="/img/play.svg" /> <span> {lang.join}</span>
         </button>
       </div>

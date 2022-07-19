@@ -4,8 +4,10 @@ import { Avatar } from "./Avatar";
 import players from "../utils/players.json";
 import teamsMock from "../utils/teams.json";
 import { IPlayer } from "../utils/types";
+import { observer } from "mobx-react-lite";
+import { store } from "../store/store";
 
-export const Players = ({ isScoreShow = false }) => {
+export const Players = observer(() => {
   const [teams, setTeams] = useState(teamsMock);
 
   const updLastTeam = (newTeams) => {
@@ -39,7 +41,7 @@ export const Players = ({ isScoreShow = false }) => {
         </p>
       </div>
       <div className="content">
-        {teams.map((team, idx) => (
+        {/* {teams.map((team, idx) => (
           <div className="team" key={nanoid()}>
             <button className="team_btn" onClick={() => handleSelectTeam(idx)}>
               team {idx}
@@ -54,17 +56,18 @@ export const Players = ({ isScoreShow = false }) => {
               </div>
             ))}
           </div>
-        ))}
+        ))} */}
 
-        {/* {players.map((player, index) => (
+        {store.room.users.map((user, index) => (
+          // user;
           <div
             key={nanoid()}
             className={index & 2 ? "player bg-dark" : "player "}
           >
-            <Avatar avatarId={player.avatarId} type={player.type} />
-            <p>{player.name}</p>
+            <Avatar avatar={user.avatar} isHost={user.is_host} />
+            <p>{user.name}</p>
           </div>
-        ))} */}
+        ))}
       </div>
       <div className="footer">
         <button className="active">ИГРОКИ</button>
@@ -72,4 +75,4 @@ export const Players = ({ isScoreShow = false }) => {
       </div>
     </div>
   );
-};
+});
