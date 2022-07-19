@@ -5,6 +5,8 @@ import { Localization } from "./localization";
 class Store {
   constructor() {
     this.socket = new WebSocket("ws://localhost:8000/ws");
+    // let socket = new WebSocket("wss://javascript.info/article/websocket/demo/hello");
+
     this.auth = new Auth(this);
     this.chat = new Chat(this);
     this.lang = new Localization(this);
@@ -14,9 +16,13 @@ class Store {
     };
 
     this.socket.onmessage = (event) => {
-      const o = JSON.parse(event.data);
-      console.log("onmessage", o);
+      // const o = JSON.parse(event.data);
+      console.log("onmessssssssssssage", event.data.text());
+      console.log("status ", this.auth.login_status);
+      this.auth.loginSuccess();
+      console.log("status ", this.auth.login_status);
     };
+
   }
 }
 
