@@ -5,6 +5,8 @@ import { ComponentsPage } from "./pages/ComponentsPage";
 import { LobbyPage } from "./pages/LobbyPage";
 import { LangSelector } from "./components/LangSelector";
 
+// to upd
+
 function App() {
   return (
     <>
