@@ -11,7 +11,7 @@ export class Auth {
 
   login(user) {
     if (!user) return;
-    console.log("login", user, this.ws);
+    // console.log("login zxc", user, this.ws);
     localStorage.setItem("user", JSON.stringify(user));
     this.user = user;
 
@@ -21,7 +21,8 @@ export class Auth {
   loginSuccess() {
     this.login_status = "success";
   }
-  loginSuccess() {
+
+  loginFail() {
     this.login_status = "fail";
   }
 }
