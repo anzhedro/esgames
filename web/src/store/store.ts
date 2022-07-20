@@ -19,7 +19,8 @@ class Store {
     this.room = new Room(this);
     
     this.socket.onopen = (event) => {
-      console.log("socket open", event);
+      // console.log("socket open", event);
+
     };
 
     this.socket.onmessage = (event) => {

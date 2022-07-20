@@ -5,7 +5,7 @@ export const Avatar = ({ avatar = randomInteger(), isHost = false }) => {
   return (
     <div className="avatar">
       {isHost ? <img src="/img/crown.svg" className="host-indicator" /> : false}
-      <img src={`/img/${avatar}.jpg`} alt="avatar" />
+      <img src={`/img/${avatar}.jpg`} alt="avatar.jpg" />
     </div>
   );
 };

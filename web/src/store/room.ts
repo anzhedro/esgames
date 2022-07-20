@@ -11,7 +11,7 @@ export class Room {
   users = [];
 
   setUsers(users) {
-    console.log("setUsers", users);
+    // console.log("setUsers", users);
     this.users = users;
   }
 }
