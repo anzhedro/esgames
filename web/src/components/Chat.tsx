@@ -10,7 +10,7 @@ export const Chat = observer(() => {
   const [smilesView, setSmilesView] = useState(false);
   const lastMessageRef = useRef<null | HTMLLIElement>(null);
 
-  const toggleSmilesView = (e:MouseEvent) => {
+  const toggleSmilesView = (e:React.MouseEvent) => {
     e.preventDefault();
     setSmilesView(!smilesView);
   };
