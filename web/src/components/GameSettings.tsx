@@ -20,11 +20,7 @@ export const RoundCount = () => {
   );
 };
 
-export const Difficulty = ({
-  option,
-}: {
-  option: { currentOption: string; options: string[] };
-}) => {
+export const Difficulty = ({ option }: { option: { currentOption: string; options: string[] } }) => {
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
   return (
@@ -51,10 +47,7 @@ export const CommandsCount = ({ counts }: { counts: number[] }) => {
     <div>
       <h3>Количество команд</h3>
       {counts.map((el) => (
-        <button
-          className={currentCount == el ? "active" : ""}
-          onClick={() => setCurrentCount(el)}
-        >
+        <button className={currentCount == el ? "active" : ""} onClick={() => setCurrentCount(el)}>
           {el}
         </button>
       ))}

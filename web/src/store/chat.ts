@@ -37,8 +37,4 @@ export class Chat {
     this.messages = [...this.messages, ...messages];
     this.message = "";
   }
-
-  setMessages(newMessages: IMessage[]) {
-    this.messages = newMessages;
-  }
 }

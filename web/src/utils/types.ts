@@ -11,3 +11,13 @@ export interface IPlayer {
   }
 
   export type TLanguage = "en" | "ru";
+
+  export interface RefType<T> {
+    readonly current: T | null
+  }
+  
+  export interface IMessage {
+    time: string;
+    author: string;
+    text: string;
+  }

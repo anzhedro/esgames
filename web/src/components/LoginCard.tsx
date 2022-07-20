@@ -29,7 +29,7 @@ export const LoginCard = ({ lang }) => {
           <input
             placeholder={lang.yorName}
             onKeyDown={(e) => {
-              if (e.key === "Enter") store.auth.login(nickname);
+              if (e.key === "Enter") store.auth.login(nickname, avatar);
             }}
             onChange={(e) => {
               setNickname(e.target.value);
