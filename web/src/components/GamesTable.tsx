@@ -13,9 +13,11 @@ export const GamesTable = () => {
 
   return (
     <div className="games_table">
-      {mode === "select" && <GamesList games={games} id={params.id} setMode={setMode} />}
-      {mode === "rules" && <GameRules setMode={setMode} />}
-      {mode === "play" && <GamePlay game={''}/>}
+      <div className="games_table_wrapper">
+        {mode === "select" && <GamesList games={games} id={params.id} setMode={setMode} />}
+        {mode === "rules" && <GameRules setMode={setMode} />}
+        {mode === "play" && <GamePlay game={""} />}
+      </div>
     </div>
   );
 };

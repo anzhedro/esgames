@@ -1,6 +1,5 @@
 import { makeAutoObservable } from "mobx";
 
-
 export const formatDate = (date) => {
   return `  ${date.getHours() < 10 ? "0" + date.getHours() : date.getHours()}:${
     date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()
@@ -15,7 +14,9 @@ export class Chat {
 
   message = "";
   // Format: { created: "2020-12-01 12:00", user: "aaaa", text: "Hello!" }
-  messages = [];
+  messages = [
+    { created: "2020-12-01 12:00", user: "aaaa", text: "Hello!" },
+  ];
 
   addSmile(smile) {
     this.message += " " + smile;
@@ -32,7 +33,7 @@ export class Chat {
   sendMessage(text) {
     if (!text) return;
 
-    this.ws.send(JSON.stringify({type: "chat", text: text}));
+    this.ws.send(JSON.stringify({ type: "chat", text: text }));
   }
 
   addMessage(messages) {

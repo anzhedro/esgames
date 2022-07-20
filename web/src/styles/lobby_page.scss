@@ -1,59 +1,62 @@
+@mixin lobby-block {
+  height: 100%;
+  width: 100%;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin lobby-block-header {
+  background: $black;
+  flex: 0 0 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  width: 100%;
+  border-radius: 15px 15px 0 0;
+  color: $white;
+  font-size: 32px;
+  text-align: center;
+}
+
 .lobby_page {
   height: 100vh;
   width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
   background: $green;
 
   .team_btn {
     font-weight: bolder;
     padding: 15px 5px;
     font-size: 1.2rem;
-    cursor: pointer
+    cursor: pointer;
   }
 
   .wrapper {
-    height: 100%;
     width: 100%;
+    padding: 25px;
     align-items: center;
-    justify-content: center;
     display: grid;
-    grid-template-columns: 20% 60% 20%;
+    grid-template-columns: 1fr 3fr 1fr;
     gap: 15px;
     justify-content: space-between;
     align-items: center;
   }
 
   .players {
-    border-radius: 15px;
-    display: flex;
-    height: 80%;
+    @include lobby-block;
     min-height: 700px;
     flex-direction: column;
-    align-items: center;
-    width: 100%;
     background: $white;
-    // height: 90px;
 
     .header {
-      background: $black;
-      flex: 0 0 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      height: 100px;
-      width: 100%;
-      border-radius: 15px 15px 0 0;
-      color: $white;
-      margin: 0;
-      padding: 0;
-      text-align: center;
+      @include lobby-block-header;
     }
 
     .content {
-      height: 80%;
+      height: 100%;
       width: 90%;
 
       .avatar {
@@ -71,7 +74,7 @@
         border-radius: 50%;
         //   flex: 1 0 auto;
         img {
-        position: relative;
+          position: relative;
           // border: 3px black solid;
           width: 110%;
           border-radius: 50%;
@@ -121,14 +124,18 @@
   }
 
   .games_table {
-    border-radius: 15px;
-    overflow: hidden;
+    @include lobby-block;
     font-size: 32px;
-    height: 700px;
+    overflow: hidden;
     background: $white;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+
+    .games_table_wrapper {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
     .header {
       height: 100px;
@@ -192,6 +199,8 @@
   }
 
   .chat {
-    height: 700px;
+    @include lobby-block;
+    // height: 700px;
+    height: 100%;
   }
 }

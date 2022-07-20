@@ -8,7 +8,7 @@ import { LangSelector } from "./components/LangSelector";
 function App() {
   return (
     <>
-      <LangSelector />
+      {/* <LangSelector /> */}
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="components" element={<ComponentsPage />} />

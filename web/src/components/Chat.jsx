@@ -83,9 +83,9 @@ export const Chat = observer(() => {
           <img src="/img/EmojisIcon.svg" />
         </button>
 
-        <button className="button">
+        {/* <button className="button">
           <img src="/img/SendIcon.svg" />
-        </button>
+        </button> */}
       </form>
     </div>
   );
