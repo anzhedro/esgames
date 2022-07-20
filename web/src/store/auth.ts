@@ -1,19 +1,21 @@
 import { makeAutoObservable } from "mobx";
 
+const validLocalUser = () => JSON.parse(localStorage.getItem('user') || '').length ? JSON.parse(localStorage.getItem('user') || '') : null
+
 export class Auth {
-  constructor(store) {
+  ws: WebSocket;
+  constructor(store:any) {
     this.ws = store.socket;
     makeAutoObservable(this);
   }
 
-  user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
-  login_status = "none";
+  user = validLocalUser()
+  login_status = this.user ? "none" : "fail";
 
-  login(user, avatar) {
+  login(user:string, avatar:number) {
     if (!user) return;
     localStorage.setItem("user", JSON.stringify(user));
     this.user = user;
-
     this.ws.send(JSON.stringify({type: "login", user: user, room: "global", avatar: avatar}));
   }
 

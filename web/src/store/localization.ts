@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx";
+import { TLanguage } from "../utils/types";
 
 const localizationMap = {
   en: {
@@ -57,7 +58,7 @@ export class Localization {
 
   localizationMap = localizationMap;
 
-  setCurrentLanguage(language) {
+  setCurrentLanguage(language: TLanguage = "en") {
     this.currentLanguage = language;
   }
 }

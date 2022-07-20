@@ -1,12 +1,16 @@
 import { makeAutoObservable } from "mobx";
+import React, { ChangeEvent } from "react";
+import { IMessage } from "../utils/types";
 
-export const formatDate = (date) => {
+// gonna remove when back ready
+export const formatDate = (date: any) => {
   return `  ${date.getHours() < 10 ? "0" + date.getHours() : date.getHours()}:${
     date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()
   }`;
 };
 
 export class Chat {
+  ws: WebSocket;
   constructor(store) {
     this.ws = store.socket;
     makeAutoObservable(this);
@@ -14,34 +18,27 @@ export class Chat {
 
   message = "";
   // Format: { created: "2020-12-01 12:00", user: "aaaa", text: "Hello!" }
-  messages = [
-    { created: "2020-12-01 12:00", user: "aaaa", text: "Hello!" },
-  ];
+  messages = [] as IMessage[];
 
-  addSmile(smile) {
+  addSmile(smile:string) {
     this.message += " " + smile;
   }
 
-  typeMessage = (e = false) => {
-    if (e) {
-      this.message = e.target.value;
-      return;
-    }
-    this.message = "";
+  typeMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.message = e.target.value;
   };
 
-  sendMessage(text) {
+  sendMessage(text: string) {
     if (!text) return;
-
     this.ws.send(JSON.stringify({ type: "chat", text: text }));
   }
 
-  addMessage(messages) {
+  addMessage(messages:IMessage[]) {
     this.messages = [...this.messages, ...messages];
     this.message = "";
   }
 
-  setMessages(newMessages) {
+  setMessages(newMessages: IMessage[]) {
     this.messages = newMessages;
   }
 }

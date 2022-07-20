@@ -4,12 +4,18 @@ import { Room } from "./room";
 import { Localization } from "./localization";
 
 class Store {
+  socket: WebSocket;
+  auth: Auth;
+  chat: Chat;
+  lang: Localization;
+  room: Room;
+
   constructor() {
     this.socket = new WebSocket("ws://localhost:8000/ws");
 
     this.auth = new Auth(this);
     this.chat = new Chat(this);
-    this.lang = new Localization(this);
+    this.lang = new Localization();
     this.room = new Room(this);
     
     this.socket.onopen = (event) => {

@@ -1,7 +1,8 @@
 import { makeAutoObservable } from "mobx";
 
 export class Room {
-  constructor(store) {
+  ws: WebSocket;
+  constructor(store:any) {
     this.ws = store.socket;
     makeAutoObservable(this);
   }
