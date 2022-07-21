@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 
-const validLocalUser = () => (localStorage.getItem("user") || "".length ? JSON.parse(localStorage.getItem("user") || "") : null);
+const validLocalUser = () => ((localStorage.getItem("user") || "").length ? JSON.parse(localStorage.getItem("user") || "") : null);
 
 export class Auth {
   ws: WebSocket;
@@ -12,13 +12,20 @@ export class Auth {
   user = validLocalUser();
   login_status = this.user ? "none" : "fail";
 
-  tryLogin() {
-    console.log(validLocalUser());
+  is_logged_in = false;
+
+  random_room = 0;
+
+  room_to_join = "";
+
+  tryLogin(room_id: string) {
     if (validLocalUser()) {
-      // this.ws.send(JSON.stringify({ type: "login", user: user, room: "global", avatar: avatar }));
-      this.login(validLocalUser().name, validLocalUser().avatarId);
+      this.ws.send(JSON.stringify({ type: "login", user: validLocalUser().name, room: room_id, avatar: validLocalUser().avatarId }));
+      this.login_status = "loading";
       return;
     }
+
+    this.room_to_join = room_id;
     this.loginFail();
   }
 
@@ -26,15 +33,13 @@ export class Auth {
     if (!user) return;
     localStorage.setItem("user", JSON.stringify({ name: user, avatarId: avatar }));
     this.user = user;
-    if (user == "zxc") {
-      this.ws.send(JSON.stringify({ type: "login", user: user, room: "zxcroom", avatar: avatar }));
-      return;
-    }
-    this.ws.send(JSON.stringify({ type: "login", user: user, room: "global", avatar: avatar }));
+
+    this.random_room = Math.floor(Math.random() * 100);
+    this.ws.send(JSON.stringify({ type: "login", user: user, room: this.room_to_join ? this.room_to_join : `${this.random_room}`, avatar: avatar }));
+    this.login_status = "loading";
   }
 
   loginSuccess() {
-    console.log("ok");
     this.login_status = "success";
   }
 

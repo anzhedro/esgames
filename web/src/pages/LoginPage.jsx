@@ -10,7 +10,7 @@ export const LoginPage = observer(() => {
 
   useEffect(() => {
     if (store.auth.login_status === "success") {
-      navigate("/lobby/zxc");
+      navigate(`/lobby/${store.auth.random_room}`);
     }
   }, [store.auth.login_status]);
 

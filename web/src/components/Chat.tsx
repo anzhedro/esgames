@@ -10,12 +10,12 @@ export const Chat = observer(() => {
   const [smilesView, setSmilesView] = useState(false);
   const lastMessageRef = useRef<null | HTMLLIElement>(null);
 
-  const toggleSmilesView = (e:React.MouseEvent) => {
+  const toggleSmilesView = (e: React.MouseEvent) => {
     e.preventDefault();
     setSmilesView(!smilesView);
   };
 
-  const submmitHandler = (e:FormEvent) => {
+  const submmitHandler = (e: FormEvent) => {
     e.preventDefault();
     setSmilesView(false);
     store.chat.sendMessage(store.chat.message);
@@ -24,7 +24,6 @@ export const Chat = observer(() => {
   const scrollToEnd = () => {
     if (store.chat.messages.length === 0) return;
     if (lastMessageRef.current) {
-      console.log("try scroll");
       lastMessageRef.current.scrollIntoView({
         behavior: firstLoad ? "auto" : "smooth",
         block: "end",
@@ -46,8 +45,14 @@ export const Chat = observer(() => {
 
       <ul className="chat__messages">
         {store.chat.messages &&
-          store.chat.messages.map((message, index) => (
-            <ChatMessage key={nanoid()} time={message.created} author={message.user} text={message.text} ref={lastMessageRef} />
+          store.chat.messages.map((message) => (
+            <ChatMessage
+              key={nanoid()}
+              created={message.created}
+              user={message.user}
+              text={message.text}
+              ref={lastMessageRef}
+            />
           ))}
       </ul>
 

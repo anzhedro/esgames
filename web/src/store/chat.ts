@@ -11,7 +11,7 @@ export const formatDate = (date: any) => {
 
 export class Chat {
   ws: WebSocket;
-  constructor(store) {
+  constructor(store: any) {
     this.ws = store.socket;
     makeAutoObservable(this);
   }
@@ -20,7 +20,7 @@ export class Chat {
   // Format: { created: "2020-12-01 12:00", user: "aaaa", text: "Hello!" }
   messages = [] as IMessage[];
 
-  addSmile(smile:string) {
+  addSmile(smile: string) {
     this.message += " " + smile;
   }
 
@@ -33,7 +33,7 @@ export class Chat {
     this.ws.send(JSON.stringify({ type: "chat", text: text }));
   }
 
-  addMessage(messages:IMessage[]) {
+  addMessage(messages: IMessage[]) {
     this.messages = [...this.messages, ...messages];
     this.message = "";
   }

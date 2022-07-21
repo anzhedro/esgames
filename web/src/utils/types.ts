@@ -1,7 +1,7 @@
 export interface IPlayer {
-    "name": "Soth",
-    "avatarId": "16",
-    "type": "host"
+    name: string,
+    avatar: number,
+    is_host: boolean
   }
 
   export interface IMessage {
@@ -16,8 +16,3 @@ export interface IPlayer {
     readonly current: T | null
   }
   
-  export interface IMessage {
-    time: string;
-    author: string;
-    text: string;
-  }

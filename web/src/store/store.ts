@@ -12,21 +12,20 @@ class Store {
 
   constructor() {
     this.socket = new WebSocket("ws://localhost:8000/ws");
+    this.lang = new Localization();
 
     this.auth = new Auth(this);
     this.chat = new Chat(this);
-    this.lang = new Localization();
     this.room = new Room(this);
     
     this.socket.onopen = (event) => {
-      // console.log("socket open", event);
-
+      console.log("ws OPEN", event);
     };
 
     this.socket.onmessage = (event) => {
-      const o = JSON.parse(event.data);
-      console.log("Got: ", o);
-      switch (o.type) {
+      const response = JSON.parse(event.data);
+      console.log("ws GOT: ", response);
+      switch (response.type) {
         case "login_success":
           this.auth.loginSuccess();
           return;
@@ -34,13 +33,21 @@ class Store {
           this.auth.loginFail();
           return;
         case "chat":
-          this.chat.addMessage(o.messages);
+          this.chat.addMessage(response.messages);
           return;
         case "room":
-          this.room.setUsers(o.users);
+          this.room.setUsers(response.users);
           return;
       }
     };
+
+    this.socket.onerror = (event) => {
+      console.log("ws ERR", event);
+    };
+
+    this.socket.onclose = (event) => {
+      console.log("ws CLOSE", event);
+    }
 
   }
 }

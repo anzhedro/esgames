@@ -3,13 +3,11 @@ import { TLanguage } from "../utils/types";
 
 const localizationMap = {
   en: {
-    "/": {
       createRoom: "CREATE ROOM!",
       selectAvatar: "CHOOSE YOUR AVATAR AND NAME",
       yorName: "YOUR NAME",
       join: "JOIN",
-    },
-    "/lobby": {
+
       playersHeader: "PLAYERS",
       player: "PLAYER",
       spectators: "SPECTATORS",
@@ -22,17 +20,14 @@ const localizationMap = {
 
       chat: "CHAT",
       messagePlaceholder: "Your message...",
-    },
   },
 
   ru: {
-    "/": {
       createRoom: "СОЗДАТЬ КОМНАТУ!",
       selectAvatar: "ВЫБЕРИ АВАТАР И ИМЯ",
       yorName: "ВАШЕ ИМЯ",
       join: "ВОЙТИ",
-    },
-    "/lobby": {
+
       playersHeader: "ИГРОКОВ",
       player: "ИГРОК",
       spectators: "ЗРИТЕЛИ",
@@ -45,7 +40,6 @@ const localizationMap = {
 
       chat: "ЧАТ",
       messagePlaceholder: "Ваше сообщение...",
-    },
   },
 };
 

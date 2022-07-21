@@ -1,24 +1,31 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Chat } from "../components/Chat";
 import { GamesTable } from "../components/GamesTable";
 import { Players } from "../components/Players";
+import { PlayersList } from "../components/PlayersList";
+import { PlayersTeams } from "../components/PlayersTeams";
 import { store } from "../store/store";
 
 export const LobbyPage = observer(() => {
   const navigate = useNavigate();
+  const params = useParams();
 
   useEffect(() => {
-    // const localUser =
-    store.auth.tryLogin();
+    if (store.auth.ws.readyState === 1 && store.auth.login_status === "none") {
+      store.auth.tryLogin(params.id);
+    }
   }, []);
 
-  
   useEffect(() => {
-    // console.log(store.auth.login_status)
+    if (store.auth.ws.readyState === 1 && store.auth.login_status === "none") {
+      store.auth.tryLogin(params.id);
+    }
+  }, [store.auth.ws.readyState]);
+
+  useEffect(() => {
     if (store.auth.login_status === "fail") {
-      console.log('imhere')
       navigate("/");
     }
   }, [store.auth.login_status]);
@@ -27,13 +34,13 @@ export const LobbyPage = observer(() => {
     <div className="lobby_page">
       {store.auth.login_status === "success" ? (
         <div className="wrapper">
-          <Players />
+          <Players>{true ? <PlayersList /> : <PlayersTeams />}</Players>
           <GamesTable />
           <Chat />
         </div>
       ) : (
-        "loading.."
+        <div>"loading..."</div>
       )}
     </div>
   );
-})
+});

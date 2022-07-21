@@ -1,17 +1,16 @@
 import { makeAutoObservable } from "mobx";
+import { IPlayer } from "../utils/types";
 
 export class Room {
   ws: WebSocket;
-  constructor(store:any) {
+  constructor(store: any) {
     this.ws = store.socket;
     makeAutoObservable(this);
   }
 
-  // Format: {name: "user1", avatar: 12, is_host: false}
-  users = [];
+  users: IPlayer[] = [];
 
-  setUsers(users) {
-    // console.log("setUsers", users);
+  setUsers(users: IPlayer[]) {
     this.users = users;
   }
 }
