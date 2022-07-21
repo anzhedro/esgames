@@ -1,3 +1,7 @@
+@mixin flex-col {
+  display: flex;
+  flex-direction: column;
+}
 @mixin lobby-block {
   height: 100%;
   width: 100%;
@@ -72,7 +76,6 @@
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        //   flex: 1 0 auto;
         img {
           position: relative;
           // border: 3px black solid;
@@ -87,9 +90,18 @@
         padding: 10px;
         display: flex;
         align-items: center;
+        position: relative;
 
         p {
           margin-left: 15px;
+        }
+
+        .kick_button {
+          position: absolute;
+          right: 15px;
+          top: calc(50% - 25px);
+          height: 50px;
+          width: 50px;
         }
       }
 
@@ -144,7 +156,9 @@
       color: $white;
       width: 100%;
       display: flex;
-      justify-content: center;
+      // justify-content: center;
+      justify-content: space-around;
+
       align-items: center;
     }
 
@@ -155,6 +169,21 @@
       gap: 15px;
       flex: 0 1 auto;
       padding: 15px;
+      width: 100%;
+      height: 100%;
+
+      &.game_settings {
+        @include flex-col;
+      }
+
+      &.game_rules {
+        @include flex-col;
+        // justify-content: center;
+      }
+
+      h2 {
+        font-size: 2.5rem;
+      }
 
       .game_card {
         border-radius: 15px;

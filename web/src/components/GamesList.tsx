@@ -7,7 +7,7 @@ export const GamesList = ({ games, id, setMode }) => {
     <>
       <div className="header">
         <button>ИГРЫ</button>
-        <button>НАСТРОЙКИ</button>
+        {/* <button>НАСТРОЙКИ</button> */}
       </div>
 
       <div className="content">

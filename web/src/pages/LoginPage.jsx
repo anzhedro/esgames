@@ -6,7 +6,7 @@ import { store } from "../store/store";
 
 export const LoginPage = observer(() => {
   const navigate = useNavigate();
-  const currentPageLocalization = store.lang.localizationMap[store.lang.currentLanguage]["/"];
+  const currentPageLocalization = store.lang.localizationMap[store.lang.currentLanguage];
 
   useEffect(() => {
     if (store.auth.login_status === "success") {

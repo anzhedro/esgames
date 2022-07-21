@@ -6,6 +6,7 @@ import games from "../utils/games.json";
 import { GamesList } from "./GamesList";
 import { GameRules } from "./GameRules";
 import { GamePlay } from "./GamePlay";
+import { GameSettings } from "./GameSettings";
 
 export const GamesTable = () => {
   const [mode, setMode] = useState("select");
@@ -15,6 +16,7 @@ export const GamesTable = () => {
     <div className="games_table">
       <div className="games_table_wrapper">
         {mode === "select" && <GamesList games={games} id={params.id} setMode={setMode} />}
+        {mode === "settings" && <GameSettings setMode={setMode} />}
         {mode === "rules" && <GameRules setMode={setMode} />}
         {mode === "play" && <GamePlay game={""} />}
       </div>

@@ -12,6 +12,10 @@ export class Auth {
   user = validLocalUser();
   login_status = this.user ? "none" : "fail";
 
+  // временное поле для компонента
+  isHost = false;
+
+
   is_logged_in = false;
 
   random_room = 0;

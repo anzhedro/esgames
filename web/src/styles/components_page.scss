@@ -1,0 +1,25 @@
+.isHost {
+  display: flex;
+  padding: 5px;
+  button {
+    background: $black;
+    margin-right: 5px;
+
+    color: $white;
+    border-radius: 15px;
+    width: 150px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+
+    &:hover {
+      border-radius: 30px;
+      transition: 0.3s;
+    }
+    &.active {
+      background: $black;
+    }
+  }
+}
