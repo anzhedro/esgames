@@ -10,13 +10,32 @@ const WordsList = ({ children }) => {
   return <div>{children}</div>;
 };
 
-const WordItem = ({ canEdit, color, text }) => {
-  const [count, setCount] = useState(0);
-  return <div>{text} </div>;
+const WordItem = ({ canEdit, color = "", text, countInit = 0 }) => {
+  const [count, setCount] = useState(countInit);
+  const colorFromCount = () => {
+    if (!canEdit && color) return color;
+    // return color;
+    if (count === 0) return "grey";
+    if (count > 0) return "green";
+    if (count < 0) return "red";
+  };
+
+  return (
+    <div className={"wordItem " + colorFromCount()}>
+      <p> {text}</p>
+      {canEdit && (
+        <div>
+          <button onClick={() => setCount(count + 1)}>+</button>
+          <p>{count}</p>
+          <button onClick={() => setCount(count - 1)}>-</button>
+        </div>
+      )}
+    </div>
+  );
 };
 
 const GreenButton = ({ text }: { text: string }) => {
-  return <button></button>;
+  return <button className="green_btn">{text}</button>;
 };
 
 export const ComponentsPage = () => {
@@ -31,7 +50,7 @@ export const ComponentsPage = () => {
     setIsStoryteller(!isStoryteller);
   };
 
-  const stageTexts = ['Начать', 'Следующее', 'Закончить', 'Заного'];
+  const stageTexts = ["Начать", "Следующее", "Закончить", "Заного"];
 
   return (
     <div className="components_page">
@@ -45,26 +64,56 @@ export const ComponentsPage = () => {
         <button onClick={toggleStoryTeller}>я {!isStoryteller && "не"} рассказчик</button>
       </div>
 
-      <div className="isHost">
+      {/* <div className="isHost">
         <button onClick={() => setStage(stage + 1)}>+</button>
         <button onClick={() => setStage(stage - 1)}>-</button>
-      </div>
+      </div> */}
       {/* lobby page для пользователя */}
 
-      <WordsList text="Жди" stage={stage}>
-        {isStoryteller && (
+      <div style={{ display: "flex", alignItems: "flex-end", gap: "50px" }}>
+        <WordsList>
+          <GreenButton text="Ждите" />
+        </WordsList>
+
+        <WordsList>
+          {/* {isStoryteller && ( */}
           <>
             <WordItem canEdit={false} color="green" text="Владилен" />
             <WordItem canEdit={false} color="green" text="Вадилен" />
             <WordItem canEdit={false} color="green" text="Вадиен" />
             <WordItem canEdit={false} color="red" text="Вадим" />
           </>
-        )}
+          {/* )} */}
 
-        <GreenButton text={stage ==  } />
-      </WordsList>
+          <GreenButton text="Далее" />
+        </WordsList>
 
-      {/* <LobbyPage /> */}
+        <WordsList>
+          {/* {isStoryteller && ( */}
+          <>
+            <WordItem canEdit={true} color="green" text="Владилен" countInit={1}/>
+            <WordItem canEdit={true} color="green" text="Вадилен" countInit={1}/>
+            <WordItem canEdit={true} color="green" text="Вадиен"countInit={0} />
+            <WordItem canEdit={true} color="red" text="Вадим" countInit={-1}/>
+          </>
+          {/* )} */}
+
+          <GreenButton text="Раунд 2" />
+        </WordsList>
+
+        <WordsList>
+          {/* {isStoryteller && ( */}
+          <>
+            <WordItem canEdit={false} color="green" text="Team 1 50" />
+            <WordItem canEdit={false} color="red" text="Team 2 49" />
+          </>
+          {/* )} */}
+
+          <GreenButton text="Тима 1 вин" />
+        </WordsList>
+
+        {/* <LobbyPage /> */}
+      </div>
     </div>
   );
 };
