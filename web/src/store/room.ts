@@ -78,9 +78,7 @@ export class Room {
     this.users = users;
   }
 
-  handleKick(user:string){
-    // structure
-    // {type: "kick_player", user: string }
-    this.ws.send(JSON.stringify({ type: "kick_player", user: 'userToKickName' }));
+  handleKick(user: string) {
+    this.ws.send(JSON.stringify({ type: "kick_user", user: user }));
   }
 }

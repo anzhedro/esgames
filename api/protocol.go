@@ -63,6 +63,16 @@ type NewMessage struct {
 	Text string `json:"text"`
 }
 
+type KickMessage struct {
+	User string `json:"user"`
+	Text string `json:"text"`
+}
+
+type KickResp struct {
+	Type   string `json:"type"`
+	Reason string `json:"reason,omitempty"`
+}
+
 type ChatBatch struct {
 	Type     string          `json:"type"`
 	Messages []ChatBatchItem `json:"messages"`

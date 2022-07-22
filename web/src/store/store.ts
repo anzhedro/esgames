@@ -17,7 +17,7 @@ class Store {
     this.auth = new Auth(this);
     this.chat = new Chat(this);
     this.room = new Room(this);
-    
+
     this.socket.onopen = (event) => {
       console.log("ws OPEN", event);
     };
@@ -33,10 +33,15 @@ class Store {
           this.auth.loginFail();
           return;
         case "chat":
+          // this.socket.send(JSON.stringify({ type: "kick_user", user: "333" }));
           this.chat.addMessage(response.messages);
           return;
         case "room":
           this.room.setUsers(response.users);
+          return;
+        case "kick_user":
+          alert(response.reason);
+          this.auth.loginFail();
           return;
       }
     };
@@ -47,8 +52,7 @@ class Store {
 
     this.socket.onclose = (event) => {
       console.log("ws CLOSE", event);
-    }
-
+    };
   }
 }
 

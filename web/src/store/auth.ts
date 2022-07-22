@@ -13,7 +13,7 @@ export class Auth {
   login_status = this.user ? "none" : "fail";
 
   // временное поле для компонента
-  isHost = false;
+  isHost = true;
 
 
   is_logged_in = false;
