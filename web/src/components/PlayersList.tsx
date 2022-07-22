@@ -1,4 +1,5 @@
 import { observer } from "mobx-react-lite";
+import { arrayExtensions } from "mobx/dist/internal";
 import { nanoid } from "nanoid";
 import React, { useState } from "react";
 import { store } from "../store/store";
@@ -7,6 +8,7 @@ import { Avatar } from "./Avatar";
 
 export const PlayersList = observer(() => {
   const [isShowKickButton, setShowKickButton] = useState(false);
+
   return (
     <div>
       {store.room.users.map((user: IPlayer, index: number) => (
@@ -19,9 +21,9 @@ export const PlayersList = observer(() => {
         >
           <Avatar avatar={user.avatar} isHost={user.is_host} />
           <p>{user.name}</p>
-          
-          {(isShowKickButton && store.auth.isHost) && (
-            <button className="kick_button">
+
+          {isShowKickButton && store.auth.isHost && (
+            <button className="kick_button" onClick={() => store.room.handleKick(user.name)}>
               <img src="/img/kick.svg" />
             </button>
           )}
@@ -30,3 +32,19 @@ export const PlayersList = observer(() => {
     </div>
   );
 });
+
+const trylogin = async (cb: any) => {
+  let t = await localStorage.getItem("token");
+  if (!t) return;
+  cb(t);
+};
+
+const login = (t:string, cb) => {
+  axios.post("/api/login", { token: t })
+};
+
+const updateState(t:string) {
+  tokenInStorage = res.token
+}
+
+trylogin(login);
