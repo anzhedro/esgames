@@ -1,0 +1,34 @@
+.lang__selector {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 9999;
+
+  button {
+    height: 40px;
+    width: 80px;
+
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
+    margin-bottom: 10px;
+
+    border: 2px solid #ccc;
+    border-radius: 5px;
+
+    background: rgba(0, 0, 0, 0.1);
+
+    gap: 5px;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+      background: rgb(137, 111, 255);
+      transform: scale(1.1);
+      transition: all 0.2s ease-in-out;
+    }
+
+    img {
+      margin-left: -5px;
+    }
+  }
+}

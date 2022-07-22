@@ -24,8 +24,8 @@ export class Chat {
     this.message += " " + smile;
   }
 
-  typeMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.message = e.target.value;
+  typeMessage = (str: string) => {
+    this.message = str
   };
 
   sendMessage(text: string) {

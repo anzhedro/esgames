@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Soth",
+    "avatarId": "16",
+    "type": "host"
+  },
+  {
+    "name": "John Doe",
+    "avatarId": "2",
+    "type": "player"
+  }
+]
