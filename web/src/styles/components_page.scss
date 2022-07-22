@@ -57,6 +57,16 @@
 }
 
 .red {
-  color: $white;
   background: $red;
+  color: $white;
+}
+
+.light-green {
+  background: $lightgreen;
+  color: $black;
+}
+
+.light-red {
+  background: $lightred;
+  color: $black;
 }

@@ -32,19 +32,3 @@ export const PlayersList = observer(() => {
     </div>
   );
 });
-
-const trylogin = async (cb: any) => {
-  let t = await localStorage.getItem("token");
-  if (!t) return;
-  cb(t);
-};
-
-const login = (t:string, cb) => {
-  axios.post("/api/login", { token: t })
-};
-
-const updateState(t:string) {
-  tokenInStorage = res.token
-}
-
-trylogin(login);

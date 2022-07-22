@@ -77,4 +77,10 @@ export class Room {
   setUsers(users: IPlayer[]) {
     this.users = users;
   }
+
+  handleKick(user:string){
+    // structure
+    // {type: "kick_player", user: string }
+    this.ws.send(JSON.stringify({ type: "kick_player", user: 'userToKickName' }));
+  }
 }
