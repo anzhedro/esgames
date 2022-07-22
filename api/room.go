@@ -77,6 +77,33 @@ func (r *Room) Handle(c *websocket.Conn, l *LoginReq) error {
 			}
 			r.mu.Unlock()
 			r.broadcast(marshalChatBatch(cm.ToItem()))
+		case "kick_user":
+			msg, err := unmarshalAs[KickMessage](raw)
+			if err != nil {
+				return fmt.Errorf("failed to unmarshal kick message: %s", err)
+			}
+			if msg.User == l.User {
+				r.broadcast(marshalChatBatch(ChatBatchItem{
+					User:    "SYSTEM",
+					Text:    fmt.Sprintf("%s was trieed to kick himself", msg.User),
+					Created: time.Now().UTC().Format("2006-01-02 15:04:05"),
+				}))
+			} else {
+				if _, ok := r.Users[msg.User]; ok {
+					if err := r.Users[msg.User].C.WriteJSON(KickResp{Type: "kick_user", Reason: fmt.Sprintf("You were kicked by %s", l.User)}); err != nil {
+						return fmt.Errorf("failed to respond to kick_user: %s", err)
+					}
+					r.mu.Lock()
+					delete(r.Users, msg.User)
+					r.mu.Unlock()
+					r.broadcast(marshalChatBatch(ChatBatchItem{
+						User:    "SYSTEM",
+						Text:    fmt.Sprintf("%s was kicked from the room", msg.User),
+						Created: time.Now().UTC().Format("2006-01-02 15:04:05"),
+					}))
+					r.broadcastRoomChange()
+				}
+			}
 		}
 	}
 }
