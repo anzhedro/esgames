@@ -26,7 +26,7 @@ export const LoginCard = (props: { lang: any }) => {
         <div class="flex-col">
           <p>{props.lang.selectAvatar}</p>
           <input
-            placeholder={props.lang.yorName}
+            placeholder={props.lang.yourName}
             onKeyDown={(e) => {
               if (e.key === "Enter") login(nickname(), avatar());
             }}

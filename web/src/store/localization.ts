@@ -1,12 +1,27 @@
-// import { makeAutoObservable } from "mobx";
 import { createSignal } from "solid-js";
-import { TLanguage } from "../utils/types";
 
-const localizationMap = {
-  en: {
+type Translation = {
+  createRoom: string,
+  selectAvatar: string,
+  yourName: string,
+  join: string,
+  playersHeader: string,
+  player: string,
+  spectators: string,
+  gamesHeader: string,
+  inviteFooter: string,
+  backFooter: string,
+  startFooter: string,
+  chat: string,
+  messagePlaceholder: string,
+};
+
+
+const localizationMap: Record<string, Translation> = {
+  "en": {
     createRoom: "CREATE ROOM!",
     selectAvatar: "CHOOSE YOUR AVATAR AND NAME",
-    yorName: "YOUR NAME",
+    yourName: "YOUR NAME",
     join: "JOIN",
 
     playersHeader: "PLAYERS",
@@ -23,10 +38,10 @@ const localizationMap = {
     messagePlaceholder: "Your message...",
   },
 
-  ru: {
+  "ru": {
     createRoom: "СОЗДАТЬ КОМНАТУ!",
     selectAvatar: "ВЫБЕРИ АВАТАР И ИМЯ",
-    yorName: "ВАШЕ ИМЯ",
+    yourName: "ВАШЕ ИМЯ",
     join: "ВОЙТИ",
 
     playersHeader: "ИГРОКОВ",
@@ -47,7 +62,7 @@ const localizationMap = {
 const [currentLanguage, setCurrentLanguage] = createSignal("en");
 const languages = Object.keys(localizationMap);
 
-const handleSetCurrentLanguage = (language: TLanguage = "en") => {
+const handleSetCurrentLanguage = (language: string) => {
   setCurrentLanguage(language);
 };
 

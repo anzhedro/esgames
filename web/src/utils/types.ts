@@ -10,8 +10,6 @@ export interface IPlayer {
     text: string;
   }
 
-  export type TLanguage = "en" | "ru";
-
   export interface RefType<T> {
     readonly current: T | null
   }
@@ -56,7 +54,7 @@ export interface IPlayer {
   }
   
   export type GameListProps = {
-    games: Game[];
+    games: IGame[];
     id: string,
     setMode: (str: string) => void;
   }
