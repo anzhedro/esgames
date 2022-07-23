@@ -26,3 +26,5 @@ const addMessage = (newmessages: IMessage[]) => {
   setMessages([...messages(), ...newmessages]);
   setMessage("");
 };
+
+export { addSmile, sendMessage, addMessage, messages, message, setMessage };

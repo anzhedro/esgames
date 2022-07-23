@@ -1,19 +1,9 @@
-import { Auth } from "./auth";
-import { Chat } from "./chat";
-import { Room } from "./room";
-import { Localization } from "./localization";
+import {  loginFail, loginSuccess } from "./auth";
+import { addMessage, } from "./chat";
+import { setUsers, users } from "./room";
 import { IPlayer } from "../utils/types";
 
-auth: Auth;
-chat: Chat;
-lang: Localization;
-room: Room;
-
-const socket : WebSocket = new WebSocket("ws://localhost:8000/ws");
-const lang = new Localization();
-const auth = new Auth(this);
-const chat = new Chat(this);
-const room = new Room(this);
+const socket: WebSocket = new WebSocket("ws://localhost:8000/ws");
 
 socket.onopen = (event) => {
   console.log("ws OPEN", event);
@@ -24,20 +14,20 @@ socket.onmessage = (event) => {
   console.log("ws GOT: ", response);
   switch (response.type) {
     case "login_success":
-      const auth.loginSuccess();
+      loginSuccess();
       return;
     case "login_fail":
-      const auth.loginFail();
+      loginFail();
       return;
     case "chat":
-      const chat.addMessage(response.messages);
+      addMessage(response.messages);
       return;
     case "room":
-      const room.setUsers(response.users);
+      setUsers(response.users);
       return;
-      case "user_kicked" : {
-        setUsers(users().filter((user:IPlayer) => user.name !== response.user));
-      }
+    case "user_kicked": {
+      setUsers(users.filter((user: any) => user.name !== response.user));
+    }
   }
 };
 
@@ -49,4 +39,4 @@ socket.onclose = (event) => {
   console.log("ws CLOSE", event);
 };
 
-export {socket}
+export { socket };

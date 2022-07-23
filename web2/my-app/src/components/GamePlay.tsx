@@ -1,5 +1,4 @@
-import React from "react";
 
-export const GamePlay = ({ game }) => {
+export const GamePlay = () => {
   return <>GamePlay</>;
 };

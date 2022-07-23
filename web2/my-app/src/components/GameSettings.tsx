@@ -1,7 +1,6 @@
-import { nanoid } from "nanoid";
-import React from "react";
-import { useState } from "react";
-import { store } from "../store/store";
+import { createSignal, For, Show } from "solid-js";
+import { isHost } from "../store/auth";
+import { CommandsCountProps, DifficultyProps, GameSettingsProps } from "../utils/types";
 
 export const RountTime = () => {
   return (
@@ -21,58 +20,63 @@ export const RoundCount = () => {
   );
 };
 
-export const Difficulty = ({ option }: { option: { currentOption: string; options: string[] } }) => {
-  const [isSelectOpen, setIsSelectOpen] = useState(false);
+export const Difficulty = (props: DifficultyProps) => {
+  const [isSelectOpen, setIsSelectOpen] = createSignal(false);
 
   return (
     <div>
       <h3>Сложность</h3>
-      <div className="select">
-        <div className="currentOption">{option.currentOption}</div>
-        {isSelectOpen
-          ? option.options.map((option) => (
-              <div className="option" key={nanoid()}>
-                {option}
-              </div>
-            ))
-          : false}
+      <div class="select">
+        <div class="currentOption">{props.option.currentOption}</div>
+
+        <Show when={isSelectOpen()} fallback={<div>Loading...</div>}>
+          <For each={props.option.options} fallback={<div>Loading...</div>}>
+            {(option) => <div class="option">{option}</div>}
+          </For>
+        </Show>
       </div>
     </div>
   );
 };
 
-export const CommandsCount = ({ counts }: { counts: number[] }) => {
-  const [currentCount, setCurrentCount] = useState(counts[0]);
+export const CommandsCount = (props: CommandsCountProps) => {
+  const [currentCount, setCurrentCount] = createSignal(props.counts[0]);
 
   return (
     <div>
       <h3>Количество команд</h3>
-      {counts.map((el) => (
-        <button className={currentCount == el ? "active" : ""} onClick={() => setCurrentCount(el)}>
-          {el}
-        </button>
-      ))}
+
+      <For each={props.counts} fallback={<div>Loading...</div>}>
+        {(count) => (
+          <button class={currentCount() == count ? "active" : ""} onClick={() => setCurrentCount(count)}>
+            {count}
+          </button>
+        )}
+      </For>
     </div>
   );
 };
 
-export const GameSettings = ({ setMode }: { setMode: (mode: string) => void }) => {
+export const GameSettings = (props: GameSettingsProps) => {
   return (
     <>
-      <div className="header" style={{ justifyContent: "space-around" }}>
-        <button onClick={() => setMode("rules")}>ПРАВИЛА</button>
-        <button onClick={() => setMode("settings")}>НАСТРОЙКИ</button>
+      <div class="header" style={{ justifyContent: "space-around" }}>
+        <button onClick={() => props.setMode("rules")}>ПРАВИЛА</button>
+        <button onClick={() => props.setMode("settings")}>НАСТРОЙКИ</button>
       </div>
-      <div className="content game_settings">
+      <div class="content game_settings">
         <h2>Настройки игры Alias</h2>
         <RountTime />
         <RoundCount />
         <Difficulty option={{ currentOption: "Легко", options: ["Легко", "Средне", "Сложно"] }} />
         <CommandsCount counts={[2, 3, 4]} />
       </div>
-      <div className="footer">
-        <button onClick={() => setMode("select")}>НАЗАД</button>
-        {store.auth.isHost && <button onClick={() => setMode("play")}>НАЧАТЬ</button>}
+      <div class="footer">
+        <button onClick={() => props.setMode("select")}>НАЗАД</button>
+
+        <Show when={isHost()} fallback={<div>Loading...</div>}>
+          <button onClick={() => props.setMode("play")}>НАЧАТЬ</button>
+        </Show>
       </div>
     </>
   );

@@ -74,4 +74,4 @@ const handleKick = (user: string) => {
   socket.send(JSON.stringify({ type: "kick_player", user: "userToKickName" }));
 };
 
-export { users, handleKick };
+export { users, handleKick, setUsers };

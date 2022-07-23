@@ -1,32 +1,32 @@
-import React, { FormEvent, useEffect, useRef, useState } from "react";
-import { nanoid } from "nanoid";
-import { store } from "../store/store";
 import { ChatMessage } from "./ChatMessage";
 import emojisIcons from "../utils/smiles.json";
 import { IMessage } from "../utils/types";
+import { createEffect, createSignal, For } from "solid-js";
+import { addSmile, message, messages, sendMessage, setMessage } from "../store/chat";
+import { loginStatus } from "../store/auth";
 
 export const Chat = () => {
-  const [firstLoad, setFirstLoad] = useState(true);
-  const [smilesView, setSmilesView] = useState(false);
+  const [firstLoad, setFirstLoad] = createSignal(true);
+  const [smilesView, setSmilesView] = createSignal(false);
   // const lastMessageRef = useRef<null | HTMLLIElement>(null);
-  let lastMessageRef: any;
-
+  let lastMessageRef:any = null;
+ 
   const toggleSmilesView = (e: MouseEvent) => {
     e.preventDefault();
     setSmilesView(!smilesView);
   };
 
-  const submmitHandler = (e: FormEvent) => {
+  const submmitHandler = (e: any) => {
     e.preventDefault();
     setSmilesView(false);
-    store.chat.sendMessage(store.chat.message);
+    sendMessage(lastMessageRef.current.value);
   };
 
   const scrollToEnd = () => {
-    if (store.chat.messages.length === 0) return;
+    if (messages().length === 0) return;
     if (lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({
-        behavior: firstLoad ? "auto" : "smooth",
+        behavior: firstLoad() ? "auto" : "smooth",
         block: "end",
         inline: "nearest",
       });
@@ -34,9 +34,9 @@ export const Chat = () => {
     }
   };
 
-  useEffect(() => {
+  createEffect(() => {
     scrollToEnd();
-  }, [store.chat.messages]);
+  }, [messages()]);
 
   return (
     <div class="chat">
@@ -45,17 +45,16 @@ export const Chat = () => {
       </div>
 
       <ul class="chat__messages">
-        {store.chat.messages &&
-          store.chat.messages.map((message: IMessage) => (
-            <ChatMessage created={message.created} user={message.user} text={message.text} ref={lastMessageRef} />
-          ))}
+        <For each={messages()} fallback={<div>Loading...</div>}>
+          {(message:IMessage) => <ChatMessage created={message.created} user={message.user} text={message.text} ref={lastMessageRef} />}
+        </For>
       </ul>
 
-      {smilesView ? (
+      {smilesView() ? (
         <div class="smiles-board">
           <div class="smiles-board-list">
             {emojisIcons.map((icon: string) => (
-              <button onClick={() => store.chat.addSmile(icon)}>
+              <button onClick={() => addSmile(icon)}>
                 <span>{icon}</span>
               </button>
             ))}
@@ -67,11 +66,11 @@ export const Chat = () => {
 
       <form class="chat-form" onSubmit={submmitHandler} autocomplete="off">
         <input
-          class={"input " + (store.auth.login_status === "fail" ? "input--error" : "")}
+          class={"input " + (loginStatus() === "fail" ? "input--error" : "")}
           type="text"
           id={"message"}
-          value={store.chat.message}
-          onChange={(e: any) => store.chat.setMessage(e.target.value)}
+          value={message()}
+          onChange={(e: any) => setMessage(e.target.value)}
           placeholder="Ваше сообщение..."
         />
 

@@ -1,24 +1,22 @@
-import React from "react";
-import { observer } from "mobx-react-lite";
-import { store } from "../store/store";
+import { users } from "../store/room";
 
-interface Props {
-  children: React.ReactNode;
+interface PlayersProps {
+  children: JSXElement;
 }
 
-export const Players: React.FC<Props> = observer(({ children }) => {
+export const Players = (props: PlayersProps) => {
   return (
-    <div className="players">
-      <div className="header">
+    <div class="players">
+      <div class="header">
         <p>
-          ИГРОКОВ: <span>{store.room.users.length}</span>
+          ИГРОКОВ: <span>{users.length}</span>
         </p>
       </div>
-      <div className="content">{children}</div>
-      <div className="footer">
-        {/* <button className="active">ИГРОКИ</button>
+      <div class="content">{props.children}</div>
+      <div class="footer">
+        {/* <button class="active">ИГРОКИ</button>
         <button disabled>ЗРИТЕЛИ</button> */}
       </div>
     </div>
   );
-});
+};
