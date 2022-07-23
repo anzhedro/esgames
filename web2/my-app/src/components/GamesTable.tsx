@@ -5,7 +5,7 @@ import { GamesList } from "./GamesList";
 import { GameRules } from "./GameRules";
 import { GamePlay } from "./GamePlay";
 import { GameSettings } from "./GameSettings";
-import { createSignal } from "solid-js";
+import { createSignal, Match, Switch } from "solid-js";
 import { useParams } from "solid-app-router";
 
 export const GamesTable = () => {
@@ -15,10 +15,23 @@ export const GamesTable = () => {
   return (
     <div class="games_table">
       <div class="games_table_wrapper">
-        {mode() === "select" && <GamesList games={games} id={params.id} setMode={setMode} />}
-        {mode() === "settings" && <GameSettings setMode={setMode} />}
-        {mode() === "rules" && <GameRules setMode={setMode} />}
-        {mode() === "play" && <GamePlay  />}
+        <Switch fallback={``}>
+          <Match when={mode() === "select"}>
+            <GamesList games={games} id={params.id} setMode={setMode} />
+          </Match>
+
+          <Match when={mode() === "settings"}>
+            <GameSettings setMode={setMode} />
+          </Match>
+
+          <Match when={mode() === "rules"}>
+            <GameRules setMode={setMode} />
+          </Match>
+
+          <Match when={mode() === "play"}>
+            <GamePlay />
+          </Match>
+        </Switch>
       </div>
     </div>
   );

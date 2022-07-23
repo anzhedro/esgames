@@ -1,10 +1,10 @@
 import React from "react";
 import { useState, useRef } from "react";
-import { store } from "../store/store";
+import { login } from "../../../web2/my-app/src/store/auth";
 import { randomInteger } from "../utils/helpers";
 
 export const LoginCard = ({ lang }) => {
-  const [avatar, setAvatar] = useState(randomInteger(1, 25));
+  const [avatar, setAvatar] = create(randomInteger(1, 25));
   const [nickname, setNickname] = useState("");
 
   const refreshAvatar = () => {
@@ -29,7 +29,7 @@ export const LoginCard = ({ lang }) => {
           <input
             placeholder={lang.yorName}
             onKeyDown={(e) => {
-              if (e.key === "Enter") store.auth.login(nickname, avatar);
+              if (e.key === "Enter") login(nickname, avatar);
             }}
             onChange={(e) => {
               setNickname(e.target.value);
@@ -38,7 +38,7 @@ export const LoginCard = ({ lang }) => {
         </div>
       </div>
       <div className="footer">
-        <button onClick={() => store.auth.login(nickname, avatar)} disabled={nickname.length > 0 ? false : true}>
+        <button onClick={() => login(nickname, avatar)} disabled={nickname.length > 0 ? false : true}>
           <img src="/img/play.svg" /> <span> {lang.join}</span>
         </button>
       </div>
