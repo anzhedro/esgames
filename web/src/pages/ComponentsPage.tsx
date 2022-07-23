@@ -1,33 +1,31 @@
-import React from "react";
-import { useState } from "react";
+import { createSignal, JSX, JSXElement } from "solid-js";
 import { LoginCard } from "../components/LoginCard";
 import { Players } from "../components/Players";
-import { store } from "../store/store";
-import { LobbyPage } from "./LobbyPage";
-// import React from "@types/react";
+import { isHost, setIsHost } from "../store/auth";
+import { WordItemProps } from "../utils/types";
 
-const WordsList = ({ children }) => {
-  return <div>{children}</div>;
+const WordsList = (props: { children: JSXElement }) => {
+  return <div>{props.children}</div>;
 };
 
-const WordItem = ({ canEdit, color = "", text, countInit = 0 }) => {
-  const [count, setCount] = useState(countInit);
+const WordItem = ({ canEdit, color = "", text, countInit = 0 }: WordItemProps) => {
+  const [count, setCount] = createSignal(countInit);
   const colorFromCount = () => {
     if (!canEdit && color) return color;
     // return color;
-    if (count === 0) return "grey";
-    if (count > 0) return "green";
-    if (count < 0) return "red";
+    if (count() === 0) return "grey";
+    if (count() > 0) return "green";
+    if (count() < 0) return "red";
   };
 
   return (
-    <div className={"wordItem " + colorFromCount()}>
+    <div class={"wordItem " + colorFromCount()}>
       <p> {text}</p>
       {canEdit && (
         <div>
-          <button onClick={() => setCount(count + 1)}>+</button>
-          <p>{count}</p>
-          <button onClick={() => setCount(count - 1)}>-</button>
+          <button onClick={() => setCount(count() + 1)}>+</button>
+          <p>{count()}</p>
+          <button onClick={() => setCount(count() - 1)}>-</button>
         </div>
       )}
     </div>
@@ -35,33 +33,33 @@ const WordItem = ({ canEdit, color = "", text, countInit = 0 }) => {
 };
 
 const GreenButton = ({ text }: { text: string }) => {
-  return <button className="green_btn">{text}</button>;
+  return <button class="green_btn">{text}</button>;
 };
 
 export const ComponentsPage = () => {
-  const [stage, setStage] = useState(0);
-  const [isStoryteller, setIsStoryteller] = useState(false);
+  // const [stage, setStage] = createSignal(0);
+  const [isStoryteller, setIsStoryteller] = createSignal(false);
 
   const toggleIsHost = () => {
-    store.auth.isHost = !store.auth.isHost;
+    setIsHost(!isHost());
   };
 
   const toggleStoryTeller = () => {
-    setIsStoryteller(!isStoryteller);
+    setIsStoryteller(!isStoryteller());
   };
 
   const stageTexts = ["Начать", "Следующее", "Закончить", "Заного"];
 
   return (
-    <div className="components_page">
+    <div class="components_page">
       {/* <LoginCard /> */}
-      <div className="isHost">
+      <div class="isHost">
         <button onClick={toggleIsHost}>я хост</button>
         <button onClick={toggleIsHost}>я не хост</button>
       </div>
 
-      <div className="isHost">
-        <button onClick={toggleStoryTeller}>я {!isStoryteller && "не"} рассказчик</button>
+      <div class="isHost">
+        <button onClick={toggleStoryTeller}>я {!isStoryteller() && "не"} рассказчик</button>
       </div>
 
       {/* <div className="isHost">
@@ -91,10 +89,10 @@ export const ComponentsPage = () => {
         <WordsList>
           {/* {isStoryteller && ( */}
           <>
-            <WordItem canEdit={true} color="green" text="Владилен" countInit={1}/>
-            <WordItem canEdit={true} color="green" text="Вадилен" countInit={1}/>
-            <WordItem canEdit={true} color="green" text="Вадиен"countInit={0} />
-            <WordItem canEdit={true} color="red" text="Вадим" countInit={-1}/>
+            <WordItem canEdit={true} color="green" text="Владилен" countInit={1} />
+            <WordItem canEdit={true} color="green" text="Вадилен" countInit={1} />
+            <WordItem canEdit={true} color="green" text="Вадиен" countInit={0} />
+            <WordItem canEdit={true} color="red" text="Вадим" countInit={-1} />
           </>
           {/* )} */}
 

@@ -1,53 +1,56 @@
-import { makeAutoObservable } from "mobx";
+import { createSignal } from "solid-js";
+import { IUser } from "../utils/types";
+import { socket } from "./store";
 
-const validLocalUser = () => ((localStorage.getItem("user") || "").length ? JSON.parse(localStorage.getItem("user") || "") : null);
+const validLocalUser = () =>
+  (localStorage.getItem("user") || "").length ? JSON.parse(localStorage.getItem("user") || "") : null;
 
-export class Auth {
-  ws: WebSocket;
-  constructor(store: any) {
-    this.ws = store.socket;
-    makeAutoObservable(this);
+type TUser = IUser | any; // should be IUser | null;
+const [user, setUser] = createSignal<TUser>({ user: validLocalUser() });
+const [loginStatus, setLoginStatus] = createSignal(user() !== null ? "none" : "fail");
+const [isLoggedIn, setIsLoggedIn] = createSignal(false);
+const [randomRoom, setRandomRoom] = createSignal("");
+const [roomToJoin, setRoomToJoin] = createSignal("");
+
+// временное поле для компонента
+const [isHost, setIsHost] = createSignal(false);
+
+const tryLogin = (room_id: string) => {
+  if (validLocalUser()) {
+    socket.send(
+      JSON.stringify({ type: "login", user: validLocalUser().name, room: room_id, avatar: validLocalUser().avatarId })
+    );
+    setLoginStatus("loading");
+    return;
+
   }
+  setRoomToJoin(room_id);
+  loginFail();
+};
 
-  user = validLocalUser();
-  login_status = this.user ? "none" : "fail";
+const login = (user?: string, avatar?: number) => {
+  if (!user) return;
+  localStorage.setItem("user", JSON.stringify({ name: user, avatarId: avatar }));
 
-  // временное поле для компонента
-  isHost = true;
+  setRandomRoom(Math.floor(Math.random() * 100) + "");
 
+  socket.send(
+    JSON.stringify({
+      type: "login",
+      user: user,
+      room: roomToJoin() ? roomToJoin() : randomRoom(),
+      avatar: avatar,
+    })
+  );
+  setLoginStatus("loading");
+};
 
-  is_logged_in = false;
+const loginSuccess = () => {
+  setLoginStatus("success");
+};
 
-  random_room = 0;
+const loginFail = () => {
+  setLoginStatus("fail");
+};
 
-  room_to_join = "";
-
-  tryLogin(room_id: string) {
-    if (validLocalUser()) {
-      this.ws.send(JSON.stringify({ type: "login", user: validLocalUser().name, room: room_id, avatar: validLocalUser().avatarId }));
-      this.login_status = "loading";
-      return;
-    }
-
-    this.room_to_join = room_id;
-    this.loginFail();
-  }
-
-  login(user?: string, avatar?: number) {
-    if (!user) return;
-    localStorage.setItem("user", JSON.stringify({ name: user, avatarId: avatar }));
-    this.user = user;
-
-    this.random_room = Math.floor(Math.random() * 100);
-    this.ws.send(JSON.stringify({ type: "login", user: user, room: this.room_to_join ? this.room_to_join : `${this.random_room}`, avatar: avatar }));
-    this.login_status = "loading";
-  }
-
-  loginSuccess() {
-    this.login_status = "success";
-  }
-
-  loginFail() {
-    this.login_status = "fail";
-  }
-}
+export { isHost, setIsHost, tryLogin, login, loginSuccess, loginFail, loginStatus, randomRoom };

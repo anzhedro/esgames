@@ -1,58 +1,54 @@
-import { makeAutoObservable } from "mobx";
+// import { makeAutoObservable } from "mobx";
+import { createSignal } from "solid-js";
 import { TLanguage } from "../utils/types";
 
 const localizationMap = {
   en: {
-      createRoom: "CREATE ROOM!",
-      selectAvatar: "CHOOSE YOUR AVATAR AND NAME",
-      yorName: "YOUR NAME",
-      join: "JOIN",
+    createRoom: "CREATE ROOM!",
+    selectAvatar: "CHOOSE YOUR AVATAR AND NAME",
+    yorName: "YOUR NAME",
+    join: "JOIN",
 
-      playersHeader: "PLAYERS",
-      player: "PLAYER",
-      spectators: "SPECTATORS",
+    playersHeader: "PLAYERS",
+    player: "PLAYER",
+    spectators: "SPECTATORS",
 
-      gamesHeader: "GAMES",
+    gamesHeader: "GAMES",
 
-      inviteFooter: "INVITE",
-      backFooter: "BACK",
-      startFooter: "START",
+    inviteFooter: "INVITE",
+    backFooter: "BACK",
+    startFooter: "START",
 
-      chat: "CHAT",
-      messagePlaceholder: "Your message...",
+    chat: "CHAT",
+    messagePlaceholder: "Your message...",
   },
 
   ru: {
-      createRoom: "СОЗДАТЬ КОМНАТУ!",
-      selectAvatar: "ВЫБЕРИ АВАТАР И ИМЯ",
-      yorName: "ВАШЕ ИМЯ",
-      join: "ВОЙТИ",
+    createRoom: "СОЗДАТЬ КОМНАТУ!",
+    selectAvatar: "ВЫБЕРИ АВАТАР И ИМЯ",
+    yorName: "ВАШЕ ИМЯ",
+    join: "ВОЙТИ",
 
-      playersHeader: "ИГРОКОВ",
-      player: "ИГРОК",
-      spectators: "ЗРИТЕЛИ",
+    playersHeader: "ИГРОКОВ",
+    player: "ИГРОК",
+    spectators: "ЗРИТЕЛИ",
 
-      gamesHeader: "ИГРЫ",
+    gamesHeader: "ИГРЫ",
 
-      inviteFooter: "ПРИГЛАСИТЬ",
-      backFooter: "НАЗАД",
-      startFooter: "НАЧАТЬ",
+    inviteFooter: "ПРИГЛАСИТЬ",
+    backFooter: "НАЗАД",
+    startFooter: "НАЧАТЬ",
 
-      chat: "ЧАТ",
-      messagePlaceholder: "Ваше сообщение...",
+    chat: "ЧАТ",
+    messagePlaceholder: "Ваше сообщение...",
   },
 };
 
-export class Localization {
-  constructor() {
-    makeAutoObservable(this);
-  }
-  currentLanguage = "en";
-  languages = ["en", "ru"];
+const [currentLanguage, setCurrentLanguage] = createSignal("en");
+const languages = Object.keys(localizationMap);
 
-  localizationMap = localizationMap;
+const handleSetCurrentLanguage = (language: TLanguage = "en") => {
+  setCurrentLanguage(language);
+};
 
-  setCurrentLanguage(language: TLanguage = "en") {
-    this.currentLanguage = language;
-  }
-}
+export { currentLanguage, handleSetCurrentLanguage, languages, localizationMap };
