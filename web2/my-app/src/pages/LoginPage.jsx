@@ -1,17 +1,17 @@
 import { createEffect } from "solid-js";
 import { LoginCard } from "../components/LoginCard";
-import { useNavigate, useRouteData } from 'solid-app-router';
-import {currentLanguage, localizationMap} from '../store/localization'
-import { loginStatus } from "../store/auth";
+import { useNavigate } from "solid-app-router";
+import { currentLanguage, localizationMap } from "../store/localization";
+import { loginStatus, randomRoom } from "../store/auth";
 
 const currentPageLocalization = localizationMap[currentLanguage()];
-// const navigate = useNavigate()
 
 export const LoginPage = () => {
+  const navigate = useNavigate();
+
   createEffect(() => {
     if (loginStatus() === "success") {
-      navigate('/lobby', { replace: true })
-      // navigate(`/lobby/${store.auth.random_room}`);
+      navigate(`/lobby/${randomRoom()}`);
     }
   });
 

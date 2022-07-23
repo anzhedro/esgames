@@ -1,6 +1,7 @@
 import { IPlayer } from "../utils/types";
 import { createStore } from "solid-js/store";
 import { socket } from "./store";
+import { createSignal } from "solid-js";
 
 const AliasSettings = {
   settings: {
@@ -66,7 +67,7 @@ const SocketCurrentGame = {
   teamScore: [],
 };
 
-const [users, setUsers] = createStore<IPlayer[]>([]);
+const [users, setUsers] = createSignal<IPlayer[]>([]);
 
 const handleKick = (user: string) => {
   // structure

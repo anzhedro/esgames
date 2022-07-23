@@ -19,7 +19,7 @@ const addSmile = (smile: string) => {
 
 const sendMessage = (text: string) => {
   if (!text) return;
-  socket.send(JSON.stringify({ type: "message", text: text }));
+  socket.send(JSON.stringify({ type: "chat", text: text }));
 };
 
 const addMessage = (newmessages: IMessage[]) => {

@@ -1,15 +1,15 @@
 import { users } from "../store/room";
 
-interface PlayersProps {
-  children: JSXElement;
-}
+// interface PlayersProps {
+//   children: JSXElement;
+// }
 
-export const Players = (props: PlayersProps) => {
+export const Players = (props: any) => {
   return (
     <div class="players">
       <div class="header">
         <p>
-          ИГРОКОВ: <span>{users.length}</span>
+          ИГРОКОВ: <span>{users().length}</span>
         </p>
       </div>
       <div class="content">{props.children}</div>

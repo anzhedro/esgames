@@ -1,5 +1,4 @@
-import { nanoid } from "nanoid";
-import { createSignal, Show } from "solid-js";
+import { createSignal, For, Show, Accessor } from "solid-js";
 import { handleKick, users } from "../store/room";
 import { IPlayer } from "../utils/types";
 import { Avatar } from "./Avatar";
@@ -9,24 +8,25 @@ export const PlayersList = () => {
 
   return (
     <div>
-      {users.map((user: IPlayer, index: number) => (
-        <div
-          class={index & 2 ? "player bg-dark" : "player "}
-          onMouseOver={() => setShowKickButton(true)}
-          onMouseLeave={() => setShowKickButton(false)}
-          onClick={() => console.log(isShowKickButton)}
-        >
-          <Avatar avatar={user.avatar} isHost={user.is_host} />
-          <p>{user.name}</p>
+      <For each={users()} fallback={<div>Loading...</div>}>
+        {(user: IPlayer, index: Accessor<number>) => (
+          <div
+            classList={{ player: true, "bg-dark": +index % 2 !== 0 }}
+            onMouseOver={() => setShowKickButton(true)}
+            onMouseLeave={() => setShowKickButton(false)}
+            onClick={() => console.log(isShowKickButton)}
+          >
+            <Avatar avatar={user.avatar} isHost={user.is_host} />
+            <p>{user.name}</p>
 
-          {/* show */}
-          <Show when={isShowKickButton()} fallback={<div>Loading...</div>}>
-            <button class="kick_button" onClick={() => handleKick(user.name)}>
-              <img src="/img/kick.svg" />
-            </button>
-          </Show>
-        </div>
-      ))}
+            <Show when={isShowKickButton()} fallback={<div></div>}>
+              <button class="kick_button" onClick={() => handleKick(user.name)}>
+                <img src="/img/kick.svg" />
+              </button>
+            </Show>
+          </div>
+        )}
+      </For>
     </div>
   );
 };

@@ -9,34 +9,36 @@ export const Chat = () => {
   const [firstLoad, setFirstLoad] = createSignal(true);
   const [smilesView, setSmilesView] = createSignal(false);
   // const lastMessageRef = useRef<null | HTMLLIElement>(null);
-  let lastMessageRef:any = null;
- 
+  let lastMessageRef: any = null;
+
   const toggleSmilesView = (e: MouseEvent) => {
     e.preventDefault();
-    setSmilesView(!smilesView);
+    setSmilesView(!smilesView());
   };
 
-  const submmitHandler = (e: any) => {
-    e.preventDefault();
+  const submmitHandler = (event: Event): void => {
+    event.preventDefault();
     setSmilesView(false);
-    sendMessage(lastMessageRef.current.value);
+    // sendMessage(lastMessageRef.current.value);
+    sendMessage(message());
   };
 
   const scrollToEnd = () => {
     if (messages().length === 0) return;
-    if (lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView({
-        behavior: firstLoad() ? "auto" : "smooth",
-        block: "end",
-        inline: "nearest",
-      });
-      setFirstLoad(false);
-    }
+    // if (lastMessageRef && lastMessageRef.current) {
+    console.log(lastMessageRef);
+    // lastMessageRef.current.scrollIntoView({
+    //   behavior: firstLoad() ? "auto" : "smooth",
+    //   block: "end",
+    //   inline: "nearest",
+    // });
+    // setFirstLoad(false);
+    // }
   };
 
   createEffect(() => {
     scrollToEnd();
-  }, [messages()]);
+  });
 
   return (
     <div class="chat">
@@ -45,19 +47,26 @@ export const Chat = () => {
       </div>
 
       <ul class="chat__messages">
-        <For each={messages()} fallback={<div>Loading...</div>}>
-          {(message:IMessage) => <ChatMessage created={message.created} user={message.user} text={message.text} ref={lastMessageRef} />}
+        <For
+          each={messages()}
+          fallback={
+            <div class="spinner-container">
+              <div class="loading-spinner"></div>
+            </div>
+          }
+        >
+          {(message: IMessage) => (
+            <ChatMessage created={message.created} user={message.user} text={message.text} ref={lastMessageRef} />
+          )}
         </For>
       </ul>
 
       {smilesView() ? (
         <div class="smiles-board">
           <div class="smiles-board-list">
-            {emojisIcons.map((icon: string) => (
-              <button onClick={() => addSmile(icon)}>
-                <span>{icon}</span>
-              </button>
-            ))}
+            <For each={emojisIcons} fallback={<div>Loading...</div>}>
+              {(emoji: any) => <button onClick={() => addSmile(emoji)}>{emoji}</button>}
+            </For>
           </div>
         </div>
       ) : (
