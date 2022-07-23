@@ -33,7 +33,6 @@ class Store {
           this.auth.loginFail();
           return;
         case "chat":
-          // this.socket.send(JSON.stringify({ type: "kick_user", user: "333" }));
           this.chat.addMessage(response.messages);
           return;
         case "room":
