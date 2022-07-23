@@ -22,6 +22,7 @@ const tryLogin = (room_id: string) => {
     );
     setLoginStatus("loading");
     return;
+
   }
   setRoomToJoin(room_id);
   loginFail();

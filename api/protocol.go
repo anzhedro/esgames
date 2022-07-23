@@ -63,6 +63,15 @@ type NewMessage struct {
 	Text string `json:"text"`
 }
 
+type KickMessage struct {
+	User string `json:"user"`
+}
+
+type KickResp struct {
+	Type   string `json:"type"`
+	Reason string `json:"reason,omitempty"`
+}
+
 type ChatBatch struct {
 	Type     string          `json:"type"`
 	Messages []ChatBatchItem `json:"messages"`
@@ -76,11 +85,8 @@ type ChatBatchItem struct {
 
 type LoginResp struct {
 	Type   string `json:"type"`
+	Room   string `json:"room"`
 	Reason string `json:"reason,omitempty"`
-}
-
-func jsonError(s string) map[string]string {
-	return map[string]string{"type": "error", "message": s}
 }
 
 // Returns message type, raw message, and an error if reading failed.
