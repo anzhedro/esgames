@@ -85,11 +85,8 @@ type ChatBatchItem struct {
 
 type LoginResp struct {
 	Type   string `json:"type"`
+	Room   string `json:"room"`
 	Reason string `json:"reason,omitempty"`
-}
-
-func jsonError(s string) map[string]string {
-	return map[string]string{"type": "error", "message": s}
 }
 
 // Returns message type, raw message, and an error if reading failed.

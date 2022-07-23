@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 )
 
@@ -49,13 +50,13 @@ func (s *Server) handleImpl(c *websocket.Conn) error {
 	log.Printf("Login: %#v\n", login)
 
 	if login.Room == "" {
-		c.WriteJSON(jsonError("room name must not be empty"))
-		return fmt.Errorf("room name is empty")
+		login.Room = uuid.NewString()
 	}
 
 	s.mu.Lock()
 	room := s.Rooms[login.Room]
 	if room == nil {
+		log.Printf("Creating room %q with host %q\n", login.Room, login.User)
 		room = NewRoom(login.Room)
 		s.Rooms[login.Room] = room
 	}

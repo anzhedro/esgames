@@ -42,7 +42,7 @@ func (r *Room) Handle(c *websocket.Conn, l *LoginReq) error {
 		r.broadcastRoomChange()
 	}()
 
-	if err := c.WriteJSON(LoginResp{Type: "login_success"}); err != nil {
+	if err := c.WriteJSON(LoginResp{Type: "login_success", Room: r.Name}); err != nil {
 		return fmt.Errorf("failed to respond to login: %s", err)
 	}
 
