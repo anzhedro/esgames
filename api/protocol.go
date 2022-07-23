@@ -65,7 +65,6 @@ type NewMessage struct {
 
 type KickMessage struct {
 	User string `json:"user"`
-	Text string `json:"text"`
 }
 
 type KickResp struct {

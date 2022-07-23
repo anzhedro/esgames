@@ -57,7 +57,7 @@ func (r *Room) Handle(c *websocket.Conn, l *LoginReq) error {
 		if err != nil {
 			return fmt.Errorf("failed to read message: %s", err)
 		}
-		log.Printf("[%s/%s]: %s\n", r.Name, l.User, kind)
+		log.Printf("[%s/%s]: %s %s\n", r.Name, l.User, kind, raw)
 
 		switch kind {
 		case "chat":
@@ -65,47 +65,40 @@ func (r *Room) Handle(c *websocket.Conn, l *LoginReq) error {
 			if err != nil {
 				return fmt.Errorf("failed to unmarshal chat message: %s", err)
 			}
-			cm := chatMsg{
-				User:    l.User,
-				Text:    msg.Text,
-				Created: time.Now(),
-			}
-			r.mu.Lock()
-			r.Chat = append(r.Chat, cm)
-			if len(r.Chat) > 100 {
-				r.Chat = r.Chat[1:]
-			}
-			r.mu.Unlock()
-			r.broadcast(marshalChatBatch(cm.ToItem()))
+			r.sendMsg(l.User, msg.Text, true)
 		case "kick_user":
 			msg, err := unmarshalAs[KickMessage](raw)
 			if err != nil {
 				return fmt.Errorf("failed to unmarshal kick message: %s", err)
 			}
-			if msg.User == l.User {
-				r.broadcast(marshalChatBatch(ChatBatchItem{
-					User:    "SYSTEM",
-					Text:    fmt.Sprintf("%s was trieed to kick himself", msg.User),
-					Created: time.Now().UTC().Format("2006-01-02 15:04:05"),
-				}))
-			} else {
-				if _, ok := r.Users[msg.User]; ok {
-					if err := r.Users[msg.User].C.WriteJSON(KickResp{Type: "kick_user", Reason: fmt.Sprintf("You were kicked by %s", l.User)}); err != nil {
-						return fmt.Errorf("failed to respond to kick_user: %s", err)
-					}
-					r.mu.Lock()
-					delete(r.Users, msg.User)
-					r.mu.Unlock()
-					r.broadcast(marshalChatBatch(ChatBatchItem{
-						User:    "SYSTEM",
-						Text:    fmt.Sprintf("%s was kicked from the room", msg.User),
-						Created: time.Now().UTC().Format("2006-01-02 15:04:05"),
-					}))
-					r.broadcastRoomChange()
-				}
+			if err := r.handleKick(msg.User, l); err != nil {
+				return fmt.Errorf("failed to kick: %s", err)
 			}
 		}
 	}
+}
+
+func (r *Room) handleKick(user string, l *LoginReq) error {
+	if user == l.User {
+		r.sendMsg("SYSTEM", fmt.Sprintf("%q tried to kick themselves", user), true)
+		return nil
+	}
+	r.mu.Lock()
+	u, ok := r.Users[user]
+	if !ok {
+		r.mu.Unlock()
+		return nil
+	}
+	delete(r.Users, user)
+	r.mu.Unlock()
+	kR := KickResp{Type: "kick_user", Reason: fmt.Sprintf("You were kicked by %s", l.User)}
+	if err := u.C.WriteJSON(kR); err != nil {
+		return fmt.Errorf("failed to respond to kick_user: %s", err)
+	}
+	u.C.Close()
+	r.sendMsg("SYSTEM", fmt.Sprintf("%q was kicked from the room", user), true)
+	r.broadcastRoomChange()
+	return nil
 }
 
 func (r *Room) chatHistory() []byte {
@@ -155,7 +148,7 @@ func (r *Room) broadcast(blob []byte) {
 	}
 }
 
-// Returns true iff the user joined successfully.
+// Returns true if the user joined successfully.
 func (r *Room) join(l *LoginReq, c *websocket.Conn) bool {
 	r.mu.Lock()
 	user, alreadyExists := r.Users[l.User]
@@ -170,6 +163,24 @@ func (r *Room) join(l *LoginReq, c *websocket.Conn) bool {
 	}
 	r.mu.Unlock()
 	return !alreadyExists
+}
+
+// Sends message to all users in the room.
+func (r *Room) sendMsg(user string, msg string, saveToHistory bool) {
+	cm := chatMsg{
+		User:    user,
+		Text:    msg,
+		Created: time.Now(),
+	}
+	if saveToHistory {
+		r.mu.Lock()
+		r.Chat = append(r.Chat, cm)
+		if len(r.Chat) > 100 {
+			r.Chat = r.Chat[1:]
+		}
+		r.mu.Unlock()
+	}
+	r.broadcast(marshalChatBatch(cm.ToItem()))
 }
 
 func (r *Room) leave(username string) {
