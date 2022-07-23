@@ -65,14 +65,15 @@ func (r *Room) Handle(c *websocket.Conn, l *LoginReq) error {
 			if err != nil {
 				return fmt.Errorf("failed to unmarshal chat message: %s", err)
 			}
-			r.sendMsg(l.User, msg.Text, true)
+			r.sendChatMsg(l.User, msg.Text)
 		case "kick_user":
 			msg, err := unmarshalAs[KickMessage](raw)
 			if err != nil {
 				return fmt.Errorf("failed to unmarshal kick message: %s", err)
 			}
 			if err := r.handleKick(msg.User, l); err != nil {
-				return fmt.Errorf("failed to kick: %s", err)
+				log.Printf("failed to kick: %s", err)
+				continue
 			}
 		}
 	}
@@ -80,7 +81,7 @@ func (r *Room) Handle(c *websocket.Conn, l *LoginReq) error {
 
 func (r *Room) handleKick(user string, l *LoginReq) error {
 	if user == l.User {
-		r.sendMsg("SYSTEM", fmt.Sprintf("%q tried to kick themselves", user), true)
+		r.sendChatMsg("SYSTEM", fmt.Sprintf("%q tried to kick themselves", user))
 		return nil
 	}
 	r.mu.Lock()
@@ -91,12 +92,12 @@ func (r *Room) handleKick(user string, l *LoginReq) error {
 	}
 	delete(r.Users, user)
 	r.mu.Unlock()
-	kR := KickResp{Type: "kick_user", Reason: fmt.Sprintf("You were kicked by %s", l.User)}
-	if err := u.C.WriteJSON(kR); err != nil {
+	resp := KickResp{Type: "kick_user", Reason: fmt.Sprintf("You were kicked by %s", l.User)}
+	if err := u.C.WriteJSON(resp); err != nil {
 		return fmt.Errorf("failed to respond to kick_user: %s", err)
 	}
 	u.C.Close()
-	r.sendMsg("SYSTEM", fmt.Sprintf("%q was kicked from the room", user), true)
+	r.sendChatMsg("SYSTEM", fmt.Sprintf("%q was kicked out of the room", user))
 	r.broadcastRoomChange()
 	return nil
 }
@@ -148,7 +149,7 @@ func (r *Room) broadcast(blob []byte) {
 	}
 }
 
-// Returns true if the user joined successfully.
+// Returns true iff the user joined successfully.
 func (r *Room) join(l *LoginReq, c *websocket.Conn) bool {
 	r.mu.Lock()
 	user, alreadyExists := r.Users[l.User]
@@ -166,20 +167,18 @@ func (r *Room) join(l *LoginReq, c *websocket.Conn) bool {
 }
 
 // Sends message to all users in the room.
-func (r *Room) sendMsg(user string, msg string, saveToHistory bool) {
+func (r *Room) sendChatMsg(user string, msg string) {
 	cm := chatMsg{
 		User:    user,
 		Text:    msg,
 		Created: time.Now(),
 	}
-	if saveToHistory {
-		r.mu.Lock()
-		r.Chat = append(r.Chat, cm)
-		if len(r.Chat) > 100 {
-			r.Chat = r.Chat[1:]
-		}
-		r.mu.Unlock()
+	r.mu.Lock()
+	r.Chat = append(r.Chat, cm)
+	if len(r.Chat) > 100 {
+		r.Chat = r.Chat[1:]
 	}
+	r.mu.Unlock()
 	r.broadcast(marshalChatBatch(cm.ToItem()))
 }
 
