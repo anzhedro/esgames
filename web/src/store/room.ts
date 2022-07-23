@@ -1,5 +1,7 @@
-import { makeAutoObservable } from "mobx";
 import { IPlayer } from "../utils/types";
+import { createStore } from "solid-js/store";
+import { socket } from "./store";
+import { createSignal } from "solid-js";
 
 const AliasSettings = {
   settings: {
@@ -65,22 +67,12 @@ const SocketCurrentGame = {
   teamScore: [],
 };
 
-export class Room {
-  ws: WebSocket;
-  constructor(store: any) {
-    this.ws = store.socket;
-    makeAutoObservable(this);
-  }
+const [users, setUsers] = createSignal<IPlayer[]>([]);
 
-  users: IPlayer[] = [];
+const handleKick = (user: string) => {
+  // structure
+  // {type: "kick_player", user: string }
+  socket.send(JSON.stringify({ type: "kick_player", user: "userToKickName" }));
+};
 
-  setUsers(users: IPlayer[]) {
-    this.users = users;
-  }
-
-  handleKick(user:string){
-    // structure
-    // {type: "kick_player", user: string }
-    this.ws.send(JSON.stringify({ type: "kick_player", user: 'userToKickName' }));
-  }
-}
+export { users, handleKick, setUsers };

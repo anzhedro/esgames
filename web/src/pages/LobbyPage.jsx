@@ -1,46 +1,37 @@
-import { observer } from "mobx-react-lite";
-import React, { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import { Chat } from "../components/Chat";
 import { GamesTable } from "../components/GamesTable";
 import { Players } from "../components/Players";
 import { PlayersList } from "../components/PlayersList";
 import { PlayersTeams } from "../components/PlayersTeams";
-import { store } from "../store/store";
+import { loginStatus, tryLogin } from "../store/auth";
+import { useNavigate, useParams } from "solid-app-router";
+import { createEffect, onMount } from "solid-js";
+import { socket, socketReady } from "../store/store";
 
-export const LobbyPage = observer(() => {
+export const LobbyPage = () => {
   const navigate = useNavigate();
   const params = useParams();
 
-  useEffect(() => {
-    if (store.auth.ws.readyState === 1 && store.auth.login_status === "none") {
-      store.auth.tryLogin(params.id);
-    }
-  }, []);
+  createEffect(() => {
 
-  useEffect(() => {
-    if (store.auth.ws.readyState === 1 && store.auth.login_status === "none") {
-      store.auth.tryLogin(params.id);
+    if (loginStatus() === "none" && socketReady() === 1) {
+        tryLogin(params.id);
     }
-  }, [store.auth.ws.readyState]);
 
-  useEffect(() => {
-    if (store.auth.login_status === "fail") {
+    if (loginStatus() === "fail") {
       navigate("/");
     }
-  }, [store.auth.login_status]);
+  });
 
   return (
     <div className="lobby_page">
-      {store.auth.login_status === "success" ? (
+      <Show when={loginStatus() === "success"} fallback={<div>Loading...</div>}>
         <div className="wrapper">
           <Players>{true ? <PlayersList /> : <PlayersTeams />}</Players>
           <GamesTable />
           <Chat />
         </div>
-      ) : (
-        <div>"loading..."</div>
-      )}
+      </Show>
     </div>
   );
-});
+};

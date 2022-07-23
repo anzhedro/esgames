@@ -1,22 +1,23 @@
-import React, { useEffect } from "react";
-import { observer } from "mobx-react-lite";
-import { useNavigate } from "react-router-dom";
+import { createEffect } from "solid-js";
 import { LoginCard } from "../components/LoginCard";
-import { store } from "../store/store";
+import { useNavigate } from "solid-app-router";
+import { currentLanguage, localizationMap } from "../store/localization";
+import { loginStatus, randomRoom } from "../store/auth";
 
-export const LoginPage = observer(() => {
+const currentPageLocalization = localizationMap[currentLanguage()];
+
+export const LoginPage = () => {
   const navigate = useNavigate();
-  const currentPageLocalization = store.lang.localizationMap[store.lang.currentLanguage];
 
-  useEffect(() => {
-    if (store.auth.login_status === "success") {
-      navigate(`/lobby/${store.auth.random_room}`);
+  createEffect(() => {
+    if (loginStatus() === "success") {
+      navigate(`/lobby/${randomRoom()}`);
     }
-  }, [store.auth.login_status]);
+  });
 
   return (
     <div className="login__page">
       <LoginCard lang={currentPageLocalization} />
     </div>
   );
-});
+};

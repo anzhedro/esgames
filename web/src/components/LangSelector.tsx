@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { store } from "../store/store";
+import { createSignal, For, Show } from "solid-js";
+import { currentLanguage, handleSetCurrentLanguage, languages } from "../store/localization";
 
 export const LangSelector = () => {
-  const [showLangSelector, setShowLangSelector] = useState(false);
+  const [showLangSelector, setShowLangSelector] = createSignal(false);
 
   return (
-    <div className="lang__selector">
+    <div class="lang__selector">
       <button
         onClick={() => {
           setShowLangSelector(!showLangSelector);
@@ -13,22 +13,23 @@ export const LangSelector = () => {
       >
         <img src={"/img/globe.svg"} />
 
-        {store.lang.currentLanguage.toUpperCase()}
+        {currentLanguage().toUpperCase()}
       </button>
 
-      {showLangSelector
-        ? store.lang.languages.map((lang, idx) => (
+      <Show when={showLangSelector()} fallback={<div>Loading...</div>}>
+        <For each={languages} fallback={<div>Loading...</div>}>
+          {(lang: any) => (
             <button
-              key={idx}
               onClick={() => {
-                store.lang.setCurrentLanguage(lang);
+                handleSetCurrentLanguage(lang);
                 setShowLangSelector(false);
               }}
             >
               {lang.toUpperCase()}
             </button>
-          ))
-        : false}
+          )}
+        </For>
+      </Show>
     </div>
   );
 };

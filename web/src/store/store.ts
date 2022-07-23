@@ -1,55 +1,44 @@
-import { Auth } from "./auth";
-import { Chat } from "./chat";
-import { Room } from "./room";
-import { Localization } from "./localization";
+import { loginFail, loginSuccess } from "./auth";
+import { addMessage } from "./chat";
+import { setUsers, users } from "./room";
+import { createSignal } from "solid-js";
 
-class Store {
-  socket: WebSocket;
-  auth: Auth;
-  chat: Chat;
-  lang: Localization;
-  room: Room;
+const socket: WebSocket = new WebSocket("ws://localhost:8000/ws");
+const [socketReady, setSocketReady] = createSignal(0);
 
-  constructor() {
-    this.socket = new WebSocket("ws://localhost:8000/ws");
-    this.lang = new Localization();
+socket.onopen = (event) => {
+  console.log("ws OPEN", event);
+  setSocketReady(1);
+};
 
-    this.auth = new Auth(this);
-    this.chat = new Chat(this);
-    this.room = new Room(this);
-    
-    this.socket.onopen = (event) => {
-      console.log("ws OPEN", event);
-    };
-
-    this.socket.onmessage = (event) => {
-      const response = JSON.parse(event.data);
-      console.log("ws GOT: ", response);
-      switch (response.type) {
-        case "login_success":
-          this.auth.loginSuccess();
-          return;
-        case "login_fail":
-          this.auth.loginFail();
-          return;
-        case "chat":
-          this.chat.addMessage(response.messages);
-          return;
-        case "room":
-          this.room.setUsers(response.users);
-          return;
-      }
-    };
-
-    this.socket.onerror = (event) => {
-      console.log("ws ERR", event);
-    };
-
-    this.socket.onclose = (event) => {
-      console.log("ws CLOSE", event);
+socket.onmessage = (event) => {
+  const response = JSON.parse(event.data);
+  console.log("ws GOT: ", response);
+  switch (response.type) {
+    case "login_success":
+      loginSuccess();
+      return;
+    case "login_fail":
+      loginFail();
+      return;
+    case "chat":
+      addMessage(response.messages);
+      return;
+    case "room":
+      setUsers(response.users);
+      return;
+    case "user_kicked": {
+      setUsers(users().filter((user: any) => user.name !== response.user));
     }
-
   }
-}
+};
 
-export const store = new Store();
+socket.onerror = (event) => {
+  console.log("ws ERR", event);
+};
+
+socket.onclose = (event) => {
+  console.log("ws CLOSE", event);
+};
+
+export { socket, socketReady };

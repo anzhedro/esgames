@@ -1,34 +1,32 @@
-import { observer } from "mobx-react-lite";
-import { arrayExtensions } from "mobx/dist/internal";
-import { nanoid } from "nanoid";
-import React, { useState } from "react";
-import { store } from "../store/store";
+import { createSignal, For, Show, Accessor } from "solid-js";
+import { handleKick, users } from "../store/room";
 import { IPlayer } from "../utils/types";
 import { Avatar } from "./Avatar";
 
-export const PlayersList = observer(() => {
-  const [isShowKickButton, setShowKickButton] = useState(false);
+export const PlayersList = () => {
+  const [isShowKickButton, setShowKickButton] = createSignal(false);
 
   return (
     <div>
-      {store.room.users.map((user: IPlayer, index: number) => (
-        <div
-          key={nanoid()}
-          className={index & 2 ? "player bg-dark" : "player "}
-          onMouseOver={() => setShowKickButton(true)}
-          onMouseLeave={() => setShowKickButton(false)}
-          onClick={() => console.log(isShowKickButton)}
-        >
-          <Avatar avatar={user.avatar} isHost={user.is_host} />
-          <p>{user.name}</p>
+      <For each={users()} fallback={<div>Loading...</div>}>
+        {(user: IPlayer, index: Accessor<number>) => (
+          <div
+            classList={{ player: true, "bg-dark": +index % 2 !== 0 }}
+            onMouseOver={() => setShowKickButton(true)}
+            onMouseLeave={() => setShowKickButton(false)}
+            onClick={() => console.log(isShowKickButton)}
+          >
+            <Avatar avatar={user.avatar} isHost={user.is_host} />
+            <p>{user.name}</p>
 
-          {isShowKickButton && store.auth.isHost && (
-            <button className="kick_button" onClick={() => store.room.handleKick(user.name)}>
-              <img src="/img/kick.svg" />
-            </button>
-          )}
-        </div>
-      ))}
+            <Show when={isShowKickButton()} fallback={<div></div>}>
+              <button class="kick_button" onClick={() => handleKick(user.name)}>
+                <img src="/img/kick.svg" />
+              </button>
+            </Show>
+          </div>
+        )}
+      </For>
     </div>
   );
-});
+};

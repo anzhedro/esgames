@@ -1,8 +1,8 @@
 import { nanoid } from "nanoid";
-import React, { useState } from "react";
 import { Avatar } from "./Avatar";
 import { IPlayer } from "../utils/types";
-import { observer } from "mobx-react-lite";
+import { createStore } from "solid-js/store";
+import { For } from "solid-js";
 
 const teamsMock = [
   [
@@ -27,10 +27,10 @@ const teamsMock = [
   [],
 ];
 
-export const PlayersTeams = observer(() => {
-  const [teams, setTeams] = useState<IPlayer[][]>(teamsMock);
+export const PlayersTeams = () => {
+  const [teams, setTeams] = createStore<IPlayer[][]>(teamsMock);
 
-  const updLastTeam = (newTeams) => {
+  const updLastTeam = (newTeams: IPlayer[][]) => {
     const teams = newTeams.filter((team: IPlayer[]) => team.length > 0);
     setTeams([...teams, []]);
   };
@@ -49,35 +49,40 @@ export const PlayersTeams = observer(() => {
     setTeams(newTeams);
     updLastTeam(newTeams);
   };
+  
   return (
     <div>
-      {teams
-        .filter((el: IPlayer[], idx: number) => idx > 0)
-        .map((team, idx) => (
-          <div className="team" key={nanoid()}>
-            <button className="team_btn" onClick={() => handleSelectTeam(idx)}>
-              team {idx + 1}
+      {/* for */}
+      <For each={teams.filter((el: IPlayer[], idx: number) => idx > 0)} fallback={<div>Loading...</div>}>
+        {(team: IPlayer[], idx) => (
+          <div class="team">
+            <button class="team_btn" onClick={() => handleSelectTeam(+idx)}>
+              team {+idx + 1}
             </button>
             {team.map((player: IPlayer, index: number) => (
-              <div key={nanoid()} className={index & 2 ? "player bg-dark" : "player "}>
+              <div class={index & 2 ? "player bg-dark" : "player "}>
                 <Avatar avatar={player.avatar} isHost={player.is_host} />
                 <p>{player.name}</p>
               </div>
             ))}
           </div>
-        ))}
+        )}
+      </For>
 
-      <div className="team">
-        <button className="team_btn" onClick={() => handleSelectTeam(0)}>
+      <div class="team">
+        <button class="team_btn" onClick={() => handleSelectTeam(0)}>
           зрители
         </button>
-        {teams[0].map((player, index) => (
-          <div key={nanoid()} className={index & 2 ? "player bg-dark" : "player "}>
-            <Avatar avatar={player.avatar} isHost={player.is_host} />
-            <p>{player.name}</p>
-          </div>
-        ))}
+
+        <For each={teams[0]} fallback={<div>Loading...</div>}>
+          {(player: IPlayer, idx) => (
+            <div class={+idx & 2 ? "player bg-dark" : "player "}>
+              <Avatar avatar={player.avatar} isHost={player.is_host} />
+              <p>{player.name}</p>
+            </div>
+          )}
+        </For>
       </div>
     </div>
   );
-});
+};
