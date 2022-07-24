@@ -70,9 +70,7 @@ const SocketCurrentGame = {
 const [users, setUsers] = createSignal<IPlayer[]>([]);
 
 const handleKick = (user: string) => {
-  // structure
-  // {type: "kick_player", user: string }
-  socket.send(JSON.stringify({ type: "kick_player", user: "userToKickName" }));
-};
+  socket.send(JSON.stringify({ type: "kick_user", user: user }));
+}
 
 export { users, handleKick, setUsers };

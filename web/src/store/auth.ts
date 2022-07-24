@@ -1,56 +1,54 @@
 import { createSignal } from "solid-js";
-import { IUser } from "../utils/types";
 import { socket } from "./store";
+import { loadUserInfo, saveUserInfo } from "./localstorage";
+import { randomInteger } from "../utils/helpers";
 
-const validLocalUser = () =>
-  (localStorage.getItem("user") || "").length ? JSON.parse(localStorage.getItem("user") || "") : null;
+const savedUserInfo = loadUserInfo() || { name: "", avatar: randomInteger(1, 25), lastRoom: "" };
+export const [avatar, setAvatar] = createSignal(savedUserInfo.avatar);
+export const [name, setName] = createSignal(savedUserInfo.name);
+export const [room, setRoom] = createSignal(savedUserInfo.lastRoom);
 
-type TUser = IUser | any; // should be IUser | null;
-const [user, setUser] = createSignal<TUser>({ user: validLocalUser() });
-const [loginStatus, setLoginStatus] = createSignal(user() !== null ? "none" : "fail");
-const [isLoggedIn, setIsLoggedIn] = createSignal(false);
-const [randomRoom, setRandomRoom] = createSignal("");
-const [roomToJoin, setRoomToJoin] = createSignal("");
+export const refreshAvatar = () => { setAvatar(randomInteger(1, 25)); };
 
-// временное поле для компонента
-const [isHost, setIsHost] = createSignal(false);
+export const [loginStatus, setLoginStatus] = createSignal("fail");
+export const [isHost, setIsHost] = createSignal(false);
 
-const tryLogin = (room_id: string) => {
-  if (validLocalUser()) {
-    socket.send(
-      JSON.stringify({ type: "login", user: validLocalUser().name, room: room_id, avatar: validLocalUser().avatarId })
-    );
-    setLoginStatus("loading");
+export function tryLogin(room_id: string) {
+  const saved = loadUserInfo();
+  if (!saved) {
+    loginFail();
     return;
-
   }
-  setRoomToJoin(room_id);
-  loginFail();
-};
-
-const login = (user?: string, avatar?: number) => {
-  if (!user) return;
-  localStorage.setItem("user", JSON.stringify({ name: user, avatarId: avatar }));
-
-  setRandomRoom(Math.floor(Math.random() * 100) + "");
 
   socket.send(
     JSON.stringify({
       type: "login",
-      user: user,
-      room: roomToJoin() ? roomToJoin() : randomRoom(),
-      avatar: avatar,
+      user: saved.name,
+      room: room_id,
+      avatar: saved.avatar,
+    })
+  );
+  setLoginStatus("loading");
+  return;
+};
+
+export function login() {
+  saveUserInfo({ name: name(), avatar: avatar(), lastRoom: room() });
+  socket.send(
+    JSON.stringify({
+      type: "login",
+      user: name(),
+      room: room(),
+      avatar: avatar(),
     })
   );
   setLoginStatus("loading");
 };
 
-const loginSuccess = () => {
+export function loginSuccess() {
   setLoginStatus("success");
 };
 
-const loginFail = () => {
+export function loginFail() {
   setLoginStatus("fail");
 };
-
-export { isHost, setIsHost, tryLogin, login, loginSuccess, loginFail, loginStatus, randomRoom };

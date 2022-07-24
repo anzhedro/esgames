@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"sort"
 	"sync"
 	"time"
 
@@ -82,16 +83,25 @@ func (r *Room) Handle(c *websocket.Conn, l *LoginReq) error {
 func (r *Room) handleKick(user string, l *LoginReq) error {
 	if user == l.User {
 		r.sendChatMsg("SYSTEM", fmt.Sprintf("%q tried to kick themselves", user))
-		return nil
+		return errors.New("user tried to kick themselves")
 	}
+
+	var isHost bool
 	r.mu.Lock()
-	u, ok := r.Users[user]
-	if !ok {
-		r.mu.Unlock()
+	if u := r.Users[l.User]; u != nil {
+		isHost = u.IsHost
+	}
+	r.mu.Unlock()
+
+	if !isHost {
+		return errors.New("user is not a host")
+	}
+
+	u := r.leave(user)
+	if u == nil { // there was no such user
 		return nil
 	}
-	delete(r.Users, user)
-	r.mu.Unlock()
+
 	resp := KickResp{Type: "kick_user", Reason: fmt.Sprintf("You were kicked by %s", l.User)}
 	if err := u.C.WriteJSON(resp); err != nil {
 		return fmt.Errorf("failed to respond to kick_user: %s", err)
@@ -126,6 +136,19 @@ func (r *Room) broadcastRoomChange() {
 			Avatar: u.Avatar,
 		})
 	}
+
+	sort.Slice(msg.Users, func(i, j int) bool {
+		a, b := &msg.Users[i], &msg.Users[j]
+		// Host always comes first.
+		if a.IsHost {
+			return true
+		}
+		if b.IsHost {
+			return false
+		}
+		// Otherwise, sort by name.
+		return msg.Users[i].Name < msg.Users[j].Name
+	})
 
 	for name, u := range r.Users {
 		if err := u.C.WriteJSON(msg); err != nil {
@@ -182,10 +205,23 @@ func (r *Room) sendChatMsg(user string, msg string) {
 	r.broadcast(marshalChatBatch(cm.ToItem()))
 }
 
-func (r *Room) leave(username string) {
+// Returns true if the user was present.
+func (r *Room) leave(username string) *User {
 	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	u := r.Users[username]
 	delete(r.Users, username)
-	r.mu.Unlock()
+
+	// If the host left, make a random user a host.
+	if u != nil && u.IsHost {
+		for _, u := range r.Users {
+			u.IsHost = true
+			break
+		}
+	}
+
+	return u
 }
 
 type User struct {

@@ -1,9 +1,10 @@
 import { createSignal } from "solid-js";
 
-type Translation = {
+export type Translation = {
   createRoom: string,
-  selectAvatar: string,
+  loginText: string,
   yourName: string,
+  roomName: string,
   join: string,
   playersHeader: string,
   player: string,
@@ -19,9 +20,10 @@ type Translation = {
 
 const localizationMap: Record<string, Translation> = {
   "en": {
-    createRoom: "CREATE ROOM!",
-    selectAvatar: "CHOOSE YOUR AVATAR AND NAME",
+    createRoom: "CREATE ROOM",
+    loginText: "Enter your name and a room to join",
     yourName: "YOUR NAME",
+    roomName: "ROOM NAME",
     join: "JOIN",
 
     playersHeader: "PLAYERS",
@@ -39,9 +41,10 @@ const localizationMap: Record<string, Translation> = {
   },
 
   "ru": {
-    createRoom: "СОЗДАТЬ КОМНАТУ!",
-    selectAvatar: "ВЫБЕРИ АВАТАР И ИМЯ",
+    createRoom: "СОЗДАТЬ КОМНАТУ",
+    loginText: "Введите ваше имя и название комнаты для входа",
     yourName: "ВАШЕ ИМЯ",
+    roomName: "ИМЯ КОМНАТЫ",
     join: "ВОЙТИ",
 
     playersHeader: "ИГРОКОВ",

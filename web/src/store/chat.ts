@@ -1,4 +1,4 @@
-import { createSelector, createSignal } from "solid-js";
+import { createSignal } from "solid-js";
 import { IMessage } from "../utils/types";
 import { socket } from "./store";
 

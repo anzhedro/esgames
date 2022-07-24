@@ -11,8 +11,8 @@ const App: Component = () => {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="components" element={<ComponentsPage />} />
-        <Route path="lobby" element={<Navigate href="/" />} />
-        <Route path="lobby/:id" element={<LobbyPage />} />
+        <Route path="room" element={<Navigate href="/" />} />
+        <Route path="room/:id" element={<LobbyPage />} />
       </Routes>
     </Router>
   );

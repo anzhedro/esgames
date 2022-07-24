@@ -1,6 +1,4 @@
 import { createSignal, JSX, JSXElement } from "solid-js";
-import { LoginCard } from "../components/LoginCard";
-import { Players } from "../components/Players";
 import { isHost, setIsHost } from "../store/auth";
 import { WordItemProps } from "../utils/types";
 

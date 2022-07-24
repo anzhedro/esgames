@@ -27,9 +27,10 @@ socket.onmessage = (event) => {
     case "room":
       setUsers(response.users);
       return;
-    case "user_kicked": {
-      setUsers(users().filter((user: any) => user.name !== response.user));
-    }
+    case "kick_user":
+      alert(response.reason);
+      loginFail();
+      return;
   }
 };
 

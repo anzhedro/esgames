@@ -5,8 +5,8 @@ import { PlayersList } from "../components/PlayersList";
 import { PlayersTeams } from "../components/PlayersTeams";
 import { loginStatus, tryLogin } from "../store/auth";
 import { useNavigate, useParams } from "solid-app-router";
-import { createEffect, onMount } from "solid-js";
-import { socket, socketReady } from "../store/store";
+import { createEffect } from "solid-js";
+import { socketReady } from "../store/store";
 
 export const LobbyPage = () => {
   const navigate = useNavigate();
