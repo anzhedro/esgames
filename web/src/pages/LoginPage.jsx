@@ -1,23 +1,29 @@
-import { createEffect } from "solid-js";
 import { LoginCard } from "../components/LoginCard";
-import { useNavigate } from "solid-app-router";
 import { currentLanguage, localizationMap } from "../store/localization";
-import { loginStatus, room } from "../store/auth";
-
-const currentPageLocalization = localizationMap[currentLanguage()];
+import { useNavigate } from "solid-app-router";
+import { appState, room } from "../store/state";
+import { createEffect } from "solid-js";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
 
   createEffect(() => {
-    if (loginStatus() === "success") {
+    if (appState() == "connected") {
       navigate(`/room/${room()}`);
     }
   });
 
   return (
     <div className="login__page">
-      <LoginCard lang={currentPageLocalization} />
+      <Show
+        when={appState() === "start"}
+        fallback={
+          <div class="spinner-container">
+            <div class="loading-spinner"></div>
+          </div>
+        }>
+        <LoginCard lang={localizationMap[currentLanguage()]} roomName={room()} />
+      </Show>
     </div>
   );
 };
