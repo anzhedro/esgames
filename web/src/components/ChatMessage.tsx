@@ -1,5 +1,9 @@
-import { onMount } from "solid-js";
-import { ChatMessageProps, IMessage } from "../utils/types";
+export type ChatMessageProps = {
+  created: string;
+  user: string;
+  text: string;
+  ref: any;
+};
 
 export const ChatMessage = (props: ChatMessageProps) => {
   return (

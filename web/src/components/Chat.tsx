@@ -9,7 +9,6 @@ import { Translation } from "../store/localization";
 export const Chat = (props: { lang: Translation }) => {
   const [firstLoad, setFirstLoad] = createSignal(true);
   const [smilesView, setSmilesView] = createSignal(false);
-  // const lastMessageRef = useRef<null | HTMLLIElement>(null);
   let lastMessageRef: any = null;
 
   const toggleSmilesView = (e: MouseEvent) => {
@@ -20,21 +19,19 @@ export const Chat = (props: { lang: Translation }) => {
   const submmitHandler = (event: Event): void => {
     event.preventDefault();
     setSmilesView(false);
-    // sendMessage(lastMessageRef.current.value);
     sendMessage();
   };
 
   const scrollToEnd = () => {
     if (messages().length === 0) return;
-    // if (lastMessageRef && lastMessageRef.current) {
-    console.log(lastMessageRef);
-    // lastMessageRef.current.scrollIntoView({
-    //   behavior: firstLoad() ? "auto" : "smooth",
-    //   block: "end",
-    //   inline: "nearest",
-    // });
-    // setFirstLoad(false);
-    // }
+    if (lastMessageRef) {
+      lastMessageRef.scrollIntoView({
+        behavior: firstLoad() ? "auto" : "smooth",
+        block: "start",
+        inline: "nearest",
+      });
+      setFirstLoad(false);
+    }
   };
 
   createEffect(() => {
@@ -48,11 +45,10 @@ export const Chat = (props: { lang: Translation }) => {
       </div>
 
       <ul class="chat__messages">
-        <For each={messages()} fallback={
-          <span class="no_messages">{props.lang.nomessages}</span>
-        }>{(message: IMessage) => (
-              <ChatMessage created={message.created} user={message.user} text={message.text} ref={lastMessageRef} />
-            )}
+        <For each={messages()} fallback={<span class="no_messages">{props.lang.nomessages}</span>}>
+          {(message: IMessage) => (
+            <ChatMessage created={message.created} user={message.user} text={message.text} ref={lastMessageRef} />
+          )}
         </For>
       </ul>
 

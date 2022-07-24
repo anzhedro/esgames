@@ -1,7 +1,7 @@
 export interface IPlayer {
-  name: string,
-  avatar: number,
-  is_host: boolean
+  name: string;
+  avatar: number;
+  is_host: boolean;
 }
 
 export interface IMessage {
@@ -11,7 +11,7 @@ export interface IMessage {
 }
 
 export interface RefType<T> {
-  readonly current: T | null
+  readonly current: T | null;
 }
 
 export type WordItemProps = {
@@ -19,13 +19,6 @@ export type WordItemProps = {
   color?: string;
   text?: string;
   countInit?: number;
-};
-
-export type ChatMessageProps = {
-  created: string;
-  user: string;
-  text: string;
-  ref: any;
 };
 
 export type DifficultyProps = {
@@ -41,7 +34,7 @@ export type CommandsCountProps = {
 
 export type GameSettingsProps = {
   setMode: (mode: string) => void;
-}
+};
 
 export interface IGame {
   title: string;
@@ -50,6 +43,6 @@ export interface IGame {
 
 export type GameListProps = {
   games: IGame[];
-  id: string,
+  id: string;
   setMode: (str: string) => void;
-}
+};

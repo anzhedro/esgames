@@ -5,7 +5,7 @@ import { PlayersList } from "../components/PlayersList";
 import { PlayersTeams } from "../components/PlayersTeams";
 import { appState, setRoom } from "../store/state";
 import { useNavigate, useParams } from "solid-app-router";
-import { createEffect } from "solid-js";
+import { createEffect, Show } from "solid-js";
 import { currentLanguage, localizationMap } from "../store/localization";
 
 export const LobbyPage = () => {
@@ -20,9 +20,9 @@ export const LobbyPage = () => {
   });
 
   return (
-    <div className="lobby_page">
+    <div class="lobby_page">
       <Show when={appState() === "connected"} fallback={<div>Loading...</div>}>
-        <div className="wrapper">
+        <div class="wrapper">
           <Players>{true ? <PlayersList /> : <PlayersTeams />}</Players>
           <GamesTable />
           <Chat lang={localizationMap[currentLanguage()]} />

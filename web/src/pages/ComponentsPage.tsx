@@ -1,40 +1,62 @@
-import { createSignal, JSX, JSXElement } from "solid-js";
-import { WordItemProps } from "../utils/types";
-
-const WordsList = (props: { children: JSXElement }) => {
-  return <div>{props.children}</div>;
+import { createEffect, createSignal, JSX, JSXElement, Show } from "solid-js";
+import { LoginCard } from "../components/LoginCard";
+import { Players } from "../components/Players";
+import { skipWord } from "../store/hatDemo";
+// import { isHost, setIsHost } from "../store/auth";
+export const WordsList = (props: { children: JSXElement }) => {
+  return <div class="wordsList">{props.children}</div>;
 };
 
-const WordItem = ({ canEdit, color = "", text, countInit = 0 }: WordItemProps) => {
-  const [count, setCount] = createSignal(countInit);
+export type WordItemProps = {
+  canEdit?: boolean;
+  color?: string | "";
+  text?: string | "";
+  countInit?: number | 0;
+  isShowSkip?: boolean | false;
+  ref: any;
+};
+
+const [isHost, setIsHost] = createSignal(false);
+
+export const WordItem = (props: WordItemProps) => {
+  const [count, setCount] = createSignal(props.countInit || 0);
+
   const colorFromCount = () => {
-    if (!canEdit && color) return color;
+    // if (!canEdit && color) return color;
     // return color;
-    if (count() === 0) return "grey";
+    if (count() === 0) return "white";
     if (count() > 0) return "green";
     if (count() < 0) return "red";
   };
 
   return (
-    <div class={"wordItem " + colorFromCount()}>
-      <p> {text}</p>
-      {canEdit && (
-        <div>
-          <button onClick={() => setCount(count() + 1)}>+</button>
-          <p>{count()}</p>
-          <button onClick={() => setCount(count() - 1)}>-</button>
-        </div>
-      )}
+    <div class="wordItemWrapper" ref={props.ref}>
+      <div class={"wordItem " + colorFromCount()}>
+        <p> {props.text}</p>
+        <Show when={props.isShowSkip}>
+          {/* button skip */}
+          <button class="skipWordBtn" onclick={skipWord}>
+            skip
+          </button>
+        </Show>
+
+        <Show when={props.canEdit}>
+          <div>
+            <button onClick={() => setCount(count() + 1)}>+</button>
+            <p>{count()}</p>
+            <button onClick={() => setCount(count() - 1)}>-</button>
+          </div>
+        </Show>
+      </div>
     </div>
   );
 };
 
-const GreenButton = ({ text }: { text: string }) => {
+export const GreenButton = ({ text }: { text: string }) => {
   return <button class="green_btn">{text}</button>;
 };
 
 export const ComponentsPage = () => {
-  const [isHost, setIsHost] = createSignal(false);
   // const [stage, setStage] = createSignal(0);
   const [isStoryteller, setIsStoryteller] = createSignal(false);
 

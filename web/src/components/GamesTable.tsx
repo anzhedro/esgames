@@ -29,7 +29,7 @@ export const GamesTable = () => {
           </Match>
 
           <Match when={mode() === "play"}>
-            <GamePlay />
+            <GamePlay isDemo={true} />
           </Match>
         </Switch>
       </div>

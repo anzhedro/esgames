@@ -1,0 +1,61 @@
+.demo_alias {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  //   overflow: hidden;
+
+  .central_column {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 15px;
+    height: 100%;
+    bottom: 0;
+    position: relative;
+    left: 0;
+    width: 100%;
+  }
+
+  .wordsList {
+    position: absolute;
+    overflow: scroll;
+    z-index: 15;
+    max-height: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 120px;
+    // opacity: 0;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .timer {
+    border: 3px $black solid;
+    border-radius: 100%;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 5px;
+    text-align: center;
+    // absolute bottom 5 right 5
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+  }
+
+  .skipWordBtn {
+    &:hover {
+      color: $red;
+    }
+  }
+
+  .white {
+    background: $white;
+  }
+}
