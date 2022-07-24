@@ -1,7 +1,7 @@
 import { IPlayer } from "../utils/types";
-import { createStore } from "solid-js/store";
-import { socket } from "./store";
+import { socket } from "./socket";
 import { createSignal } from "solid-js";
+import { appState } from "./state";
 
 const AliasSettings = {
   settings: {
@@ -67,10 +67,10 @@ const SocketCurrentGame = {
   teamScore: [],
 };
 
-const [users, setUsers] = createSignal<IPlayer[]>([]);
+export const [users, setUsers] = createSignal<IPlayer[]>([]);
 
-const handleKick = (user: string) => {
-  socket.send(JSON.stringify({ type: "kick_user", user: user }));
+export function handleKick(user: string) {
+  if (appState() !== "connected") return;
+
+  socket()!.send(JSON.stringify({ type: "kick_user", user: user }));
 }
-
-export { users, handleKick, setUsers };

@@ -1,30 +1,27 @@
 import { createSignal } from "solid-js";
 import { IMessage } from "../utils/types";
-import { socket } from "./store";
+import { socket } from "./socket";
+import { appState } from "./state";
 
 // gonna remove when back ready
-export const formatDate = (date: any) => {
-  return `  ${date.getHours() < 10 ? "0" + date.getHours() : date.getHours()}:${
-    date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()
-  }`;
+export const formatDate = (d: Date) => {
+  return `  ${d.getHours() < 10 ? "0" + d.getHours() : d.getHours()}:${d.getMinutes() < 10 ? "0" + d.getMinutes() : d.getMinutes()
+    }`;
 };
 
-const [message, setMessage] = createSignal("");
-// Format: { created: "2020-12-01 12:00", user: "aaaa", text: "Hello!" }
 const [messages, setMessages] = createSignal<IMessage[]>([]);
+export const [chatInput, setChatInput] = createSignal("");
 
-const addSmile = (smile: string) => {
-  setMessage(message() + " " + smile);
+export function sendMessage() {
+  const text = chatInput().trim();
+  if (!text || appState() !== "connected") return;
+
+  socket()!.send(JSON.stringify({ type: "chat", text: text }));
+  setChatInput("");
 };
 
-const sendMessage = (text: string) => {
-  if (!text) return;
-  socket.send(JSON.stringify({ type: "chat", text: text }));
-};
-
-const addMessage = (newmessages: IMessage[]) => {
+export function addMessages(newmessages: IMessage[]) {
   setMessages([...messages(), ...newmessages]);
-  setMessage("");
 };
 
-export { addSmile, sendMessage, addMessage, messages, message, setMessage };
+export { messages };

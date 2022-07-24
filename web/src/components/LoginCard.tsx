@@ -1,38 +1,35 @@
-import { login, name, room, avatar, refreshAvatar, setName, setRoom } from "../store/auth";
+import { login, name, room, avatar, setRandomAvatar, setName, setRoom } from "../store/state";
 import { Translation } from "../store/localization";
+import { createEffect } from "solid-js";
 
 export const LoginCard = (props: { lang: Translation }) => {
   return (
     <div class="login_card">
       <div class="heading">
-        <p>{props.lang.createRoom}</p>
+        <p>{room() === "" ? props.lang.createRoom : props.lang.joinRoom}</p>
       </div>
       <div class="flex">
         <div class="avatar">
           <div class="wrapper">
             <img src={`/img/${avatar()}.jpg`} alt="" />
-            <button onClick={() => refreshAvatar()}>⟳</button>
+            <button onClick={() => setRandomAvatar()}>⟳</button>
           </div>
         </div>
         <div class="flex-col">
           <p>{props.lang.loginText}</p>
           <input
             placeholder={props.lang.yourName}
-            onKeyDown={(e) => {
+            onKeyUp={(e) => {
+              setName(e.currentTarget.value);
               if (e.key === "Enter") login();
-            }}
-            onChange={(e: any) => {
-              setName(e.target.value);
             }}
             value={name()}
             />
           <input
             placeholder={props.lang.roomName}
-            onKeyDown={(e) => {
+            onKeyUp={(e) => {
+              setRoom(e.currentTarget.value);
               if (e.key === "Enter") login();
-            }}
-            onChange={(e: any) => {
-              setRoom(e.target.value);
             }}
             value={room()}
           />
@@ -40,7 +37,8 @@ export const LoginCard = (props: { lang: Translation }) => {
       </div>
       <div class="footer">
         <button onClick={() => login()} disabled={name().length > 0 ? false : true}>
-          <img src="/img/play.svg" /> <span> {props.lang.join}</span>
+          <img src="/img/play.svg"/> 
+          <span>{room() === "" ? props.lang.create : props.lang.join}</span>
         </button>
       </div>
     </div>

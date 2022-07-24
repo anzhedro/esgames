@@ -2,13 +2,9 @@ import { createEffect, createSignal, For, Show, Accessor } from "solid-js";
 import { handleKick, users } from "../store/room";
 import { IPlayer } from "../utils/types";
 import { Avatar } from "./Avatar";
-import {name as CurrentUsername }from "../store/auth";
+import {name as CurrentUsername, iAmHost }from "../store/state";
 
 export const PlayersList = () => {
-  const [iAmHost, setIAmHost] = createSignal(false);
-  createEffect(() => {
-    setIAmHost(users().find(user => user.name === CurrentUsername())?.is_host === true);
-  });
   
   return (
     <div>

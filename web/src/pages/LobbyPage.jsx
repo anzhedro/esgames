@@ -3,33 +3,29 @@ import { GamesTable } from "../components/GamesTable";
 import { Players } from "../components/Players";
 import { PlayersList } from "../components/PlayersList";
 import { PlayersTeams } from "../components/PlayersTeams";
-import { loginStatus, tryLogin } from "../store/auth";
+import { appState, setRoom } from "../store/state";
 import { useNavigate, useParams } from "solid-app-router";
 import { createEffect } from "solid-js";
-import { socketReady } from "../store/store";
+import { currentLanguage, localizationMap } from "../store/localization";
 
 export const LobbyPage = () => {
   const navigate = useNavigate();
   const params = useParams();
 
   createEffect(() => {
-
-    if (loginStatus() === "none" && socketReady() === 1) {
-        tryLogin(params.id);
-    }
-
-    if (loginStatus() === "fail") {
+    if (appState() === "start") {
+      setRoom(params.id);
       navigate("/");
     }
   });
 
   return (
     <div className="lobby_page">
-      <Show when={loginStatus() === "success"} fallback={<div>Loading...</div>}>
+      <Show when={appState() === "connected"} fallback={<div>Loading...</div>}>
         <div className="wrapper">
           <Players>{true ? <PlayersList /> : <PlayersTeams />}</Players>
           <GamesTable />
-          <Chat />
+          <Chat lang={localizationMap[currentLanguage()]} />
         </div>
       </Show>
     </div>

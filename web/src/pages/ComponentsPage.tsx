@@ -1,5 +1,4 @@
 import { createSignal, JSX, JSXElement } from "solid-js";
-import { isHost, setIsHost } from "../store/auth";
 import { WordItemProps } from "../utils/types";
 
 const WordsList = (props: { children: JSXElement }) => {
@@ -35,6 +34,7 @@ const GreenButton = ({ text }: { text: string }) => {
 };
 
 export const ComponentsPage = () => {
+  const [isHost, setIsHost] = createSignal(false);
   // const [stage, setStage] = createSignal(0);
   const [isStoryteller, setIsStoryteller] = createSignal(false);
 

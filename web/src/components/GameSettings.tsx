@@ -1,5 +1,5 @@
 import { createSignal, For, Show } from "solid-js";
-import { isHost } from "../store/auth";
+import { iAmHost } from "../store/state";
 import { CommandsCountProps, DifficultyProps, GameSettingsProps } from "../utils/types";
 
 export const RountTime = () => {
@@ -74,7 +74,7 @@ export const GameSettings = (props: GameSettingsProps) => {
       <div class="footer">
         <button onClick={() => props.setMode("select")}>НАЗАД</button>
 
-        <Show when={isHost()} fallback={<div>Loading...</div>}>
+        <Show when={iAmHost()} fallback={<div>Loading...</div>}>
           <button onClick={() => props.setMode("play")}>НАЧАТЬ</button>
         </Show>
       </div>

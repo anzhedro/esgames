@@ -2,10 +2,11 @@ import { ChatMessage } from "./ChatMessage";
 import emojisIcons from "../utils/smiles.json";
 import { IMessage } from "../utils/types";
 import { createEffect, createSignal, For } from "solid-js";
-import { addSmile, message, messages, sendMessage, setMessage } from "../store/chat";
-import { loginStatus } from "../store/auth";
+import { chatInput, messages, sendMessage, setChatInput } from "../store/chat";
+import { appState } from "../store/state";
+import { Translation } from "../store/localization";
 
-export const Chat = () => {
+export const Chat = (props: { lang: Translation }) => {
   const [firstLoad, setFirstLoad] = createSignal(true);
   const [smilesView, setSmilesView] = createSignal(false);
   // const lastMessageRef = useRef<null | HTMLLIElement>(null);
@@ -20,7 +21,7 @@ export const Chat = () => {
     event.preventDefault();
     setSmilesView(false);
     // sendMessage(lastMessageRef.current.value);
-    sendMessage(message());
+    sendMessage();
   };
 
   const scrollToEnd = () => {
@@ -47,17 +48,11 @@ export const Chat = () => {
       </div>
 
       <ul class="chat__messages">
-        <For
-          each={messages()}
-          fallback={
-            <div class="spinner-container">
-              <div class="loading-spinner"></div>
-            </div>
-          }
-        >
-          {(message: IMessage) => (
-            <ChatMessage created={message.created} user={message.user} text={message.text} ref={lastMessageRef} />
-          )}
+        <For each={messages()} fallback={
+          <span class="no_messages">{props.lang.nomessages}</span>
+        }>{(message: IMessage) => (
+              <ChatMessage created={message.created} user={message.user} text={message.text} ref={lastMessageRef} />
+            )}
         </For>
       </ul>
 
@@ -65,7 +60,7 @@ export const Chat = () => {
         <div class="smiles-board">
           <div class="smiles-board-list">
             <For each={emojisIcons} fallback={<div>Loading...</div>}>
-              {(emoji: any) => <button onClick={() => addSmile(emoji)}>{emoji}</button>}
+              {(emoji: any) => <button onClick={() => setChatInput(`${chatInput()} ${emoji}`)}>{emoji}</button>}
             </For>
           </div>
         </div>
@@ -75,11 +70,11 @@ export const Chat = () => {
 
       <form class="chat-form" onSubmit={submmitHandler} autocomplete="off">
         <input
-          class={"input " + (loginStatus() === "fail" ? "input--error" : "")}
+          class={"input " + (appState() === "connected" ? "" : "input--error")}
           type="text"
           id={"message"}
-          value={message()}
-          onChange={(e: any) => setMessage(e.target.value)}
+          value={chatInput()}
+          onChange={(e: any) => setChatInput(e.target.value)}
           placeholder="Ваше сообщение..."
         />
 
