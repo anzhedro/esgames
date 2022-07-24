@@ -57,7 +57,7 @@ func (s *Server) handleImpl(c *websocket.Conn) error {
 	room := s.Rooms[login.Room]
 	if room == nil {
 		log.Printf("Creating room %q with host %q\n", login.Room, login.User)
-		room = NewRoom(login.Room)
+		room = NewRoom(login.Room, login.User)
 		s.Rooms[login.Room] = room
 	}
 	s.mu.Unlock()

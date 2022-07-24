@@ -14,15 +14,17 @@ import (
 
 type Room struct {
 	Name string
+	Host string // name of the user who created the room
 
 	mu    sync.Mutex // guards fields below
 	Users map[string]*User
 	Chat  []chatMsg // last 100 messages
 }
 
-func NewRoom(name string) *Room {
+func NewRoom(name, host string) *Room {
 	return &Room{
 		Name:  name,
+		Host:  host,
 		Users: make(map[string]*User),
 	}
 }
@@ -86,14 +88,7 @@ func (r *Room) handleKick(user string, l *LoginReq) error {
 		return errors.New("user tried to kick themselves")
 	}
 
-	var isHost bool
-	r.mu.Lock()
-	if u := r.Users[l.User]; u != nil {
-		isHost = u.IsHost
-	}
-	r.mu.Unlock()
-
-	if !isHost {
+	if l.User != r.Host {
 		return errors.New("user is not a host")
 	}
 
@@ -129,24 +124,24 @@ func (r *Room) broadcastRoomChange() {
 
 	msg := RoomMsg{Type: "room", Users: make([]UserInfo, 0, len(r.Users))}
 
-	for _, u := range r.Users {
+	if host := r.Users[r.Host]; host != nil {
 		msg.Users = append(msg.Users, UserInfo{
-			Name:   u.Name,
-			IsHost: u.IsHost,
-			Avatar: u.Avatar,
+			Name:   host.Name,
+			IsHost: true,
+			Avatar: host.Avatar,
 		})
 	}
 
+	for _, u := range r.Users {
+		if u.Name != r.Host {
+			msg.Users = append(msg.Users, UserInfo{
+				Name:   u.Name,
+				Avatar: u.Avatar,
+			})
+		}
+	}
+
 	sort.Slice(msg.Users, func(i, j int) bool {
-		a, b := &msg.Users[i], &msg.Users[j]
-		// Host always comes first.
-		if a.IsHost {
-			return true
-		}
-		if b.IsHost {
-			return false
-		}
-		// Otherwise, sort by name.
 		return msg.Users[i].Name < msg.Users[j].Name
 	})
 
@@ -179,7 +174,6 @@ func (r *Room) join(l *LoginReq, c *websocket.Conn) bool {
 	if user == nil {
 		user = &User{
 			Name:   l.User,
-			IsHost: len(r.Users) == 0,
 			Avatar: l.Avatar,
 			C:      c,
 		}
@@ -212,21 +206,11 @@ func (r *Room) leave(username string) *User {
 
 	u := r.Users[username]
 	delete(r.Users, username)
-
-	// If the host left, make a random user a host.
-	if u != nil && u.IsHost {
-		for _, u := range r.Users {
-			u.IsHost = true
-			break
-		}
-	}
-
 	return u
 }
 
 type User struct {
 	Name   string
-	IsHost bool
 	Avatar int
 	C      *websocket.Conn
 }
