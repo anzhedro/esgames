@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -19,13 +20,24 @@ var (
 )
 
 type Server struct {
-	mu    sync.Mutex
-	Rooms map[string]*Room
+	Registry map[string]StartGameFn
+	mu       sync.Mutex
+	Rooms    map[string]*Room
 }
 
-func NewServer() *Server {
+type Game interface {
+	Name() string
+	Run()
+	State() json.RawMessage
+	HandleAction(user string, action json.RawMessage)
+}
+
+type StartGameFn func(room *Room, setting json.RawMessage) (Game, error)
+
+func NewServer(games map[string]StartGameFn) *Server {
 	return &Server{
-		Rooms: make(map[string]*Room),
+		Registry: games,
+		Rooms:    make(map[string]*Room),
 	}
 }
 
@@ -57,7 +69,7 @@ func (s *Server) handleImpl(c *websocket.Conn) error {
 	room := s.Rooms[login.Room]
 	if room == nil {
 		log.Printf("Creating room %q with host %q\n", login.Room, login.User)
-		room = NewRoom(login.Room, login.User)
+		room = NewRoom(s.Registry, login.Room, login.User)
 		s.Rooms[login.Room] = room
 	}
 	s.mu.Unlock()

@@ -13,19 +13,22 @@ import (
 )
 
 type Room struct {
-	Name string
-	Host string // name of the user who created the room
+	Name     string
+	Host     string // name of the user who created the room
+	Registry map[string]StartGameFn
 
 	mu    sync.Mutex // guards fields below
-	Users map[string]*User
-	Chat  []chatMsg // last 100 messages
+	users map[string]*User
+	chat  []chatMsg // last 100 messages
+	game  Game      // currently active game
 }
 
-func NewRoom(name, host string) *Room {
+func NewRoom(registry map[string]StartGameFn, name, host string) *Room {
 	return &Room{
-		Name:  name,
-		Host:  host,
-		Users: make(map[string]*User),
+		Name:     name,
+		Host:     host,
+		Registry: registry,
+		users:    make(map[string]*User),
 	}
 }
 
@@ -78,6 +81,104 @@ func (r *Room) Handle(c *websocket.Conn, l *LoginReq) error {
 				log.Printf("failed to kick: %s", err)
 				continue
 			}
+		case "start_game":
+			if l.User != r.Host {
+				return errors.New("only host can start a game")
+			}
+
+			msg, err := unmarshalAs[StartGameMessage](raw)
+			if err != nil {
+				return fmt.Errorf("failed to unmarshal start game message: %s", err)
+			}
+
+			startGame, ok := r.Registry[msg.Game]
+			if !ok {
+				return fmt.Errorf("unknown game %q", msg.Game)
+			}
+			game, err := startGame(r, msg.Settings)
+			if err != nil {
+				return fmt.Errorf("failed to start game %q: %v", msg.Game, err)
+			}
+
+			r.mu.Lock()
+			if r.game != nil {
+				r.mu.Unlock()
+				return errors.New("game already in progress")
+			}
+			r.game = game
+			r.mu.Unlock()
+
+			r.broadcastRoomChange()
+
+			go func() {
+				game.Run()
+
+				r.mu.Lock()
+				r.game = nil
+				r.mu.Unlock()
+
+				r.broadcastRoomChange()
+			}()
+
+		case "game_action":
+			// {type: "game_action", action: {...}}
+			msg, err := unmarshalAs[GameAction](raw)
+			if err != nil {
+				return fmt.Errorf("failed to unmarshal game action: %s", err)
+			}
+			r.mu.Lock()
+			if r.game == nil {
+				r.mu.Unlock()
+				return errors.New("no game in progress")
+			}
+			game := r.game
+			r.mu.Unlock()
+			game.HandleAction(l.User, msg.Action)
+		}
+	}
+}
+
+func (r *Room) Users() []string {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	ret := make([]string, 0, len(r.users))
+	for user := range r.users {
+		ret = append(ret, user)
+	}
+	sort.Strings(ret)
+	return ret
+}
+
+func (r *Room) GameToUser(user string, msg any) {
+	r.mu.Lock()
+	u := r.users[user]
+	r.mu.Unlock()
+	if u == nil {
+		return
+	}
+
+	if err := u.C.WriteJSON(map[string]any{"type": "game_action", "action": msg}); err != nil {
+		log.Printf("failed to send message to %s: %s\n", user, err)
+	}
+}
+
+func (r *Room) Broadcast(msg any) {
+	blob, err := json.Marshal(msg)
+	if err != nil {
+		log.Fatalf("failed to marshal message %#v: %s", msg, err)
+	}
+
+	r.mu.Lock()
+	conns := make(map[string]*websocket.Conn)
+	for name := range r.users {
+		conns[name] = r.users[name].C
+	}
+	r.mu.Unlock()
+
+	for name, c := range conns {
+		if err := c.WriteMessage(websocket.TextMessage, blob); err != nil {
+			log.Printf("failed to resend a message to %s: %s\n", name, err)
 		}
 	}
 }
@@ -107,10 +208,10 @@ func (r *Room) handleKick(user string, l *LoginReq) error {
 	return nil
 }
 
-func (r *Room) chatHistory() []byte {
+func (r *Room) chatHistory() json.RawMessage {
 	r.mu.Lock()
-	msgs := make([]ChatBatchItem, len(r.Chat))
-	for i, cm := range r.Chat {
+	msgs := make([]ChatBatchItem, len(r.chat))
+	for i, cm := range r.chat {
 		msgs[i] = cm.ToItem()
 	}
 	r.mu.Unlock()
@@ -122,9 +223,12 @@ func (r *Room) broadcastRoomChange() {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	msg := RoomMsg{Type: "room", Users: make([]UserInfo, 0, len(r.Users))}
+	msg := RoomMsg{
+		Type:  "room",
+		Users: make([]UserInfo, 0, len(r.users)),
+	}
 
-	if host := r.Users[r.Host]; host != nil {
+	if host := r.users[r.Host]; host != nil {
 		msg.Users = append(msg.Users, UserInfo{
 			Name:   host.Name,
 			IsHost: true,
@@ -132,7 +236,7 @@ func (r *Room) broadcastRoomChange() {
 		})
 	}
 
-	for _, u := range r.Users {
+	for _, u := range r.users {
 		if u.Name != r.Host {
 			msg.Users = append(msg.Users, UserInfo{
 				Name:   u.Name,
@@ -145,24 +249,22 @@ func (r *Room) broadcastRoomChange() {
 		return msg.Users[i].Name < msg.Users[j].Name
 	})
 
-	for name, u := range r.Users {
-		if err := u.C.WriteJSON(msg); err != nil {
-			log.Printf("failed to send room update to %s: %s\n", name, err)
+	if r.game != nil {
+		msg.Game = &GameInfo{
+			Name:  r.game.Name(),
+			State: r.game.State(),
 		}
 	}
-}
 
-func (r *Room) broadcast(blob []byte) {
-	r.mu.Lock()
-	conns := make(map[string]*websocket.Conn)
-	for name := range r.Users {
-		conns[name] = r.Users[name].C
+	raw, err := json.Marshal(msg)
+	if err != nil {
+		log.Fatalf("Failed to marshal room message: %s. Msg:\n%#v", err, msg)
+		return
 	}
-	r.mu.Unlock()
 
-	for name, c := range conns {
-		if err := c.WriteMessage(websocket.TextMessage, blob); err != nil {
-			log.Printf("failed to resend a message to %s: %s\n", name, err)
+	for name, u := range r.users {
+		if err := u.C.WriteMessage(websocket.TextMessage, raw); err != nil {
+			log.Printf("failed to send room update to %s: %s\n", name, err)
 		}
 	}
 }
@@ -170,14 +272,14 @@ func (r *Room) broadcast(blob []byte) {
 // Returns true iff the user joined successfully.
 func (r *Room) join(l *LoginReq, c *websocket.Conn) bool {
 	r.mu.Lock()
-	user, alreadyExists := r.Users[l.User]
+	user, alreadyExists := r.users[l.User]
 	if user == nil {
 		user = &User{
 			Name:   l.User,
 			Avatar: l.Avatar,
 			C:      c,
 		}
-		r.Users[l.User] = user
+		r.users[l.User] = user
 	}
 	r.mu.Unlock()
 	return !alreadyExists
@@ -191,12 +293,12 @@ func (r *Room) sendChatMsg(user string, msg string) {
 		Created: time.Now(),
 	}
 	r.mu.Lock()
-	r.Chat = append(r.Chat, cm)
-	if len(r.Chat) > 100 {
-		r.Chat = r.Chat[1:]
+	r.chat = append(r.chat, cm)
+	if len(r.chat) > 100 {
+		r.chat = r.chat[1:]
 	}
 	r.mu.Unlock()
-	r.broadcast(marshalChatBatch(cm.ToItem()))
+	r.Broadcast(marshalChatBatch(cm.ToItem()))
 }
 
 // Returns true if the user was present.
@@ -204,8 +306,8 @@ func (r *Room) leave(username string) *User {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	u := r.Users[username]
-	delete(r.Users, username)
+	u := r.users[username]
+	delete(r.users, username)
 	return u
 }
 
@@ -229,7 +331,7 @@ func (c *chatMsg) ToItem() ChatBatchItem {
 	}
 }
 
-func marshalChatBatch(msgs ...ChatBatchItem) []byte {
+func marshalChatBatch(msgs ...ChatBatchItem) json.RawMessage {
 	blob, err := json.Marshal(ChatBatch{Type: "chat", Messages: msgs})
 	if err != nil {
 		log.Fatalf("failed to marshal chat messages: %s", err)

@@ -51,6 +51,16 @@ type LoginReq struct {
 type RoomMsg struct {
 	Type  string     `json:"type"`
 	Users []UserInfo `json:"users"`
+	Game  *GameInfo  `json:"game,omitempty"`
+}
+
+type GameInfo struct {
+	Name  string          `json:"name"`
+	State json.RawMessage `json:"state"`
+}
+
+type GameAction struct {
+	Action json.RawMessage `json:"action"`
 }
 
 type UserInfo struct {
@@ -87,6 +97,11 @@ type LoginResp struct {
 	Type   string `json:"type"`
 	Room   string `json:"room"`
 	Reason string `json:"reason,omitempty"`
+}
+
+type StartGameMessage struct {
+	Game     string          `json:"game"`
+	Settings json.RawMessage `json:"settings"`
 }
 
 // Returns message type, raw message, and an error if reading failed.
