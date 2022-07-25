@@ -1,5 +1,6 @@
 import { createEffect, createRoot, createSignal } from "solid-js";
-import { connectToRoom } from "./socket";
+import { connectToRoom, socket } from "./socket";
+import { setMessages} from "./chat";
 import { loadUserInfo, saveUserInfo } from "./localstorage";
 import { randomInteger } from "../utils/helpers";
 import { users } from "./room";
@@ -18,6 +19,11 @@ export const [iAmHost, setIAmHost] = createSignal(false);
 createRoot(() => {
   createEffect(() => {
     setIAmHost(users().find((user) => user.name === name())?.is_host === true);
+  });
+  createEffect(() => {
+    if (socket() === null) {
+      setMessages([]);
+    }
   });
 });
 

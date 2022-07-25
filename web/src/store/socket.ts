@@ -1,5 +1,5 @@
 import { iAmHost, setAppState, setRoom } from "./state";
-import { addMessages, sendMessage, setChatInput } from "./chat";
+import { addMessages } from "./chat";
 import { setCurrentGame, setTableState, setShowButton, setUsers } from "./room";
 import { createSignal } from "solid-js";
 import { IMessage, IPlayer } from "../utils/types";

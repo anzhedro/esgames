@@ -1,4 +1,4 @@
-import { createSignal } from "solid-js";
+import { createEffect, createSignal } from "solid-js";
 import { IMessage } from "../utils/types";
 import { socket } from "./socket";
 import { appState } from "./state";
@@ -10,7 +10,7 @@ export const formatDate = (d: Date) => {
   }`;
 };
 
-const [messages, setMessages] = createSignal<IMessage[]>([]);
+export const [messages, setMessages] = createSignal<IMessage[]>([]);
 export const [chatInput, setChatInput] = createSignal("");
 
 export function sendMessage() {
@@ -23,5 +23,3 @@ export function sendMessage() {
 export function addMessages(newmessages: IMessage[]) {
   setMessages([...messages(), ...newmessages]);
 }
-
-export { messages };
