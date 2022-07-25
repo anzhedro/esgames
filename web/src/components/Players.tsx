@@ -1,9 +1,5 @@
 import { users } from "../store/room";
 
-// interface PlayersProps {
-//   children: JSXElement;
-// }
-
 export const Players = (props: any) => {
   return (
     <div class="players">
@@ -13,10 +9,7 @@ export const Players = (props: any) => {
         </p>
       </div>
       <div class="content">{props.children}</div>
-      <div class="footer">
-        {/* <button class="active">ИГРОКИ</button>
-        <button disabled>ЗРИТЕЛИ</button> */}
-      </div>
+      <div class="footer"></div>
     </div>
   );
 };

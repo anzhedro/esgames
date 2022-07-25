@@ -5,6 +5,7 @@ import { createEffect, createSignal, For } from "solid-js";
 import { chatInput, messages, sendMessage, setChatInput } from "../store/chat";
 import { appState } from "../store/state";
 import { Translation } from "../store/localization";
+import { Spinner } from "./Spinner";
 
 export const Chat = (props: { lang: Translation }) => {
   const [firstLoad, setFirstLoad] = createSignal(true);
@@ -55,7 +56,7 @@ export const Chat = (props: { lang: Translation }) => {
       {smilesView() ? (
         <div class="smiles-board">
           <div class="smiles-board-list">
-            <For each={emojisIcons} fallback={<div>Loading...</div>}>
+            <For each={emojisIcons} fallback={<Spinner />}>
               {(emoji: any) => <button onClick={() => setChatInput(`${chatInput()} ${emoji}`)}>{emoji}</button>}
             </For>
           </div>

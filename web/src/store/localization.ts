@@ -1,28 +1,28 @@
 import { createSignal } from "solid-js";
 
 export type Translation = {
-  createRoom: string,
-  joinRoom: string,
-  loginText: string,
-  yourName: string,
-  roomName: string,
-  create: string,
-  join: string,
-  playersHeader: string,
-  player: string,
-  spectators: string,
-  gamesHeader: string,
-  inviteFooter: string,
-  backFooter: string,
-  startFooter: string,
-  chat: string,
-  messagePlaceholder: string,
-  nomessages: string,
+  createRoom: string;
+  joinRoom: string;
+  loginText: string;
+  yourName: string;
+  roomName: string;
+  create: string;
+  join: string;
+  playersHeader: string;
+  player: string;
+  spectators: string;
+  gamesHeader: string;
+  inviteFooter: string;
+  backFooter: string;
+  startFooter: string;
+  chat: string;
+  messagePlaceholder: string;
+  nomessages: string;
+  gameTitles: Record<string, string>;
 };
 
-
 const localizationMap: Record<string, Translation> = {
-  "en": {
+  en: {
     createRoom: "CREATE ROOM",
     joinRoom: "JOIN ROOM",
     loginText: "Enter your name and a room to join",
@@ -44,9 +44,21 @@ const localizationMap: Record<string, Translation> = {
     chat: "CHAT",
     messagePlaceholder: "Your message...",
     nomessages: "no messages",
+
+    gameTitles: {
+      "10": "Reaction",
+      "11": "Hat",
+      "12": "Boring game",
+      "13": "Code names",
+      "14": "Crocodile",
+      "15": "Guess the melody",
+      "16": "Songlio",
+      "17": "Lie",
+      "18": "Vladilen",
+    },
   },
 
-  "ru": {
+  ru: {
     createRoom: "СОЗДАТЬ КОМНАТУ",
     joinRoom: "ПРИСОЕДИНИТЬСЯ К КОМНАТЕ",
     loginText: "Введите ваше имя и название комнаты для входа",
@@ -68,6 +80,17 @@ const localizationMap: Record<string, Translation> = {
     chat: "ЧАТ",
     messagePlaceholder: "Ваше сообщение...",
     nomessages: "нет сообщений",
+    gameTitles: {
+      "10": "Реакция",
+      "11": "Шляпа",
+      "12": "Скучная игра",
+      "13": "Кодовые имена",
+      "14": "Крокодил",
+      "15": "Угадай мелодию",
+      "16": "Песня",
+      "17": "Ложь",
+      "18": "Владилен",
+    },
   },
 };
 

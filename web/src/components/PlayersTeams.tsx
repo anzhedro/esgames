@@ -1,8 +1,9 @@
-import { nanoid } from "nanoid";
+
 import { Avatar } from "./Avatar";
 import { IPlayer } from "../utils/types";
 import { createStore } from "solid-js/store";
 import { For } from "solid-js";
+import { Spinner } from "./Spinner";
 
 const teamsMock = [
   [
@@ -49,10 +50,9 @@ export const PlayersTeams = () => {
     setTeams(newTeams);
     updLastTeam(newTeams);
   };
-  
+
   return (
     <div>
-      {/* for */}
       <For each={teams.filter((el: IPlayer[], idx: number) => idx > 0)} fallback={<div>Loading...</div>}>
         {(team: IPlayer[], idx) => (
           <div class="team">
@@ -74,7 +74,7 @@ export const PlayersTeams = () => {
           зрители
         </button>
 
-        <For each={teams[0]} fallback={<div>Loading...</div>}>
+        <For each={teams[0]} fallback={<Spinner />}>
           {(player: IPlayer, idx) => (
             <div class={+idx & 2 ? "player bg-dark" : "player "}>
               <Avatar avatar={player.avatar} isHost={player.is_host} />

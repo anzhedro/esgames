@@ -1,42 +1,61 @@
 [
   {
-    "image": "/img/hat.svg",
-    "title": "Шляпа"
+    "gameId": "10",
+    "image": "/img/speed.svg",
+    "title": "Реакция",
+    "settings": {}
   },
   {
+    "gameId": "11",
     "image": "/img/hat.svg",
-    "title": "Скучная игра"
+    "title": "Шляпа",
+    "settings": {
+      "roundTime": [10, 20],
+      "roundCount": [2, 3, 4],
+      "difficulty": [0, 1, 2],
+      "teamsCount": [2, 3, 4]
+    }
   },
   {
-    "image": "/img/hat.svg",
-    "title": "Кодовые имена"
+    "gameId": "12",
+    "image": "/img/zzz.svg",
+    "title": "Скучная игра",
+    "settings": {}
   },
   {
-    "image": "/img/hat.svg",
-    "title": "Крокодил"
+    "gameId": "13",
+    "image": "/img/codenames.svg",
+    "title": "Кодовые имена",
+    "settings": {}
   },
   {
-    "image": "/img/hat.svg",
-    "title": "Отгадай мелодию"
+    "gameId": "14",
+    "image": "/img/crocodile.svg",
+    "title": "Крокодил",
+    "settings": {}
   },
   {
-    "image": "/img/hat.svg",
-    "title": "Songlio"
+    "gameId": "15",
+    "image": "/img/song.svg",
+    "title": "Отгадай мелодию",
+    "settings": {}
   },
   {
-    "image": "/img/hat.svg",
-    "title": "Обман"
+    "gameId": "16",
+    "image": "/img/song_heart.svg",
+    "title": "Songlio",
+    "settings": {}
   },
   {
-    "image": "/img/hat.svg",
-    "title": "123"
+    "gameId": "17",
+    "image": "/img/lie.svg",
+    "title": "Обман",
+    "settings": {}
   },
   {
-    "image": "/img/hat.svg",
-    "title": "321"
-  },
-  {
-    "image": "/img/hat.svg",
-    "title": "444"
+    "gameId": "18",
+    "image": "/img/vladilen.svg",
+    "title": "Vladilen",
+    "settings": {}
   }
 ]

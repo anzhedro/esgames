@@ -1,22 +1,21 @@
-import { createEffect, createSelector, createSignal, For, Show } from "solid-js";
-import { GreenButton, WordItem, WordsList } from "../pages/ComponentsPage";
+import { createEffect, For, Show } from "solid-js";
+import { WordItem, WordsList } from "../pages/ComponentsPage";
 import {
   handleClick,
   roundTime,
   roundWords,
   setTextInButton,
-  skipWord,
-  startGame,
   textInButton,
   timer,
 } from "../store/hatDemo";
+import { sendGameAction, setShowButton, showButton } from "../store/room";
+
 
 type GamePlayProps = {
   isDemo?: boolean;
 };
 
 export const GamePlay = (props: GamePlayProps) => {
-  const [stage, setStage] = createSignal(0);
   let lastWordRef: any = null;
 
   createEffect(() => {
@@ -33,13 +32,28 @@ export const GamePlay = (props: GamePlayProps) => {
     });
   };
 
-  createEffect(() => {
-    scrollToEnd();
-  });
-
   return (
     <>
-      <Show when={props.isDemo}>
+      <Show
+        when={props.isDemo}
+        fallback={
+          <Show when={showButton()} fallback={<div></div>}>
+            <div class="demo_alias">
+              <div class="central_column">
+                <button
+                  class="green_btn"
+                  onClick={() => {
+                    sendGameAction("btn_click");
+                    setShowButton(false);
+                  }}
+                >
+                  CLICK
+                </button>
+              </div>
+            </div>
+          </Show>
+        }
+      >
         <div class="demo_alias">
           <div class="central_column">
             <WordsList>

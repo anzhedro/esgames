@@ -1,6 +1,6 @@
 import { setAppState, setRoom } from "./state";
-import { addMessages } from "./chat";
-import { setUsers } from "./room";
+import { addMessages, sendMessage, setChatInput } from "./chat";
+import { setCurrentGame, setTableState, setShowButton, setUsers } from "./room";
 import { createSignal } from "solid-js";
 
 const [socket, setSocket] = createSignal<WebSocket | null>(null);
@@ -14,7 +14,7 @@ export function connectToRoom(user: string, room: string, avatar: number) {
   soc.onclose = (event) => {
     console.log("ws CLOSE", event);
     // Reconnect only if we are supposed to have an open socket.
-    if (socket() !== null) { 
+    if (socket() !== null) {
       setSocket(null);
       setTimeout(() => {
         connectToRoom(user, room, avatar);
@@ -24,12 +24,14 @@ export function connectToRoom(user: string, room: string, avatar: number) {
 
   soc.onopen = (event) => {
     console.log("ws OPEN", event);
-    soc.send(JSON.stringify({
-      type: "login",
-      user,
-      room,
-      avatar,
-    }));
+    soc.send(
+      JSON.stringify({
+        type: "login",
+        user,
+        room,
+        avatar,
+      })
+    );
   };
 
   soc.onerror = (event) => {
@@ -53,6 +55,21 @@ export function connectToRoom(user: string, room: string, avatar: number) {
         return;
       case "room":
         setUsers(response.users);
+        if (response.game) {
+          setCurrentGame(response.game.name);
+          setTableState("game_play");
+        } else {
+          setTableState("game_select");
+        }
+        return;
+      case "game_action":
+        if ("already_pressed" in response.action) {
+          setShowButton(true);
+        }
+        if (response.action.total_time_sec) {
+          setChatInput(`My reaction time is ${response.action.total_time_sec}`);
+          sendMessage();
+        }
         return;
       case "kick_user":
         alert(response.reason);

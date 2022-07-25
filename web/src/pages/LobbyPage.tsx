@@ -7,6 +7,7 @@ import { appState, setRoom } from "../store/state";
 import { useNavigate, useParams } from "solid-app-router";
 import { createEffect, Show } from "solid-js";
 import { currentLanguage, localizationMap } from "../store/localization";
+import { Spinner } from "../components/Spinner";
 
 export const LobbyPage = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export const LobbyPage = () => {
 
   return (
     <div class="lobby_page">
-      <Show when={appState() === "connected"} fallback={<div>Loading...</div>}>
+      <Show when={appState() === "connected"} fallback={<Spinner />}>
         <div class="wrapper">
           <Players>{true ? <PlayersList /> : <PlayersTeams />}</Players>
           <GamesTable />

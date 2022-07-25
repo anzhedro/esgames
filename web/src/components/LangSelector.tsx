@@ -1,5 +1,6 @@
 import { createSignal, For, Show } from "solid-js";
 import { currentLanguage, handleSetCurrentLanguage, languages } from "../store/localization";
+import { Spinner } from "./Spinner";
 
 export const LangSelector = () => {
   const [showLangSelector, setShowLangSelector] = createSignal(false);
@@ -16,8 +17,8 @@ export const LangSelector = () => {
         {currentLanguage().toUpperCase()}
       </button>
 
-      <Show when={showLangSelector()} fallback={<div>Loading...</div>}>
-        <For each={languages} fallback={<div>Loading...</div>}>
+      <Show when={showLangSelector()} fallback={<Spinner />}>
+        <For each={languages} fallback={<Spinner />}>
           {(lang: any) => (
             <button
               onClick={() => {

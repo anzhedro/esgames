@@ -1,13 +1,10 @@
-import { createEffect, createSignal, JSX, JSXElement, Show } from "solid-js";
-import { LoginCard } from "../components/LoginCard";
-import { Players } from "../components/Players";
+import { createSignal, JSXElement, Show } from "solid-js";
 import { skipWord } from "../store/hatDemo";
-// import { isHost, setIsHost } from "../store/auth";
 export const WordsList = (props: { children: JSXElement }) => {
   return <div class="wordsList">{props.children}</div>;
 };
 
-export type WordItemProps = {
+type WordItemProps = {
   canEdit?: boolean;
   color?: string | "";
   text?: string | "";
@@ -57,7 +54,6 @@ export const GreenButton = ({ text }: { text: string }) => {
 };
 
 export const ComponentsPage = () => {
-  // const [stage, setStage] = createSignal(0);
   const [isStoryteller, setIsStoryteller] = createSignal(false);
 
   const toggleIsHost = () => {
@@ -68,11 +64,10 @@ export const ComponentsPage = () => {
     setIsStoryteller(!isStoryteller());
   };
 
-  const stageTexts = ["Начать", "Следующее", "Закончить", "Заного"];
+  const stageTexts = ["Начать", "Следующее", "Закончить", "Заново"];
 
   return (
     <div class="components_page">
-      {/* <LoginCard /> */}
       <div class="isHost">
         <button onClick={toggleIsHost}>я хост</button>
         <button onClick={toggleIsHost}>я не хост</button>
@@ -81,12 +76,6 @@ export const ComponentsPage = () => {
       <div class="isHost">
         <button onClick={toggleStoryTeller}>я {!isStoryteller() && "не"} рассказчик</button>
       </div>
-
-      {/* <div className="isHost">
-        <button onClick={() => setStage(stage + 1)}>+</button>
-        <button onClick={() => setStage(stage - 1)}>-</button>
-      </div> */}
-      {/* lobby page для пользователя */}
 
       <div style={{ display: "flex", alignItems: "flex-end", gap: "50px" }}>
         <WordsList>

@@ -2,6 +2,7 @@ import { IPlayer } from "../utils/types";
 import { socket } from "./socket";
 import { createSignal } from "solid-js";
 import { appState } from "./state";
+import { localizationMap } from "./localization";
 
 const AliasSettings = {
   settings: {
@@ -68,9 +69,57 @@ const SocketCurrentGame = {
 };
 
 export const [users, setUsers] = createSignal<IPlayer[]>([]);
+export const [currentGame, setCurrentGame] = createSignal("");
+export const [showButton, setShowButton] = createSignal(false);
+
+type GameTableState = "game_select" | "game_rules" | "game_settings" | "game_play" | "game_end" | "hat";
+export const [tableState, setTableState] = createSignal<GameTableState>("game_select");
+
+export type correctTypeGameSettings = {
+  roundTime?: number[];
+  roundsCount?: number[];
+  difficulty?: number[];
+  wordsLanguage?: string[];
+  teamsCount?: number[];
+};
+
+export const [gameSettings, setGameSettings] = createSignal<correctTypeGameSettings>({
+  roundTime: [10, 20],
+  roundsCount: [2, 3, 4],
+  difficulty: [0, 1, 2],
+  teamsCount: [2, 3, 4],
+});
+
+export const [currentGameSettings, setCurrentGameSettings] = createSignal({
+  gameId: 1,
+  roundTime: 10,
+  roundCount: 3,
+  difficulty: "Easy",
+  teamsCount: 2,
+});
+
+export const [currentGameId, setCurrentGameId] = createSignal("");
+
+export function startGame() {
+  socket()!.send(
+    JSON.stringify({
+      type: "start_game",
+      game: localizationMap.en.gameTitles[currentGameId()],
+      settings: currentGameSettings(),
+    })
+  );
+}
+
+export function sendGameAction(action_data: any) {
+  socket()!.send(
+    JSON.stringify({
+      type: "game_action",
+      action: action_data,
+    })
+  );
+}
 
 export function handleKick(user: string) {
   if (appState() !== "connected") return;
-
   socket()!.send(JSON.stringify({ type: "kick_user", user: user }));
 }

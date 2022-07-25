@@ -26,6 +26,23 @@
   text-align: center;
 }
 
+@mixin button {
+  margin: 30px;
+  transition: 0.3s;
+  padding: 15px 10px;
+  background: $white;
+  color: $black;
+  border-radius: 15px;
+  letter-spacing: 2px;
+  line-height: 1;
+
+  &:hover {
+    color: $white;
+    background: $darkgray;
+    transition: 0.3s;
+  }
+}
+
 .lobby_page {
   height: 100vh;
   width: 100%;
@@ -116,7 +133,7 @@
         }
       }
 
-      .player:hover>.kick_button {
+      .player:hover > .kick_button {
         display: block;
       }
 
@@ -140,18 +157,7 @@
       justify-content: space-around;
 
       button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 45%;
-        height: 50px;
-        color: $white;
-        background: $gray;
-        border-radius: 15px;
-
-        &.active {
-          background: $black;
-        }
+        @include button;
       }
     }
   }
@@ -177,10 +183,12 @@
       color: $white;
       width: 100%;
       display: flex;
-      // justify-content: center;
-      justify-content: space-around;
-
+      justify-content: space-between;
       align-items: center;
+
+      button {
+        @include button;
+      }
     }
 
     .content {
@@ -195,6 +203,36 @@
 
       &.game_settings {
         @include flex-col;
+
+        input {
+          background: white;
+          border: 3px black solid;
+          margin: 5px 0;
+          width: 100px;
+        }
+
+        .row {
+          display: flex;
+        }
+
+        button {
+          @include button;
+
+          &:hover {
+            background: $green;
+          }
+
+          margin: 0px;
+          background: $black;
+          color: $white;
+          width: 50px;
+          height: 50px;
+          text-align: center;
+          display: flex;
+          align-items: center;
+          margin-right: 15px;
+          justify-content: center;
+        }
       }
 
       &.game_rules {
@@ -239,13 +277,7 @@
       width: 100%;
 
       button {
-        margin: 30px;
-        transition: 0.3s;
-
-        &:hover {
-          color: $lightgray;
-          transition: 0.3s;
-        }
+        @include button;
       }
     }
   }
@@ -254,5 +286,46 @@
     @include lobby-block;
     // height: 700px;
     height: 100%;
+  }
+}
+
+.round_count {
+  .row {
+    display: flex;
+    align-items: center;
+    p {
+      margin-right: 20px;
+    }
+  }
+}
+
+.select {
+  position: relative;
+  height: 50px;
+
+  .currentOption.option {
+    background: $green;
+  }
+
+  .options {
+    position: absolute;
+    top: 62px;
+    left: 0;
+    background: $white;
+    // backdrop-filter: blur(2px);
+  }
+
+  .option {
+    background: $white;
+    width: 250px;
+    border: 3px $black solid;
+    margin: 7px 0;
+    color: $black;
+    padding: 10px 10px;
+    border-radius: 15px;
+
+    &:hover {
+      background: $green;
+    }
   }
 }
