@@ -5,12 +5,12 @@ import (
 	"net/http"
 
 	"github.com/anzhedro/esgames/api"
-	"github.com/anzhedro/esgames/api/hat"
+	"github.com/anzhedro/esgames/api/reaction"
 )
 
 func main() {
 	games := map[string]api.StartGameFn{
-		hat.Name: hat.NewGame,
+		reaction.Name: reaction.NewGame,
 	}
 	srv := api.NewServer(games)
 	http.HandleFunc("/ws", srv.Handle)

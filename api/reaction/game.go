@@ -1,4 +1,4 @@
-package hat
+package reaction
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 	"github.com/anzhedro/esgames/api"
 )
 
-const Name = "hat"
+const Name = "reaction"
 
 type Game struct {
 	Room  *api.Room
