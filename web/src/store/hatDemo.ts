@@ -1,5 +1,4 @@
-import { createEffect, createSignal, resetErrorBoundaries } from "solid-js";
-import { RoundCount } from "../components/GameSettings";
+import { createSignal } from "solid-js";
 
 const [textInButton, setTextInButton] = createSignal("Ждите");
 

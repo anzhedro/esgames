@@ -2,6 +2,17 @@ import { setAppState, setRoom } from "./state";
 import { addMessages, sendMessage, setChatInput } from "./chat";
 import { setCurrentGame, setTableState, setShowButton, setUsers } from "./room";
 import { createSignal } from "solid-js";
+import { IMessage, IPlayer } from "../utils/types";
+
+interface wsResponse {
+  type: string;
+  room: string;
+  messages: IMessage[];
+  users: IPlayer[];
+  game: Record<string, string>;
+  action: Record<string, any>;
+  reason: string;
+}
 
 const [socket, setSocket] = createSignal<WebSocket | null>(null);
 
@@ -39,7 +50,7 @@ export function connectToRoom(user: string, room: string, avatar: number) {
   };
 
   soc.onmessage = (event) => {
-    const response = JSON.parse(event.data);
+    const response = JSON.parse(event.data) as wsResponse;
     console.log("ws GOT: ", response);
     switch (response.type) {
       case "login_success":

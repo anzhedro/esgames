@@ -1,5 +1,5 @@
 import { For } from "solid-js";
-import { setCurrentGameId, setGameSettings, setTableState } from "../store/room";
+import { setCurrentGameId, setGameSettingsOptinos, setTableState } from "../store/room";
 import { copyToClipboard } from "../utils/helpers";
 import { Spinner } from "./Spinner";
 
@@ -30,7 +30,7 @@ export const GamesList = () => {
               onClick={() => {
                 setTableState("game_rules");
                 setCurrentGameId(game.gameId);
-                setGameSettings(game.settings);
+                setGameSettingsOptinos(game.settings);
               }}
             >
               <img src={game.image} />

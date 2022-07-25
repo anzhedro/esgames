@@ -1,5 +1,5 @@
 import { createSignal, For, Show } from "solid-js";
-import { gameSettings, setTableState, startGame } from "../store/room";
+import { gameSettingsOptinos, setTableState, startGame } from "../store/room";
 import { iAmHost } from "../store/state";
 
 const [difficultyOptions, setDifficultyOptions] = createSignal(["Легко", "Средне", "Сложно"]);
@@ -74,14 +74,14 @@ export const Difficulty = (props: any) => {
 };
 
 export const TeamsCount = () => {
-  const [currentCount, setCurrentCount] = createSignal(gameSettings().teamsCount);
+  const [currentCount, setCurrentCount] = createSignal(gameSettingsOptinos().teamsCount);
 
   return (
     <div class="commands_count">
       <h3>Количество команд</h3>
 
       <div class="row">
-        <For each={gameSettings().teamsCount} fallback={<div>Loading...</div>}>
+        <For each={gameSettingsOptinos().teamsCount} fallback={<div>Loading...</div>}>
           {(count) => (
             <button class={currentCount() == count ? "active" : ""} onClick={() => setCurrentCount(count)}>
               {count}
@@ -99,25 +99,25 @@ export const GameSettings = () => {
       <div class="header" style={{ justifyContent: "space-around" }}>
         <button onClick={() => setTableState("game_rules")}>ПРАВИЛА</button>
 
-        <Show when={Object.keys(gameSettings()).length === 0}>
+        <Show when={Object.keys(gameSettingsOptinos()).length === 0}>
           <button onClick={() => setTableState("game_settings")}>НАСТРОЙКИ</button>
         </Show>
       </div>
       <div class="content game_settings">
         <h2>Настройки игры Alias</h2>
-        <Show when={"roundTime" in gameSettings()}>
+        <Show when={"roundTime" in gameSettingsOptinos()}>
           <RoundTime />
         </Show>
 
-        <Show when={"roundCount" in gameSettings()}>
+        <Show when={"roundCount" in gameSettingsOptinos()}>
           <RoundCount />
         </Show>
 
-        <Show when={"difficulty" in gameSettings()}>
+        <Show when={"difficulty" in gameSettingsOptinos()}>
           <Difficulty />
         </Show>
 
-        <Show when={"teamsCount" in gameSettings()}>
+        <Show when={"teamsCount" in gameSettingsOptinos()}>
           <TeamsCount />
         </Show>
       </div>
