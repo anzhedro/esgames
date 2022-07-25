@@ -1,4 +1,4 @@
-import { setAppState, setRoom } from "./state";
+import { iAmHost, setAppState, setRoom } from "./state";
 import { addMessages, sendMessage, setChatInput } from "./chat";
 import { setCurrentGame, setTableState, setShowButton, setUsers } from "./room";
 import { createSignal } from "solid-js";
@@ -76,10 +76,17 @@ export function connectToRoom(user: string, room: string, avatar: number) {
       case "game_action":
         if ("already_pressed" in response.action) {
           setShowButton(true);
+          return;
+        }
+        if (response.action.your_time_sec) {
+          socket()!.send(JSON.stringify({ type: "chat", text: `My reaction time is ${response.action.your_time_sec}` }));
+          return;
         }
         if (response.action.total_time_sec) {
-          setChatInput(`My reaction time is ${response.action.total_time_sec}`);
-          sendMessage();
+          if (iAmHost()) {
+            socket()!.send(JSON.stringify({ type: "chat", text: `Total is ${response.action.total_time_sec}` }));
+          }
+          return;
         }
         return;
       case "kick_user":

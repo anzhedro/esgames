@@ -18,8 +18,9 @@ type Game struct {
 
 	endGame chan struct{}
 
-	mu        sync.Mutex
-	curPlayer int
+	mu              sync.Mutex
+	lastUserStarted time.Time
+	curPlayer       int
 }
 
 func NewGame(room *api.Room, settings json.RawMessage) (api.Game, error) {
@@ -39,7 +40,10 @@ func (g *Game) Name() string {
 }
 
 func (g *Game) Run() {
+	g.mu.Lock()
 	start := time.Now()
+	g.lastUserStarted = start
+	g.mu.Unlock()
 
 	g.Room.GameToUser(g.Users[0], pressBtn{})
 	<-g.endGame
@@ -56,7 +60,6 @@ func (g *Game) State() json.RawMessage {
 
 func (g *Game) HandleAction(user string, action json.RawMessage) {
 	g.mu.Lock()
-
 	if wantUser := g.Users[g.curPlayer]; user != wantUser {
 		g.mu.Unlock()
 
@@ -65,8 +68,12 @@ func (g *Game) HandleAction(user string, action json.RawMessage) {
 	}
 
 	g.curPlayer++
+	start := g.lastUserStarted
+	g.lastUserStarted = time.Now()
 	if g.curPlayer >= len(g.Users) {
 		g.mu.Unlock()
+
+		g.Room.GameToUser(user, map[string]float64{"your_time_sec": time.Since(start).Seconds()})
 		close(g.endGame)
 		return
 	}
@@ -74,6 +81,7 @@ func (g *Game) HandleAction(user string, action json.RawMessage) {
 	alreadyPressed := g.Users[g.curPlayer-1:]
 	g.mu.Unlock()
 
+	g.Room.GameToUser(user, map[string]float64{"your_time_sec": time.Since(start).Seconds()})
 	g.Room.GameToUser(nextUser, pressBtn{AlreadyPressed: alreadyPressed})
 }
 
