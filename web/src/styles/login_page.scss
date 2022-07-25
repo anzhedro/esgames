@@ -15,10 +15,8 @@
     .avatar {
       height: 150px;
       width: 150px;
-      display: flex;
+      @include dfc;
       align-items: center;
-      justify-content: center;
-      margin-left: 15px;
 
       .wrapper {
         position: relative;
@@ -41,30 +39,27 @@
     }
 
     .flex-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20%;
-      text-align: left;
-      margin-left: 15px;
-
-      * {
-        width: 220px;
-      }
+      @include flex-col;
+      align-items: flex-start;
+      gap: 10px;
+      width: 220px;
 
       input {
-        border-bottom: 2px $black solid;
+        border-bottom: 3px $black solid;
+        padding-bottom: 5px;
       }
+
       input::placeholder {
         color: $gray;
       }
     }
 
     .flex {
+      @include dfc;
       width: 100%;
       background: $white;
-      display: flex;
+      padding: 10px;
+      gap: 30px;
     }
 
     .heading {
@@ -73,15 +68,13 @@
 
     .heading,
     .footer {
-      width: 100%;
+      @include dfc;
       background-color: $black;
       color: $white;
-      text-align: center;
-      display: flex;
-      justify-content: center;
     }
 
     .footer button {
+      @include dfc;
       padding: 10px 30px;
       margin: 10px 0;
       border-radius: 10px;
@@ -89,27 +82,20 @@
       background: $lightgray;
       color: $black;
       outline: unset;
-      padding-top: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
 
       img {
+        align-self: center;
         height: 25px;
         width: 25px;
       }
 
       span {
-        padding-top: 1px;
+        @include dfc;
         padding-left: 5px;
-
-        &:nth-child(1) {
-          margin-bottom: 10px !important;
-        }
       }
 
       &:hover {
-        color: $darkgray;
+        background: $green;
         transition: 0.3s;
       }
     }

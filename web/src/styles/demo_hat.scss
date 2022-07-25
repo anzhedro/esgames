@@ -5,45 +5,36 @@
   //   overflow: hidden;
 
   .central_column {
-    display: flex;
-    flex-direction: column;
+    @include flex-col;
     justify-content: flex-end;
     align-items: center;
     padding-bottom: 15px;
     height: 100%;
-    bottom: 0;
-    position: relative;
-    left: 0;
     width: 100%;
+    position: relative;
   }
 
   .wordsList {
+    @include flex-col;
     position: absolute;
     overflow: scroll;
     z-index: 15;
     max-height: 80%;
-    margin: 20px auto;
+    margin: 20px auto 120px auto;
     padding: 20px;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 120px;
-    // opacity: 0;
     &::-webkit-scrollbar {
       display: none;
     }
   }
 
   .timer {
+    @include dfc;
     border: 3px $black solid;
     border-radius: 100%;
     height: 50px;
     width: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     padding-top: 5px;
     text-align: center;
-    // absolute bottom 5 right 5
     position: absolute;
     bottom: 25px;
     right: 25px;

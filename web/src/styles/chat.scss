@@ -1,18 +1,17 @@
 .title {
   font-size: 1.5rem;
   font-weight: bold;
-  // margin-bottom: 1rem;
 }
 
 .chat {
-  //     @include lobby-block;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
   height: 100%;
   width: 100%;
-  align-items: center;
 
-  flex-direction: column;
-  justify-content: space-between;
   padding-left: 0px;
   background-color: #fafafa;
   border-radius: 0.5rem;
@@ -21,14 +20,16 @@
   position: relative;
 
   .header {
-    height: 100px;
-    width: 100%;
-    flex: 0 0 100px;
-    background: $black;
     display: flex;
     align-items: center;
     justify-content: center;
+
     color: $white;
+    height: 100px;
+    width: 100%;
+
+    flex: 0 0 100px;
+    background: $black;
 
     .title {
       font-size: 32px;
@@ -36,8 +37,8 @@
   }
 
   .smiles-board {
-    margin-bottom: 70px;
     position: absolute;
+    margin-bottom: 70px;
     height: 300px;
     width: 100%;
     bottom: 0;
@@ -61,9 +62,9 @@
 
       button {
         display: flex;
-        font-size: 1.5rem;
         align-items: center;
         justify-content: center;
+        font-size: 1.5rem;
         border-radius: 5px;
         border: 2px $lightgray solid;
         aspect-ratio: 1/1;
@@ -82,21 +83,18 @@
   }
 
   .chat__messages {
-    overflow-y: scroll;
     width: 100%;
     overflow-x: hidden;
+    overflow-y: scroll;
     min-height: calc(100% - 100px - 70px);
-    // flex: 1 0 auto;
 
     &::-webkit-scrollbar {
       width: 0px;
       background: transparent;
     }
-    
+
     .no_messages {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      @include dfc;
       height: 100%;
       width: 100%;
       font-size: 1.5rem;
@@ -104,33 +102,28 @@
     }
   }
 
-  .message + .message {
-    border-top: 1px solid $lightgray;
-    // white-space: normal;
-    white-space: break-spaces;
-  }
-
   .message {
     list-style: none;
     padding: 1rem;
+    border-top: 1px solid $lightgray;
+    white-space: break-spaces;
 
     &__meta {
       display: flex;
-      gap: 0.5rem;
       align-items: center;
+
+      gap: 0.5rem;
       margin-bottom: 0.5rem;
       font-weight: 300;
       color: $darkgray;
     }
 
     &__avatar {
+      @include dfc;
+
       width: 1rem;
       height: 1rem;
       border-radius: 50%;
-
-      justify-content: center;
-      align-self: center;
-      display: flex;
 
       img {
         width: 100%;
@@ -143,7 +136,6 @@
       display: flex;
 
       font-size: 0.8rem;
-      // font-weight: bold;
     }
 
     &__content {
@@ -155,21 +147,19 @@
 }
 
 .chat-form {
-  flex: 0 0 70px;
-  background: $subgray !important;
-  padding: 5px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  flex: 0 0 70px;
+  background: $subgray;
+  padding: 5px;
   width: 100%;
-  background-color: #fafafa;
   border-radius: 0 0 0.5rem 0.5rem;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 
   input {
-    // width: 70%;
     width: 80%;
-
     height: 50px;
     vertical-align: middle;
     font-size: 18px;
