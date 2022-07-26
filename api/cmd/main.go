@@ -23,8 +23,13 @@ func main() {
 		hat.Name:      hat.NewGame,
 	}
 	srv := api.NewServer(games)
-	http.Handle("/", http.FileServer(http.Dir("dist")))
+	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("dist/assets"))))
+	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("dist/img"))))
 	http.HandleFunc("/ws", srv.Handle)
+	// Handle all other paths by serving the index.html file.
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "dist/index.html")
+	})
 	log.Printf("Starting server on :%d\n", *port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", *port), nil))
 }
