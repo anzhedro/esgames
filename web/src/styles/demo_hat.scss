@@ -1,22 +1,19 @@
 .demo_alias {
-  height: 100%;
-  width: 100%;
+  @include sizes(100%, 100%);
   position: relative;
-  //   overflow: hidden;
 
   .central_column {
     @include flex-col;
+    @include sizes(100%, 100%);
     justify-content: flex-end;
     align-items: center;
     padding-bottom: 15px;
-    height: 100%;
-    width: 100%;
     position: relative;
   }
 
   .wordsList {
-    @include flex-col;
     position: absolute;
+    @include flex-col;
     overflow: scroll;
     z-index: 15;
     max-height: 80%;
@@ -29,15 +26,12 @@
 
   .timer {
     @include dfc;
+    @include sizes(50px, 50px);
+    @include pos(absolute, right, 25px, bottom, 25px);
     border: 3px $black solid;
     border-radius: 100%;
-    height: 50px;
-    width: 50px;
     padding-top: 5px;
     text-align: center;
-    position: absolute;
-    bottom: 25px;
-    right: 25px;
   }
 
   .skipWordBtn {

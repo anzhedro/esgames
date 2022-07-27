@@ -1,7 +1,7 @@
 @mixin dfc {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
 @mixin shadow {
@@ -11,4 +11,15 @@
 @mixin flex-col {
   display: flex;
   flex-direction: column;
+}
+
+@mixin sizes($height, $width) {
+  height: $height;
+  width: $width;
+}
+
+@mixin pos($position, $x, $xsize, $y, $ysize) {
+  position: $position;
+  #{$x}: $xsize;
+  #{$y}: $ysize;
 }

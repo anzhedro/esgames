@@ -1,20 +1,14 @@
 @mixin lobby-block {
-  height: 100%;
-  width: 100%;
+  @include sizes(100%, 100%);
   border-radius: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include dfc;
 }
 
 @mixin lobby-block-header {
+  @include sizes(100px, 100%);
+  @include dfc;
   background: $black;
   flex: 0 0 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100px;
-  width: 100%;
   border-radius: 15px 15px 0 0;
   color: $white;
   font-size: 32px;
@@ -39,120 +33,113 @@
 }
 
 .lobby_page {
-  height: 100vh;
-  width: 100%;
+  @include sizes(100vh, 100%);
   display: flex;
   background: $green;
-
-  .team_btn {
-    font-weight: bolder;
-    padding: 15px 5px;
-    font-size: 1.2rem;
-    cursor: pointer;
-  }
 
   .wrapper {
     width: 100%;
     padding: 25px;
-    align-items: center;
-    display: grid;
     grid-template-columns: 1fr 3fr 1fr;
     gap: 15px;
-    justify-content: space-between;
+
+    display: grid;
     align-items: center;
-  }
+    justify-content: space-between;
 
-  .players {
-    @include lobby-block;
-    min-height: 700px;
-    flex-direction: column;
-    background: $white;
-
-    .header {
-      @include lobby-block-header;
+    .team_btn {
+      font-weight: bolder;
+      padding: 15px 5px;
+      font-size: 1.2rem;
+      cursor: pointer;
     }
 
-    .content {
-      height: 100%;
-      width: 100%;
+    .players {
+      @include lobby-block;
+      @include flex-col;
 
-      .avatar {
-        .host-indicator {
-          position: absolute;
-          left: -20px;
-          top: -25px;
-          z-index: 1;
-          // display: none;
-        }
+      min-height: 700px;
+      background: $white;
 
-        position: relative;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-
-        img {
-          position: relative;
-          // border: 3px black solid;
-          width: 110%;
-          border-radius: 50%;
-        }
+      .header {
+        @include lobby-block-header;
       }
 
-      .player {
-        width: 100%;
-        height: 90px;
-        padding: 10px;
-        display: flex;
-        align-items: center;
-        position: relative;
-
-        p {
-          margin-left: 15px;
-        }
+      .content {
+        @include size(100%, 100%);
 
         .avatar {
-          margin-left: 10px;
+          @include sizes(50px, 50px);
+          position: relative;
+          border-radius: 50%;
+
+          .host-indicator {
+            @include pos(absolute, left, -20px, top, -25px);
+            z-index: 1;
+          }
+
+          img {
+            position: relative;
+            width: 110%;
+            border-radius: 50%;
+          }
         }
 
-        .kick_button {
-          position: absolute;
-          right: 10px;
-          margin-right: 10px;
-          vertical-align: middle;
-          width: 50px;
-          cursor: pointer;
-          display: none;
-        }
-        .you {
-          font-style: italic;
+        .player {
+          width: 100%;
+          @include sizes(90px, 10px);
+
+          display: flex;
+          align-items: center;
+          position: relative;
+
+          &:hover > .kick_button {
+            display: block;
+          }
+          &:nth-child(odd) {
+            background: gainsboro;
+          }
+          &.host {
+            background: gold;
+
+            .kick_button {
+              display: none;
+            }
+          }
+
+          p {
+            margin-left: 15px;
+          }
+
+          .avatar {
+            margin-left: 10px;
+          }
+
+          .kick_button {
+            position: absolute;
+            right: 10px;
+            margin-right: 10px;
+            vertical-align: middle;
+            width: 50px;
+            cursor: pointer;
+            display: none;
+          }
+          .you {
+            font-style: italic;
+          }
         }
       }
 
-      .player:hover > .kick_button {
-        display: block;
-      }
+      .footer {
+        display: flex;
+        justify-content: space-around;
 
-      .player:nth-child(odd) {
-        background: gainsboro;
-      }
+        margin-bottom: 5px;
+        width: 100%;
 
-      .player.host {
-        background: gold;
-
-        .kick_button {
-          display: none;
+        button {
+          @include button;
         }
-      }
-    }
-
-    .footer {
-      margin-bottom: 5px;
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-
-      button {
-        @include button;
       }
     }
   }
@@ -164,19 +151,18 @@
     background: $white;
 
     .games_table_wrapper {
-      height: 100%;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
+      @include flex-col;
+      @include sizes(100%, 100%);
       justify-content: space-between;
     }
 
     .header {
-      height: 100px;
+      @include sizes(100px, 100%);
       flex: 0 0 100px;
+
       background: $black;
       color: $white;
-      width: 100%;
+
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -187,17 +173,61 @@
     }
 
     .content {
-      overflow-y: scroll;
+      @include sizes(100%, 100%);
+      
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 15px;
+      
+      overflow-y: scroll;
       flex: 0 1 auto;
       padding: 15px;
-      width: 100%;
-      height: 100%;
 
       &.game_settings {
         @include flex-col;
+
+        .round_count {
+          .row {
+            display: flex;
+            align-items: center;
+            p {
+              margin-right: 20px;
+            }
+          }
+        }
+
+        .select {
+          position: relative;
+          height: 50px;
+
+          .currentOption.option {
+            background: $green;
+          }
+
+          .options {
+            @include pos(absolute, top, 62px, left, 0);
+            background: $white;
+          }
+
+          .option {
+            background: $white;
+            color: $black;
+
+            border: 3px $black solid;
+            width: 250px;
+            margin: 7px 0;
+            padding: 10px 10px;
+            border-radius: 15px;
+
+            &:hover {
+              background: $green;
+            }
+          }
+        }
+
+        .row {
+          display: flex;
+        }
 
         input {
           background: white;
@@ -206,33 +236,26 @@
           width: 100px;
         }
 
-        .row {
-          display: flex;
-        }
-
         button {
           @include button;
+          @include sizes(50px, 50px);
+          @include dfc;
+
+          margin: 0px;
+          margin-right: 15px;
+
+          background: $black;
+          color: $white;
+          text-align: center;
 
           &:hover {
             background: $green;
           }
-
-          margin: 0px;
-          background: $black;
-          color: $white;
-          width: 50px;
-          height: 50px;
-          text-align: center;
-          display: flex;
-          align-items: center;
-          margin-right: 15px;
-          justify-content: center;
         }
       }
 
       &.game_rules {
         @include flex-col;
-        // justify-content: center;
       }
 
       h2 {
@@ -240,20 +263,17 @@
       }
 
       .game_card {
+        @include sizes(200px, 100%);
+        @include flex-col;
+        @include dfc;
+
         border-radius: 15px;
         background: white;
-        height: 200px;
-        width: 100%;
         font-size: 26px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
         transition: 0.3s;
 
         img {
-          height: 150px;
-          width: 150px;
+          @include sizes(150px, 150px);
         }
 
         &:hover {
@@ -263,13 +283,14 @@
     }
 
     .footer {
-      height: 100px;
+      @include sizes(100px, 100%);
+
       background: $black;
       color: $white;
+
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      width: 100%;
+      justify-content: space-between;
 
       button {
         @include button;
@@ -279,48 +300,6 @@
 
   .chat {
     @include lobby-block;
-    // height: 700px;
     height: 100%;
-  }
-}
-
-.round_count {
-  .row {
-    display: flex;
-    align-items: center;
-    p {
-      margin-right: 20px;
-    }
-  }
-}
-
-.select {
-  position: relative;
-  height: 50px;
-
-  .currentOption.option {
-    background: $green;
-  }
-
-  .options {
-    position: absolute;
-    top: 62px;
-    left: 0;
-    background: $white;
-    // backdrop-filter: blur(2px);
-  }
-
-  .option {
-    background: $white;
-    width: 250px;
-    border: 3px $black solid;
-    margin: 7px 0;
-    color: $black;
-    padding: 10px 10px;
-    border-radius: 15px;
-
-    &:hover {
-      background: $green;
-    }
   }
 }

@@ -9,8 +9,7 @@
   align-items: center;
   justify-content: space-between;
 
-  height: 100%;
-  width: 100%;
+  @include sizes(100%, 100%);
 
   padding-left: 0px;
   background-color: #fafafa;
@@ -20,13 +19,11 @@
   position: relative;
 
   .header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include dfc;
 
     color: $white;
-    height: 100px;
-    width: 100%;
+
+    @include sizes(100xp, 100%);
 
     flex: 0 0 100px;
     background: $black;
@@ -37,12 +34,9 @@
   }
 
   .smiles-board {
-    position: absolute;
+    @include pos(absolute, right, 0, bottom, 0);
+    @include sizes(300px, 100%);
     margin-bottom: 70px;
-    height: 300px;
-    width: 100%;
-    bottom: 0;
-    right: 0;
     overflow: hidden;
     overflow-y: scroll;
     background: $white;
@@ -95,8 +89,7 @@
 
     .no_messages {
       @include dfc;
-      height: 100%;
-      width: 100%;
+      @include sizes(100%, 100%);
       font-size: 1.5rem;
       color: $lightgray;
     }
@@ -120,21 +113,17 @@
 
     &__avatar {
       @include dfc;
-
-      width: 1rem;
-      height: 1rem;
+      @include sizes(1rem, 1rem);
       border-radius: 50%;
 
       img {
-        width: 100%;
-        height: 100%;
+        @include sizes(100%, 100%);
         border-radius: 50%;
       }
     }
 
     &__text {
       display: flex;
-
       font-size: 0.8rem;
     }
 
@@ -159,15 +148,14 @@
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 
   input {
-    width: 80%;
-    height: 50px;
+    @include sizes(50px, 80%);
     vertical-align: middle;
     font-size: 18px;
     font-weight: 400 !important;
     padding-left: 10px;
     border: none;
     border-radius: 0.5rem;
-    background-color: white;
+    background: white;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
     margin-left: 5px;
     margin-right: 5px;
@@ -177,9 +165,8 @@
   }
 
   button {
+    @include sizes(40px, 40px);
     margin: 0 auto;
-    width: 40px;
-    height: 40px;
     font-size: 1.2rem;
     text-align: center;
     border: none;
