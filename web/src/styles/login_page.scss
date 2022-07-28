@@ -1,160 +1,94 @@
 .login__page {
-  @include sizes(100vh, 100%);
-  @include dfc;
-  @include flex-col;
-  background-color: $green;
+	@include sizes(100vh, 100%);
+	@include dfc;
+	@include flex-col;
+	background-color: $green;
 
-  .quiz-game__pick__stage {
-    border-radius: 15px;
-    border: 1px solid $white;
-    width: 450px;
-    .quiz-game__pick__title {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+	.login_card {
+		border-radius: 15px;
+		overflow: hidden;
+		width: 450px;
 
-      color: $white;
-      // font-size: 2.5rem;
-      font-weight: bold;
-    }
-    .quiz-game__pick__search {
-      display: flex;
+		.avatar {
+			@include dfc;
+			@include sizes(150px, 150px);
 
-      .input__container {
-        .input__field {
-          border: 3px solid $black;
-          background-color: $white;
-          color: $green;
-          font-size: 1.5rem;
-          font-weight: bold;
-          padding: 0.5rem;
-          width: 100%;
-        }
-      }
-      .button.--secondary {
-        background-color: blue;
-        font-size: 1.5rem;
-        font-weight: bold;
+			.wrapper {
+				@include sizes(100px, 100px);
+				position: relative;
+			}
 
-        .button__label.--secondary {
-          color: $white;
-          padding: 0.5rem;
-        }
+			img {
+				border-radius: 100%;
+			}
 
-        &:hover {
-          background-color: rgb(12, 12, 150);
-          color: $green;
-        }
-      }
-    }
-    .quiz-game__pick__results {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+			button {
+				@include sizes(20px, 20px);
+				position: absolute;
+				bottom: 15px;
+				right: 15px;
+				font-size: 2rem;
+			}
+		}
 
-      .quiz-game__pick__results__row {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        .quiz-game__pick__results__row__main {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: $white;
-          font-size: 1.5rem;
-          font-weight: bold;
-        }
-      }
-    }
-  }
+		.flex-col {
+			@include flex-col;
+			align-items: flex-start;
+			gap: 10px;
+			width: 220px;
 
-  .login_card {
-    border-radius: 15px;
-    overflow: hidden;
-    width: 450px;
+			input {
+				border-bottom: 3px $black solid;
+				padding-bottom: 5px;
+			}
 
-    .avatar {
-      @include dfc;
-      @include sizes(150px, 150px);
+			input::placeholder {
+				color: $gray;
+			}
+		}
 
-      .wrapper {
-        @include sizes(100px, 100px);
-        position: relative;
-      }
+		.flex {
+			@include dfc;
+			background: $white;
+			padding: 10px;
+			gap: 30px;
+		}
 
-      img {
-        border-radius: 100%;
-      }
+		.heading {
+			padding: 20px 0;
+		}
 
-      button {
-        @include sizes(20px, 20px);
-        position: absolute;
-        bottom: 15px;
-        right: 15px;
-        font-size: 2rem;
-      }
-    }
+		.heading,
+		.footer {
+			@include dfc;
+			background-color: $black;
+			color: $white;
+		}
 
-    .flex-col {
-      @include flex-col;
-      align-items: flex-start;
-      gap: 10px;
-      width: 220px;
+		.footer button {
+			@include dfc;
+			padding: 10px 30px;
+			margin: 10px 0;
+			border-radius: 10px;
+			transition: 0.3s;
+			background: $lightgray;
+			color: $black;
+			outline: unset;
 
-      input {
-        border-bottom: 3px $black solid;
-        padding-bottom: 5px;
-      }
+			img {
+				align-self: center;
+				@include sizes(25px, 25px);
+			}
 
-      input::placeholder {
-        color: $gray;
-      }
-    }
+			span {
+				@include dfc;
+				padding-left: 5px;
+			}
 
-    .flex {
-      @include dfc;
-      background: $white;
-      padding: 10px;
-      gap: 30px;
-    }
-
-    .heading {
-      padding: 20px 0;
-    }
-
-    .heading,
-    .footer {
-      @include dfc;
-      background-color: $black;
-      color: $white;
-    }
-
-    .footer button {
-      @include dfc;
-      padding: 10px 30px;
-      margin: 10px 0;
-      border-radius: 10px;
-      transition: 0.3s;
-      background: $lightgray;
-      color: $black;
-      outline: unset;
-
-      img {
-        align-self: center;
-        @include sizes(25px, 25px);
-      }
-
-      span {
-        @include dfc;
-        padding-left: 5px;
-      }
-
-      &:hover {
-        background: $green;
-        transition: 0.3s;
-      }
-    }
-  }
+			&:hover {
+				background: $green;
+				transition: 0.3s;
+			}
+		}
+	}
 }

@@ -15,6 +15,9 @@ type WordItemProps = {
 
 const [isHost, setIsHost] = createSignal(false);
 
+
+
+
 export const WordItem = (props: WordItemProps) => {
   const [count, setCount] = createSignal(props.countInit || 0);
 

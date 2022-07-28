@@ -1,0 +1,30 @@
+.quiz-container {
+	@include dfc;
+	flex-direction: column;
+}
+.quiz-game {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-direction: column;
+	@include sizes(30%, 30%);
+	.quiz-game__pick__results {
+		display: flex;
+		flex-direction: column;
+		background-color: $lightgray;
+	}
+}
+.quiz-game__pick__search {
+	padding: 5px;
+	background-color: $red;
+	border-radius: 0.5rem;
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+	position: relative;
+	.input__field {
+		background-color: white;
+		padding: 5px;
+	}
+	.button {
+	}
+}
