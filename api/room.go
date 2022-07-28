@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/anzhedro/esgames/api/game"
 	"github.com/gorilla/websocket"
 )
 
@@ -20,7 +21,17 @@ type Room struct {
 	mu    sync.Mutex // guards fields below
 	users map[string]*User
 	chat  []chatMsg // last 100 messages
-	game  Game      // currently active game
+
+	game struct {
+		sync.RWMutex
+		info *gameInfo
+	}
+}
+
+type gameInfo struct {
+	name   string
+	game   game.Game // if empty, no game started
+	events chan game.Event
 }
 
 func NewRoom(registry map[string]StartGameFn, name, host string) *Room {
@@ -95,27 +106,34 @@ func (r *Room) Handle(c *websocket.Conn, l *LoginReq) error {
 			if !ok {
 				return fmt.Errorf("unknown game %q", msg.Game)
 			}
-			game, err := startGame(r, msg.Settings)
+			newGame, err := startGame(r, msg.Settings)
 			if err != nil {
 				return fmt.Errorf("failed to start game %q: %v", msg.Game, err)
 			}
 
-			r.mu.Lock()
-			if r.game != nil {
-				r.mu.Unlock()
+			events := make(chan game.Event, 32)
+
+			r.game.Lock()
+			if r.game.info != nil {
+				r.game.Unlock()
 				return errors.New("game already in progress")
 			}
-			r.game = game
-			r.mu.Unlock()
+			r.game.info = &gameInfo{
+				name:   msg.Game,
+				game:   newGame,
+				events: events,
+			}
+			r.game.Unlock()
 
 			r.broadcastRoomChange()
 
 			go func() {
-				game.Run()
+				newGame.Run(events)
 
-				r.mu.Lock()
-				r.game = nil
-				r.mu.Unlock()
+				r.game.Lock()
+				r.game.info = nil
+				r.game.Unlock()
+				close(events)
 
 				r.broadcastRoomChange()
 			}()
@@ -126,14 +144,13 @@ func (r *Room) Handle(c *websocket.Conn, l *LoginReq) error {
 			if err != nil {
 				return fmt.Errorf("failed to unmarshal game action: %s", err)
 			}
-			r.mu.Lock()
-			if r.game == nil {
-				r.mu.Unlock()
+			r.game.RLock()
+			if r.game.info == nil {
+				r.game.RUnlock()
 				return errors.New("no game in progress")
 			}
-			game := r.game
-			r.mu.Unlock()
-			game.HandleAction(l.User, msg.Action)
+			r.game.info.events <- &game.UserAction{User: l.User, Action: msg.Action}
+			r.game.RUnlock()
 		}
 	}
 }
@@ -220,13 +237,20 @@ func (r *Room) chatHistory() json.RawMessage {
 }
 
 func (r *Room) broadcastRoomChange() {
+	msg := RoomMsg{
+		Type: "room",
+	}
+
+	r.game.RLock()
+	if info := r.game.info; info != nil {
+		msg.Game = info.name
+	}
+	r.game.RUnlock()
+
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	msg := RoomMsg{
-		Type:  "room",
-		Users: make([]UserInfo, 0, len(r.users)),
-	}
+	msg.Users = make([]UserInfo, 0, len(r.users))
 
 	if host := r.users[r.Host]; host != nil {
 		msg.Users = append(msg.Users, UserInfo{
@@ -248,13 +272,6 @@ func (r *Room) broadcastRoomChange() {
 	sort.Slice(msg.Users, func(i, j int) bool {
 		return msg.Users[i].Name < msg.Users[j].Name
 	})
-
-	if r.game != nil {
-		msg.Game = &GameInfo{
-			Name:  r.game.Name(),
-			State: r.game.State(),
-		}
-	}
 
 	raw, err := json.Marshal(msg)
 	if err != nil {

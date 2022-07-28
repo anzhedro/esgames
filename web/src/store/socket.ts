@@ -9,7 +9,7 @@ interface wsResponse {
   room: string;
   messages: IMessage[];
   users: IPlayer[];
-  game: Record<string, string>;
+  game: string;
   action: Record<string, any>;
   reason: string;
 }
@@ -66,7 +66,7 @@ export function connectToRoom(user: string, room: string, avatar: number) {
       case "room":
         setUsers(response.users);
         if (response.game) {
-          setCurrentGame(response.game.name);
+          setCurrentGame(response.game);
           setTableState("game_play");
         } else {
           setTableState("game_select");

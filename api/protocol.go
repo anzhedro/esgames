@@ -51,12 +51,7 @@ type LoginReq struct {
 type RoomMsg struct {
 	Type  string     `json:"type"`
 	Users []UserInfo `json:"users"`
-	Game  *GameInfo  `json:"game,omitempty"`
-}
-
-type GameInfo struct {
-	Name  string          `json:"name"`
-	State json.RawMessage `json:"state"`
+	Game  string     `json:"game,omitempty"` // name of the game, if started
 }
 
 type GameAction struct {

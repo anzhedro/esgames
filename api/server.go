@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/anzhedro/esgames/api/game"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 )
@@ -25,14 +26,7 @@ type Server struct {
 	Rooms    map[string]*Room
 }
 
-type Game interface {
-	Name() string
-	Run()
-	State() json.RawMessage
-	HandleAction(user string, action json.RawMessage)
-}
-
-type StartGameFn func(room *Room, setting json.RawMessage) (Game, error)
+type StartGameFn func(room *Room, setting json.RawMessage) (game.Game, error)
 
 func NewServer(games map[string]StartGameFn) *Server {
 	return &Server{
