@@ -24,14 +24,14 @@ type Room struct {
 
 	game struct {
 		sync.RWMutex
-		info *gameInfo
+		info *gameInfo // if empty, no game started
 	}
 }
 
 type gameInfo struct {
-	name   string
-	game   game.Game // if empty, no game started
-	events chan game.Event
+	Game   game.Game
+	Name   string
+	Events chan game.Event
 }
 
 func NewRoom(registry map[string]StartGameFn, name, host string) *Room {
@@ -82,7 +82,7 @@ func (r *Room) Handle(c *websocket.Conn, l *LoginReq) error {
 			if err != nil {
 				return fmt.Errorf("failed to unmarshal chat message: %s", err)
 			}
-			r.sendChatMsg(l.User, msg.Text)
+			r.onChatMsg(l.User, msg.Text)
 		case "kick_user":
 			msg, err := unmarshalAs[KickMessage](raw)
 			if err != nil {
@@ -119,9 +119,9 @@ func (r *Room) Handle(c *websocket.Conn, l *LoginReq) error {
 				return errors.New("game already in progress")
 			}
 			r.game.info = &gameInfo{
-				name:   msg.Game,
-				game:   newGame,
-				events: events,
+				Game:   newGame,
+				Name:   msg.Game,
+				Events: events,
 			}
 			r.game.Unlock()
 
@@ -149,7 +149,7 @@ func (r *Room) Handle(c *websocket.Conn, l *LoginReq) error {
 				r.game.RUnlock()
 				return errors.New("no game in progress")
 			}
-			r.game.info.events <- &game.UserAction{User: l.User, Action: msg.Action, Payload: msg.Payload}
+			r.game.info.Events <- &game.UserAction{User: l.User, Action: msg.Action, Payload: msg.Payload}
 			r.game.RUnlock()
 		}
 	}
@@ -167,7 +167,8 @@ func (r *Room) Users() []string {
 	return ret
 }
 
-func (r *Room) GameToUser(user string, msg any) {
+// SendGameChat message to a given user, without adding it to the history.
+func (r *Room) SendGameChat(user string, m game.NewChatMessage) {
 	r.mu.Lock()
 	u := r.users[user]
 	r.mu.Unlock()
@@ -175,7 +176,26 @@ func (r *Room) GameToUser(user string, msg any) {
 		return
 	}
 
-	if err := u.C.WriteJSON(map[string]any{"type": "game_action", "action": msg}); err != nil {
+	msg := chatMsg{User: m.User, Text: m.Text, Created: m.Created}
+
+	if err := u.C.WriteMessage(websocket.TextMessage, marshalChatBatch(msg.ToItem())); err != nil {
+		log.Printf("failed to send a chat message within a game to %s: %s\n", user, err)
+	}
+}
+
+func (r *Room) SendGameAction(user string, action string, payload any) {
+	r.mu.Lock()
+	u := r.users[user]
+	r.mu.Unlock()
+	if u == nil {
+		return
+	}
+
+	o := map[string]any{"type": "game_action", "action": action}
+	if payload != nil {
+		o["payload"] = payload
+	}
+	if err := u.C.WriteJSON(o); err != nil {
 		log.Printf("failed to send message to %s: %s\n", user, err)
 	}
 }
@@ -202,7 +222,7 @@ func (r *Room) Broadcast(msg any) {
 
 func (r *Room) handleKick(user string, l *LoginReq) error {
 	if user == l.User {
-		r.sendChatMsg("SYSTEM", fmt.Sprintf("%q tried to kick themselves", user))
+		r.onChatMsg("SYSTEM", fmt.Sprintf("%q tried to kick themselves", user))
 		return errors.New("user tried to kick themselves")
 	}
 
@@ -220,7 +240,7 @@ func (r *Room) handleKick(user string, l *LoginReq) error {
 		return fmt.Errorf("failed to respond to kick_user: %s", err)
 	}
 	u.C.Close()
-	r.sendChatMsg("SYSTEM", fmt.Sprintf("%q was kicked out of the room", user))
+	r.onChatMsg("SYSTEM", fmt.Sprintf("%q was kicked out of the room", user))
 	r.broadcastRoomChange()
 	return nil
 }
@@ -243,7 +263,7 @@ func (r *Room) broadcastRoomChange() {
 
 	r.game.RLock()
 	if info := r.game.info; info != nil {
-		msg.Game = info.name
+		msg.Game = info.Name
 	}
 	r.game.RUnlock()
 
@@ -302,13 +322,27 @@ func (r *Room) join(l *LoginReq, c *websocket.Conn) bool {
 	return !alreadyExists
 }
 
-// Sends message to all users in the room.
-func (r *Room) sendChatMsg(user string, msg string) {
+// Sends message to the current game, if any. If the game does not hijack the message,
+// broadcasts it to all users in the room.
+func (r *Room) onChatMsg(user string, msg string) {
 	cm := chatMsg{
 		User:    user,
 		Text:    msg,
 		Created: time.Now(),
 	}
+
+	var chatHijacked bool
+	r.game.RLock()
+	if r.game.info != nil {
+		chatHijacked = game.HijacksChat(r.game.info.Game)
+		r.game.info.Events <- &game.NewChatMessage{User: user, Text: msg, Created: cm.Created}
+	}
+	r.game.RUnlock()
+
+	if chatHijacked {
+		return
+	}
+
 	r.mu.Lock()
 	r.chat = append(r.chat, cm)
 	if len(r.chat) > 100 {

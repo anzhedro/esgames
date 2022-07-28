@@ -11,8 +11,11 @@ import (
 const Name = "songquiz"
 
 type Game struct {
+	game.ChatHijackerMixin // we handle chat ourselves
+
 	Settings
-	Room *api.Room
+	Room  *api.Room
+	Users []string
 }
 
 func NewGame(room *api.Room, settings json.RawMessage) (game.Game, error) {
@@ -27,6 +30,7 @@ func NewGame(room *api.Room, settings json.RawMessage) (game.Game, error) {
 	ret := &Game{
 		Settings: s,
 		Room:     room,
+		Users:    room.Users(),
 	}
 	return ret, nil
 }

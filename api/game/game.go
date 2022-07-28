@@ -9,6 +9,17 @@ type Game interface {
 	Run(<-chan Event)
 }
 
+// Embed into a game to let the room know that the game is handling chat messages, so Room will not
+// broadcast chat messages to users.
+type ChatHijackerMixin struct{}
+
+func (ChatHijackerMixin) _hijackChat() {}
+
+func HijacksChat(g Game) bool {
+	_, ok := g.(interface{ _hijackChat() })
+	return ok
+}
+
 type Event interface {
 	_event()
 }
@@ -27,9 +38,9 @@ type UserLeft struct {
 }
 
 type NewChatMessage struct {
-	User string
-	Msg  string
-	Time time.Time
+	User    string
+	Text    string
+	Created time.Time
 }
 
 type UserAction struct {
