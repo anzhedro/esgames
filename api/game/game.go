@@ -33,6 +33,7 @@ type NewChatMessage struct {
 }
 
 type UserAction struct {
-	User   string
-	Action json.RawMessage
+	User    string
+	Action  string
+	Payload json.RawMessage
 }

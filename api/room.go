@@ -139,7 +139,7 @@ func (r *Room) Handle(c *websocket.Conn, l *LoginReq) error {
 			}()
 
 		case "game_action":
-			// {type: "game_action", action: {...}}
+			// {type: "game_action", action: "ready", payload: {...}}
 			msg, err := unmarshalAs[GameAction](raw)
 			if err != nil {
 				return fmt.Errorf("failed to unmarshal game action: %s", err)
@@ -149,7 +149,7 @@ func (r *Room) Handle(c *websocket.Conn, l *LoginReq) error {
 				r.game.RUnlock()
 				return errors.New("no game in progress")
 			}
-			r.game.info.events <- &game.UserAction{User: l.User, Action: msg.Action}
+			r.game.info.events <- &game.UserAction{User: l.User, Action: msg.Action, Payload: msg.Payload}
 			r.game.RUnlock()
 		}
 	}

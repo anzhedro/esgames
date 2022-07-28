@@ -105,11 +105,12 @@ export function startGame() {
   );
 }
 
-export function sendGameAction(action_data: any) {
+export function sendGameAction(action: string, payload?: Object|Array<any>) {
   socket()!.send(
     JSON.stringify({
       type: "game_action",
-      action: action_data.action,
+      action,
+      payload,
     })
   );
 }

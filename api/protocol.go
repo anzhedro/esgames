@@ -55,7 +55,8 @@ type RoomMsg struct {
 }
 
 type GameAction struct {
-	Action json.RawMessage `json:"action"`
+	Action  string          `json:"action"`            // kind of action
+	Payload json.RawMessage `json:"payload,omitempty"` // optional payload
 }
 
 type UserInfo struct {

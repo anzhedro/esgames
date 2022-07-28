@@ -43,7 +43,7 @@ export const GamePlay = (props: GamePlayProps) => {
                 <button
                   class="green_btn"
                   onClick={() => {
-                    sendGameAction("btn_click");
+                    sendGameAction("click");
                     setShowButton(false);
                   }}
                 >

@@ -48,7 +48,7 @@ func (g *Game) Run(events <-chan game.Event) {
 	for ev := range events {
 		switch ev := ev.(type) {
 		case *game.UserAction:
-			if !g.onAction(ev.User, ev.Action) {
+			if !g.onAction(ev.User) {
 				return
 			}
 		}
@@ -56,7 +56,7 @@ func (g *Game) Run(events <-chan game.Event) {
 }
 
 // Returns false if the game should end.
-func (g *Game) onAction(user string, action json.RawMessage) bool {
+func (g *Game) onAction(user string) bool {
 	if wantUser := g.Users[g.curPlayer]; user != wantUser {
 		log.Printf("Game expects %s to send answer, got %s", wantUser, user)
 		return true
