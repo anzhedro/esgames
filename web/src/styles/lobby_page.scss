@@ -86,8 +86,7 @@
         }
 
         .player {
-          width: 100%;
-          @include sizes(90px, 10px);
+          @include sizes(90px, 100%);
 
           display: flex;
           align-items: center;
@@ -174,11 +173,11 @@
 
     .content {
       @include sizes(100%, 100%);
-      
+
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 15px;
-      
+
       overflow-y: scroll;
       flex: 0 1 auto;
       padding: 15px;

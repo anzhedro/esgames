@@ -1,4 +1,4 @@
-import { createResource, createSignal, For, Match, mergeProps, Show, Suspense, Switch } from "solid-js";
+import { createEffect, createResource, createSignal, For, Match, mergeProps, Show, Suspense, Switch } from "solid-js";
 import { Spinner } from "../components/Spinner";
 
 interface SongItem {
@@ -69,13 +69,15 @@ const SongSearch = () => {
   const [songs] = createResource(querySearchTerm, fetchMusic);
   return (
     <div class="quiz-game">
-      <div class="quiz-game__pick__search">
-        <input
-          class="input__field"
-          type="text"
-          placeholder="Song / artist"
-          onChange={(e) => setSearchTerm(e.currentTarget.value)}
-        />
+      <form class="quiz-game__pick__search" onSubmit={(e) => e.preventDefault()}>
+        <div class="wrapper">
+          <input
+            class="input__field"
+            type="text"
+            placeholder="Song / artist"
+            onChange={(e) => setSearchTerm(e.currentTarget.value)}
+          />
+        </div>
 
         <button
           class="button --secondary "
@@ -86,20 +88,25 @@ const SongSearch = () => {
         >
           <span class="button__label --secondary">Search</span>
         </button>
-      </div>
+      </form>
       <Suspense fallback={<Spinner />}>
         <Show when={songs()} fallback={<div></div>}>
           <div class="quiz-game__pick__results">
             <For each={songs()!.results}>
               {(song) => (
                 <div
-                  class="quiz-game__pick__results__row"
+                  classList={{
+                    selected: selectedSong() === song,
+                    "quiz-game__pick__results__row": true,
+                  }}
                   onClick={() => {
+                    if (selectedSong() === song) return;
+                    setSelectedSong(null);
                     setSelectedSong(song);
                     // setGameState("pick_song_player");
                   }}
                 >
-                  <span class="quiz-game__pick__results__row__main">{song.trackName}</span>- {song.artistName}
+                  <span class="quiz-game__pick__results__row__main">{song.trackName}</span> - {song.artistName}
                 </div>
               )}
             </For>
@@ -113,37 +120,40 @@ const SongSearch = () => {
 const SongPreview = () => {
   return (
     <>
-      <div
-        class="quiz-game__pick__song__image"
-        style={{
-          "background-image": `url(${selectedSong()!.artworkUrl100})`,
-          height: "100px",
-          width: "100px",
-        }}
-      ></div>
-      <div class="quiz-game__pick__song__player__content">
-        <div class="quiz-game__pick__song__player__content__top">
-          <div class="quiz-game__pick__song__name">{selectedSong()!.trackName}</div>
-          <div class="quiz-game__pick__song__details">{selectedSong()!.artistName}</div>
-          <audio class="quiz-game__pick__song__audio" controls={true} style={{ height: "40px", width: "300px" }}>
-            <source src={selectedSong()!.previewUrl} type="audio/mpeg" />
-            Your browser does not support the audio element.
-          </audio>
+      <div class="quiz-game__player">
+        <div
+          class="quiz-game__pick__song__image"
+          style={{
+            "background-image": `url(${selectedSong()!.artworkUrl100})`,
+            height: "100px",
+            width: "100px",
+          }}
+        ></div>
+        <div class="quiz-game__pick__song__player__content">
+          <div class="quiz-game__pick__song__player__content__top">
+            <div class="quiz-game__pick__song__name">{selectedSong()!.trackName}</div>
+            <div class="quiz-game__pick__song__details">{selectedSong()!.artistName}</div>
+            <audio class="quiz-game__pick__song__audio" controls={true} style={{ height: "40px", width: "300px" }}>
+              {/* <source src={selectedSong()!.previewUrl} type="audio/mpeg" /> */}
+              <source src={selectedSong()!.previewUrl} type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </audio>
+          </div>
         </div>
-        <div class="quiz-game__pick__song__player__content__bottom">
-          <button class="button --link " onClick={() => setGameState("pick_search")}>
+      </div>
+      <div class="quiz-game__pick__song__player__content__bottom">
+        {/* <button class="button --link " onClick={() => setGameState("pick_search")}>
             <span class="button__label --link">Cancel</span>
-          </button>
-          <button
-            class="button --primary "
-            onClick={() => {
-              setGameState("confirm_song_title");
-              setUserGuess(selectedSong()!.trackName);
-            }}
-          >
-            <span class="button__label --primary">Pick Song</span>
-          </button>
-        </div>
+          </button> */}
+        <button
+          class="button --primary "
+          onClick={() => {
+            setGameState("confirm_song_title");
+            setUserGuess(selectedSong()!.trackName);
+          }}
+        >
+          <span class="button__label --primary">Pick Song</span>
+        </button>
       </div>
     </>
   );

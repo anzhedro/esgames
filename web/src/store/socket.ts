@@ -2,6 +2,7 @@ import { iAmHost, setAppState, setRoom } from "./state";
 import { addMessages } from "./chat";
 import { setCurrentGame, setTableState, setShowButton, setUsers } from "./room";
 import { createSignal } from "solid-js";
+import { byName } from "../games/games";
 import { IMessage, IPlayer } from "../utils/types";
 
 interface wsMessage extends gameActionMessage {
@@ -70,14 +71,14 @@ export function connectToRoom(user: string, room: string, avatar: number) {
       case "room":
         setUsers(response.users);
         if (response.game) {
-          setCurrentGame(response.game);
+          setCurrentGame(byName(response.game));
           setTableState("game_play");
         } else {
           setTableState("game_select");
         }
         return;
       case "game_action":
-        const {action, payload} = response as gameActionMessage;
+        const { action, payload } = response as gameActionMessage;
         // TODO: dispatch action to a particular game
         // Handling actions for "reaction" game
         switch (action) {
@@ -85,11 +86,11 @@ export function connectToRoom(user: string, room: string, avatar: number) {
             setShowButton(true);
             return;
           case "your_time_sec":
-            socket()!.send(JSON.stringify({type: "chat", text: `My reaction time is ${payload}`}));
+            socket()!.send(JSON.stringify({ type: "chat", text: `My reaction time is ${payload}` }));
             return;
           case "game_over":
             if (iAmHost()) {
-              socket()!.send(JSON.stringify({type: "chat", text: `Total is ${payload}`}));
+              socket()!.send(JSON.stringify({ type: "chat", text: `Total is ${payload}` }));
             }
             return;
           default:

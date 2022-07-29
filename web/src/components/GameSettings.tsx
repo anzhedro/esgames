@@ -1,5 +1,6 @@
-import { createSignal, For, Show } from "solid-js";
-import { gameSettingsOptinos, setTableState, startGame } from "../store/room";
+import { createSignal, For, Show, createEffect, Switch, Match } from "solid-js";
+import { currentLanguage, localizationMap } from "../store/localization";
+import { currentGame, gameSettingsOptions, selectedGameSettings, setTableState, startGame } from "../store/room";
 import { iAmHost } from "../store/state";
 
 const [difficultyOptions, setDifficultyOptions] = createSignal(["Легко", "Средне", "Сложно"]);
@@ -74,16 +75,16 @@ export const Difficulty = (props: any) => {
 };
 
 export const TeamsCount = () => {
-  const [currentCount, setCurrentCount] = createSignal(gameSettingsOptinos().teamsCount);
+  const [currentCount, setCurrentCount] = createSignal(selectedGameSettings().teamsCount);
 
   return (
     <div class="commands_count">
       <h3>Количество команд</h3>
 
       <div class="row">
-        <For each={gameSettingsOptinos().teamsCount} fallback={<div>Loading...</div>}>
+        <For each={gameSettingsOptions().teamsCount} fallback={<div>Loading...</div>}>
           {(count) => (
-            <button class={currentCount() == count ? "active" : ""} onClick={() => setCurrentCount(count)}>
+            <button classList={{ active: currentCount() === count }} onClick={() => setCurrentCount(count)}>
               {count}
             </button>
           )}
@@ -94,31 +95,23 @@ export const TeamsCount = () => {
 };
 
 export const GameSettings = () => {
+  createEffect(() => {
+    console.log(gameSettingsOptions());
+  });
+
   return (
     <>
       <div class="header" style={{ justifyContent: "space-around" }}>
         <button onClick={() => setTableState("game_rules")}>ПРАВИЛА</button>
 
-        <Show when={Object.keys(gameSettingsOptinos()).length === 0}>
+        <Show when={currentGame()?.settings}>
           <button onClick={() => setTableState("game_settings")}>НАСТРОЙКИ</button>
         </Show>
       </div>
       <div class="content game_settings">
-        <h2>Настройки игры Alias</h2>
-        <Show when={"roundTime" in gameSettingsOptinos()}>
-          <RoundTime />
-        </Show>
-
-        <Show when={"roundCount" in gameSettingsOptinos()}>
-          <RoundCount />
-        </Show>
-
-        <Show when={"difficulty" in gameSettingsOptinos()}>
-          <Difficulty />
-        </Show>
-
-        <Show when={"teamsCount" in gameSettingsOptinos()}>
-          <TeamsCount />
+        <h2>Настройки игры {currentGame()?.title}</h2>
+        <Show when={currentGame()?.settings} fallback={<p>No settings in this game</p>}>
+          {currentGame()!.settings!}
         </Show>
       </div>
       <div class="footer">

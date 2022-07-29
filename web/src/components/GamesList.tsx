@@ -1,21 +1,14 @@
 import { For } from "solid-js";
-import { setCurrentGameId, setGameSettingsOptinos, setTableState } from "../store/room";
+import { setCurrentGame, setGameSettingsOptions, setTableState } from "../store/room";
 import { copyToClipboard } from "../utils/helpers";
 import { Spinner } from "./Spinner";
 
-import games from "../utils/games.json";
 import { useParams } from "solid-app-router";
-
-interface IGame {
-  title: string;
-  image: string;
-  gameId: string;
-  settings: Record<string, any>;
-}
+import { IGame } from "../utils/types";
+import { Games } from "../games/games";
 
 export const GamesList = () => {
   const params = useParams();
-
   return (
     <>
       <div class="header">
@@ -23,14 +16,13 @@ export const GamesList = () => {
       </div>
 
       <div class="content">
-        <For each={games} fallback={<Spinner />}>
-          {(game: IGame | any) => (
+        <For each={Games} fallback={<Spinner />}>
+          {(game: IGame) => (
             <div
               class="game_card"
               onClick={() => {
+                setCurrentGame(game);
                 setTableState("game_rules");
-                setCurrentGameId(game.gameId);
-                setGameSettingsOptinos(game.settings);
               }}
             >
               <img src={game.image} />
