@@ -6,6 +6,7 @@ import (
 	"math/rand"
 
 	"github.com/anzhedro/esgames/api"
+	"github.com/anzhedro/esgames/api/game"
 )
 
 const Name = "hat"
@@ -16,7 +17,7 @@ type Game struct {
 	Words []string // words in hat
 }
 
-func NewGame(room *api.Room, settings json.RawMessage) (api.Game, error) {
+func NewGame(room *api.Room, settings json.RawMessage) (game.Game, error) {
 	var s Settings
 	if err := json.Unmarshal(settings, &s); err != nil {
 		return nil, fmt.Errorf("failed to parse settings: %v", err)
@@ -44,22 +45,16 @@ func NewGame(room *api.Room, settings json.RawMessage) (api.Game, error) {
 	return ret, nil
 }
 
-func (g *Game) Name() string {
-	return Name
+func (g *Game) Run(events <-chan game.Event) {
+	for ev := range events {
+		switch ev := ev.(type) {
+		case *game.UserAction:
+			fmt.Printf("HAT: %v: %v\n", ev.User, ev.Action)
+		}
+	}
 }
 
-func (g *Game) Run() {
-}
-
-func (g *Game) State() json.RawMessage {
-	return nil
-}
-
-func (g *Game) HandleAction(user string, action json.RawMessage) {
-
-}
-
-type State struct {
+type state struct {
 	Round int
 	Team  int
 }

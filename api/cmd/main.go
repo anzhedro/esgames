@@ -9,6 +9,7 @@ import (
 	"github.com/anzhedro/esgames/api"
 	"github.com/anzhedro/esgames/api/hat"
 	"github.com/anzhedro/esgames/api/reaction"
+	"github.com/anzhedro/esgames/api/songquiz"
 )
 
 var (
@@ -21,6 +22,7 @@ func main() {
 	games := map[string]api.StartGameFn{
 		reaction.Name: reaction.NewGame,
 		hat.Name:      hat.NewGame,
+		songquiz.Name: songquiz.NewGame,
 	}
 	srv := api.NewServer(games)
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("dist/assets"))))

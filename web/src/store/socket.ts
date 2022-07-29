@@ -4,14 +4,18 @@ import { setCurrentGame, setTableState, setShowButton, setUsers } from "./room";
 import { createSignal } from "solid-js";
 import { IMessage, IPlayer } from "../utils/types";
 
-interface wsResponse {
+interface wsMessage extends gameActionMessage {
   type: string;
   room: string;
   messages: IMessage[];
   users: IPlayer[];
-  game: Record<string, string>;
-  action: Record<string, any>;
+  game: string;
   reason: string;
+}
+
+interface gameActionMessage {
+  action: string;
+  payload?: any;
 }
 
 const [socket, setSocket] = createSignal<WebSocket | null>(null);
@@ -49,7 +53,7 @@ export function connectToRoom(user: string, room: string, avatar: number) {
   };
 
   soc.onmessage = (event) => {
-    const response = JSON.parse(event.data) as wsResponse;
+    const response = JSON.parse(event.data) as wsMessage;
     console.log("ws GOT: ", response);
     switch (response.type) {
       case "login_success":
@@ -66,28 +70,31 @@ export function connectToRoom(user: string, room: string, avatar: number) {
       case "room":
         setUsers(response.users);
         if (response.game) {
-          setCurrentGame(response.game.name);
+          setCurrentGame(response.game);
           setTableState("game_play");
         } else {
           setTableState("game_select");
         }
         return;
       case "game_action":
-        if ("already_pressed" in response.action) {
-          setShowButton(true);
-          return;
+        const {action, payload} = response as gameActionMessage;
+        // TODO: dispatch action to a particular game
+        // Handling actions for "reaction" game
+        switch (action) {
+          case "press_btn":
+            setShowButton(true);
+            return;
+          case "your_time_sec":
+            socket()!.send(JSON.stringify({type: "chat", text: `My reaction time is ${payload}`}));
+            return;
+          case "game_over":
+            if (iAmHost()) {
+              socket()!.send(JSON.stringify({type: "chat", text: `Total is ${payload}`}));
+            }
+            return;
+          default:
+            return;
         }
-        if (response.action.your_time_sec) {
-          socket()!.send(JSON.stringify({ type: "chat", text: `My reaction time is ${response.action.your_time_sec}` }));
-          return;
-        }
-        if (response.action.total_time_sec) {
-          if (iAmHost()) {
-            socket()!.send(JSON.stringify({ type: "chat", text: `Total is ${response.action.total_time_sec}` }));
-          }
-          return;
-        }
-        return;
       case "kick_user":
         alert(response.reason);
         setSocket(null);
