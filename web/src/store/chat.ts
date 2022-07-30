@@ -13,10 +13,14 @@ export const formatDate = (d: Date) => {
 export const [messages, setMessages] = createSignal<IMessage[]>([]);
 export const [chatInput, setChatInput] = createSignal("");
 
+export function sendMsg(text: string) {
+  socket()!.send(JSON.stringify({ type: "chat", text: text }));
+}
+
 export function sendMessage() {
   const text = chatInput().trim();
   if (!text || appState() !== "connected") return;
-  socket()!.send(JSON.stringify({ type: "chat", text: text }));
+  sendMsg(text);
   setChatInput("");
 }
 

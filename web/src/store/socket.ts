@@ -1,6 +1,6 @@
-import { iAmHost, setAppState, setRoom } from "./state";
+import { setAppState, setRoom } from "./state";
 import { addMessages } from "./chat";
-import { setCurrentGame, setTableState, setShowButton, setUsers } from "./room";
+import { setCurrentGame, setTableState, setUsers, currentGame } from "./room";
 import { createSignal } from "solid-js";
 import { byName } from "../games/games";
 import { IMessage, IPlayer } from "../utils/types";
@@ -23,7 +23,7 @@ const [socket, setSocket] = createSignal<WebSocket | null>(null);
 
 export function connectToRoom(user: string, room: string, avatar: number) {
   setAppState("connecting");
-  const soc = new WebSocket("ws://" + location.host + "/ws");
+  const soc = new WebSocket("ws://localhost:8000/ws");
   setSocket(soc);
 
   soc.onclose = (event) => {
@@ -79,23 +79,8 @@ export function connectToRoom(user: string, room: string, avatar: number) {
         return;
       case "game_action":
         const { action, payload } = response as gameActionMessage;
-        // TODO: dispatch action to a particular game
-        // Handling actions for "reaction" game
-        switch (action) {
-          case "press_btn":
-            setShowButton(true);
-            return;
-          case "your_time_sec":
-            socket()!.send(JSON.stringify({ type: "chat", text: `My reaction time is ${payload}` }));
-            return;
-          case "game_over":
-            if (iAmHost()) {
-              socket()!.send(JSON.stringify({ type: "chat", text: `Total is ${payload}` }));
-            }
-            return;
-          default:
-            return;
-        }
+        currentGame()!.handleBEGameAction(action, payload);
+        return;
       case "kick_user":
         alert(response.reason);
         setSocket(null);
@@ -104,5 +89,7 @@ export function connectToRoom(user: string, room: string, avatar: number) {
     }
   };
 }
+
+function handleGameAction(action: string, payload?: any) {}
 
 export { socket };

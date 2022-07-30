@@ -1,5 +1,5 @@
 import { For } from "solid-js";
-import { setCurrentGame, setGameSettingsOptions, setTableState } from "../store/room";
+import { setCurrentGame, setTableState } from "../store/room";
 import { copyToClipboard } from "../utils/helpers";
 import { Spinner } from "./Spinner";
 
@@ -32,7 +32,7 @@ export const GamesList = () => {
         </For>
       </div>
       <div class="footer">
-        <button onClick={() => copyToClipboard("localhost:3000/lobby/" + params.id)}>ПРИГЛАСИТЬ</button>
+        <button onClick={() => copyToClipboard(location.host + "/room/" + params.id)}>ПРИГЛАСИТЬ</button>
       </div>
     </>
   );

@@ -1,0 +1,26 @@
+.re {
+  cursor: url("/img/s.png") 16 16, auto;
+}
+
+.reaction_btn {
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  transition: all 0.1s;
+
+  background: red;
+  @include dfc;
+
+  cursor: url("/img/s.png") 16 16, auto;
+  .dot {
+    border-radius: 100%;
+    border: 17px $white solid;
+    background: red;
+    height: 65px;
+    width: 65px;
+  }
+
+  &:hover {
+    transform: scale(1.5);
+  }
+}

@@ -2,6 +2,21 @@
   @include dfc;
   flex-direction: column;
   height: 100%;
+  .title {
+    margin-bottom: 10px;
+  }
+  .quiz-game__pick__song__player__content__bottom {
+    .button {
+      background-color: $red;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+      &:hover {
+        background-color: $lightred;
+      }
+    }
+  }
 }
 
 .quiz-game {

@@ -161,7 +161,7 @@ const SongPreview = () => {
 
 const SongTitleConfirm = () => {
   return (
-    <>
+    <div class="quiz-game__chosen__song">
       <div class="quiz-game__pick__stage">
         <div class="input__container quiz-game__pick__song__edit-name">
           <input
@@ -172,21 +172,22 @@ const SongTitleConfirm = () => {
             onChange={(e) => setUserGuess(e.currentTarget.value)}
           />
         </div>
-
-        <button class="button --link " onClick={() => setGameState("pick_search")}>
-          <span class="button__label --link">Back</span>
-        </button>
-        <button
-          class="button --primary "
-          onClick={() => {
-            console.log(userGuess());
-            // send ws message
-          }}
-        >
-          <span class="button__label --primary">Choose this song!</span>
-        </button>
+        <div class="buttons">
+          <button class="button --link " onClick={() => setGameState("pick_search")}>
+            Back
+          </button>
+          <button
+            class="button --primary "
+            onClick={() => {
+              console.log(userGuess());
+              // send ws message
+            }}
+          >
+            Choose this song!
+          </button>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -195,7 +196,7 @@ export const SongGame = () => {
     <div class="quiz-container">
       <Switch>
         <Match when={gameState() === "pick_search"}>
-          <div class="title">Pick a song for others to guess:</div>
+          <h2 class="title">Pick a song for others to guess:</h2>
           <SongSearch />
           <Show when={selectedSong()}>
             <SongPreview />

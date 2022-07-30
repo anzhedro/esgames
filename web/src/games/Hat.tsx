@@ -162,7 +162,7 @@ const startGame = () => {
   }, 1000);
 };
 
-const nextWithStatus = (status: number) => {
+const nextWordWithStatus = (status: number) => {
   let newArr = roundWords().slice(0, -1); // Удаляем последний элемент массива
   newArr.push({ word: roundWords()[roundWords().length - 1].word, state: status }); // Добавляем в конец массива новый элемент
   newArr.push({ word: words[wordsCounter()], state: 0 });
@@ -171,11 +171,11 @@ const nextWithStatus = (status: number) => {
 };
 
 export const skipWord = () => {
-  nextWithStatus(0);
+  nextWordWithStatus(0);
 };
 
 const acceptWord = () => {
-  nextWithStatus(1);
+  nextWordWithStatus(1);
 };
 
 export const Game: IGame = {

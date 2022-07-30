@@ -1,0 +1,29 @@
+.quiz-game__chosen__song {
+  display: flex;
+  .quiz-game__pick__song__edit-name {
+    background-color: $red;
+    border-radius: 0.5rem;
+    padding: 5px;
+    margin-bottom: 10px;
+    .input__field {
+      padding: 5px;
+      background-color: white;
+      border-radius: 0.5rem;
+    }
+  }
+  .buttons {
+    display: flex;
+    gap: 10px;
+
+    .button {
+      background-color: $red;
+      padding: 10px;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      color: white;
+      &:hover {
+        background-color: $lightred;
+      }
+    }
+  }
+}

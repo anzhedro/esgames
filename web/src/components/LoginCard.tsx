@@ -1,6 +1,5 @@
 import { login, name, room, avatar, setRandomAvatar, setName, setRoom } from "../store/state";
 import { Translation } from "../store/localization";
-import { createEffect } from "solid-js";
 
 export const LoginCard = (props: { lang: Translation }) => {
   return (
@@ -24,7 +23,7 @@ export const LoginCard = (props: { lang: Translation }) => {
               if (e.key === "Enter") login();
             }}
             value={name()}
-            />
+          />
           <input
             placeholder={props.lang.roomName}
             onKeyUp={(e) => {
@@ -37,7 +36,7 @@ export const LoginCard = (props: { lang: Translation }) => {
       </div>
       <div class="footer">
         <button onClick={() => login()} disabled={name().length > 0 ? false : true}>
-          <img src="/img/play.svg"/> 
+          <img src="/img/play.svg" />
           <span>{room() === "" ? props.lang.create : props.lang.join}</span>
         </button>
       </div>

@@ -1,6 +1,5 @@
-import { createSignal, For, Show, createEffect, Switch, Match } from "solid-js";
-import { currentLanguage, localizationMap } from "../store/localization";
-import { currentGame, gameSettingsOptions, selectedGameSettings, setTableState, startGame } from "../store/room";
+import { createSignal, For, Show, createEffect} from "solid-js";
+import { currentGame, setTableState, startGame } from "../store/room";
 import { iAmHost } from "../store/state";
 
 const [difficultyOptions, setDifficultyOptions] = createSignal(["Легко", "Средне", "Сложно"]);
@@ -75,28 +74,28 @@ export const Difficulty = (props: any) => {
 };
 
 export const TeamsCount = () => {
-  const [currentCount, setCurrentCount] = createSignal(selectedGameSettings().teamsCount);
+  // const [currentCount, setCurrentCount] = createSignal(selectedGameSettings().teamsCount);
 
   return (
     <div class="commands_count">
       <h3>Количество команд</h3>
 
-      <div class="row">
-        <For each={gameSettingsOptions().teamsCount} fallback={<div>Loading...</div>}>
+      {/* <div class="row">
+        <For each={currentGame()!.settings!.teamsCount} fallback={<div>Loading...</div>}>
           {(count) => (
             <button classList={{ active: currentCount() === count }} onClick={() => setCurrentCount(count)}>
               {count}
             </button>
           )}
         </For>
-      </div>
+      </div> */}
     </div>
   );
 };
 
 export const GameSettings = () => {
   createEffect(() => {
-    console.log(gameSettingsOptions());
+    console.log(currentGame()!.settings!);
   });
 
   return (

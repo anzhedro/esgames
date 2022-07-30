@@ -149,6 +149,10 @@
     overflow: hidden;
     background: $white;
 
+    .game_play {
+      height: 100%;
+    }
+
     .games_table_wrapper {
       @include flex-col;
       @include sizes(100%, 100%);

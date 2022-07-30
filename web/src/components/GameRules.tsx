@@ -1,8 +1,6 @@
 import { Show } from "solid-js";
-import { setTableState, startGame, gameSettingsOptions, currentGame } from "../store/room";
+import { setTableState, startGame, currentGame } from "../store/room";
 import { iAmHost } from "../store/state";
-import * as hat from "../games/Hat";
-import * as reaction from "../games/Reaction";
 
 export const GameRules = () => {
   return (
