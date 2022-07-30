@@ -21,6 +21,3 @@ COPY --from=build-front /app/dist ./dist
 COPY --from=build-server /app/server ./server
 RUN find /root/
 CMD [ "./server", "--port=8000" ]
-
-# docker build --tag docker-go-server .
-# docker run --rm -it -p 8000:8000 docker-go-server
