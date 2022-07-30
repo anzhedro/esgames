@@ -1,9 +1,9 @@
 import { GamesList } from "./GamesList";
 import { GameRules } from "./GameRules";
-import { GamePlay } from "./GamePlay";
 import { GameSettings } from "./GameSettings";
 import { Match, Switch } from "solid-js";
 import { tableState } from "../store/room";
+import { currentGame } from "../store/room";
 
 export const GamesTable = () => {
   return (
@@ -23,7 +23,7 @@ export const GamesTable = () => {
           </Match>
 
           <Match when={tableState() === "game_play"}>
-            <GamePlay isDemo={false} />
+            <div class="game_play">{currentGame()!.game}</div>
           </Match>
         </Switch>
       </div>

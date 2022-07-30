@@ -1,5 +1,5 @@
 import { createSignal, JSXElement, Show } from "solid-js";
-import { skipWord } from "../store/hatDemo";
+import { skipWord } from "../games/Hat";
 export const WordsList = (props: { children: JSXElement }) => {
   return <div class="wordsList">{props.children}</div>;
 };

@@ -1,7 +1,8 @@
 import { Show } from "solid-js";
-import { setTableState, startGame, gameSettingsOptinos } from "../store/room";
+import { setTableState, startGame, gameSettingsOptions, currentGame } from "../store/room";
 import { iAmHost } from "../store/state";
-import { AliasRules } from "./AliasRules";
+import * as hat from "../games/Hat";
+import * as reaction from "../games/Reaction";
 
 export const GameRules = () => {
   return (
@@ -9,13 +10,11 @@ export const GameRules = () => {
       <div class="header" style={{ justifyContent: "space-around" }}>
         <button onClick={() => setTableState("game_rules")}>ПРАВИЛА</button>
 
-        <Show when={Object.keys(gameSettingsOptinos()).length === 0}>
+        <Show when={currentGame()?.settings}>
           <button onClick={() => setTableState("game_settings")}>НАСТРОЙКИ</button>
         </Show>
       </div>
-      <div class="content game_rules">
-        <AliasRules />
-      </div>
+      <div class="content game_rules">{currentGame()!.rules}</div>
       <div class="footer">
         <button onClick={() => setTableState("game_select")}>НАЗАД</button>
 

@@ -19,6 +19,7 @@ export type Translation = {
   messagePlaceholder: string;
   nomessages: string;
   gameTitles: Record<string, string>;
+  songquizTopics: string[];
 };
 
 const localizationMap: Record<string, Translation> = {
@@ -52,10 +53,36 @@ const localizationMap: Record<string, Translation> = {
       codenames: "Code names",
       crocodile: "Crocodile",
       guess_melody: "Guess the melody",
-      soglio: "Songlio",
+      songquiz: "Songlio",
       lie: "Lie",
       vladilen: "Vladilen",
     },
+
+    songquizTopics: [
+      "No theme",
+      "Custom",
+      "Lockdown",
+      "Disney",
+      "TV Shows",
+      "Film Soundtracks",
+      "Cartoon Themes",
+      "Songs with a name in them",
+      "Songs containing a place/city/country",
+      "Colours",
+      "Videogames",
+      "80s",
+      "90s",
+      "00s",
+      "Christmas",
+      "Musicals",
+      "Covers",
+      "Songs where the name is never mentioned in the lyrics",
+      "Songs in a different language",
+      "Game Show Theme Songs",
+      "Rap",
+      "Classical music",
+      "One-word artist names",
+    ],
   },
 
   ru: {
@@ -87,10 +114,35 @@ const localizationMap: Record<string, Translation> = {
       codenames: "Кодовые имена",
       crocodile: "Крокодил",
       guess_melody: "Угадай мелодию",
-      soglio: "Песня",
+      songquiz: "Песня",
       lie: "Ложь",
       vladilen: "Владилен",
     },
+    songquizTopics: [
+      "Без темы",
+      "Пользовательская",
+      "Карантин",
+      "Дисней",
+      "ТВ-шоу",
+      "Фильмы",
+      "Мультфильмы",
+      "Песни с названием в них",
+      "Песни с местом/городом/страной",
+      "Цвета",
+      "Видеоигры",
+      "80ые",
+      "90ые",
+      "00ые",
+      "Рождество",
+      "Мьюзиклы",
+      "Каверы",
+      "Песни, где название никогда не встречается в тексте",
+      "Песни на другом языке",
+      "Заставки игровых шоу",
+      "Рэп",
+      "Классическая музыка",
+      "Име исполнителя из одного слова",
+    ],
   },
 };
 

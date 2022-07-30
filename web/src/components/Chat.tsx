@@ -57,7 +57,11 @@ export const Chat = (props: { lang: Translation }) => {
         <div class="smiles-board">
           <div class="smiles-board-list">
             <For each={emojisIcons} fallback={<Spinner />}>
-              {(emoji: any) => <button onClick={() => setChatInput(`${chatInput()} ${emoji}`)}>{emoji}</button>}
+              {(emoji: any) => (
+                <button onClick={() => setChatInput(`${chatInput()} ${emoji}`)}>
+                  <span>{emoji}</span>
+                </button>
+              )}
             </For>
           </div>
         </div>
