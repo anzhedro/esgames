@@ -168,33 +168,19 @@ func (r *Room) Users() []string {
 }
 
 // SendGameChat message to a given user, without adding it to the history.
-func (r *Room) SendGameChat(user string, m game.NewChatMessage) {
-	r.mu.Lock()
-	u := r.users[user]
-	r.mu.Unlock()
-	if u == nil {
+func (r *Room) SendGameChat(m *game.NewChatMessage, users ...string) {
+	conns := r.getUsers(users...)
+	if len(conns) == 0 {
 		return
 	}
 
 	msg := chatMsg{User: m.User, Text: m.Text, Created: m.Created}
-
-	if err := u.C.WriteMessage(websocket.TextMessage, marshalChatBatch(msg.ToItem())); err != nil {
-		log.Printf("failed to send a chat message within a game to %s: %s\n", user, err)
-	}
+	blob := mustMarshal(ChatBatch{Type: "chat", Messages: []ChatBatchItem{msg.ToItem()}})
+	broadcast(blob, conns...)
 }
 
 func (r *Room) SendGameAction(action string, payload any, users ...string) {
-	conns := make([]*User, 0, len(users))
-	r.mu.Lock()
-	for _, name := range users {
-		if u := r.users[name]; u != nil {
-			conns = append(conns, u)
-		} else {
-			log.Printf("Failed to send game action %q to %s: user not found\n", action, name)
-		}
-	}
-	r.mu.Unlock()
-
+	conns := r.getUsers(users...)
 	if len(conns) == 0 {
 		return
 	}
@@ -203,36 +189,35 @@ func (r *Room) SendGameAction(action string, payload any, users ...string) {
 	if payload != nil {
 		o["payload"] = payload
 	}
+
 	blob, err := json.Marshal(o)
 	if err != nil {
 		log.Fatalf("Failed to marshal message %#v: %s", o, err)
 	}
-
-	for _, u := range conns {
-		if err := u.C.WriteMessage(websocket.TextMessage, blob); err != nil {
-			log.Printf("Failed to send a message to %s: %s\n", u.Name, err)
-		}
-	}
+	broadcast(blob, conns...)
 }
 
 func (r *Room) Broadcast(msg any) {
-	blob, err := json.Marshal(msg)
-	if err != nil {
-		log.Fatalf("failed to marshal message %#v: %s", msg, err)
-	}
-
 	r.mu.Lock()
-	conns := make(map[string]*websocket.Conn)
-	for name := range r.users {
-		conns[name] = r.users[name].C
+	users := make([]*User, 0, len(r.users))
+	for _, u := range r.users {
+		users = append(users, u)
 	}
 	r.mu.Unlock()
 
-	for name, c := range conns {
-		if err := c.WriteMessage(websocket.TextMessage, blob); err != nil {
-			log.Printf("failed to resend a message to %s: %s\n", name, err)
+	broadcast(mustMarshal(msg), users...)
+}
+
+func (r *Room) getUsers(users ...string) []*User {
+	ret := make([]*User, 0, len(users))
+	r.mu.Lock()
+	for _, name := range users {
+		if u := r.users[name]; u != nil {
+			ret = append(ret, u)
 		}
 	}
+	r.mu.Unlock()
+	return ret
 }
 
 func (r *Room) handleKick(user string, l *LoginReq) error {
@@ -268,7 +253,7 @@ func (r *Room) chatHistory() json.RawMessage {
 	}
 	r.mu.Unlock()
 
-	return marshalChatBatch(msgs...)
+	return mustMarshal(ChatBatch{Type: "chat", Messages: msgs})
 }
 
 func (r *Room) broadcastRoomChange() {
@@ -308,14 +293,9 @@ func (r *Room) broadcastRoomChange() {
 		return msg.Users[i].Name < msg.Users[j].Name
 	})
 
-	raw, err := json.Marshal(msg)
-	if err != nil {
-		log.Fatalf("Failed to marshal room message: %s. Msg:\n%#v", err, msg)
-		return
-	}
-
+	blob := mustMarshal(msg)
 	for name, u := range r.users {
-		if err := u.C.WriteMessage(websocket.TextMessage, raw); err != nil {
+		if err := u.C.WriteMessage(websocket.TextMessage, blob); err != nil {
 			log.Printf("failed to send room update to %s: %s\n", name, err)
 		}
 	}
@@ -364,7 +344,9 @@ func (r *Room) onChatMsg(user string, msg string) {
 		r.chat = r.chat[1:]
 	}
 	r.mu.Unlock()
-	r.Broadcast(marshalChatBatch(cm.ToItem()))
+
+	blob := mustMarshal(ChatBatch{Type: "chat", Messages: []ChatBatchItem{cm.ToItem()}})
+	r.Broadcast(blob)
 }
 
 // Returns true if the user was present.
@@ -397,10 +379,18 @@ func (c *chatMsg) ToItem() ChatBatchItem {
 	}
 }
 
-func marshalChatBatch(msgs ...ChatBatchItem) json.RawMessage {
-	blob, err := json.Marshal(ChatBatch{Type: "chat", Messages: msgs})
+func mustMarshal(v any) json.RawMessage {
+	blob, err := json.Marshal(v)
 	if err != nil {
-		log.Fatalf("failed to marshal chat messages: %s", err)
+		log.Fatalf("failed to marshal %#v: %s", v, err)
 	}
 	return blob
+}
+
+func broadcast(blob json.RawMessage, users ...*User) {
+	for _, u := range users {
+		if err := u.C.WriteMessage(websocket.TextMessage, blob); err != nil {
+			log.Printf("Failed to send message to %s: %s\n", u.Name, err)
+		}
+	}
 }

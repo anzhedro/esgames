@@ -9,6 +9,7 @@ BE -> FE: Resend settings to everyone
 	* { type: "game_action", action: "settings", payload: Settings{} }
 FE should show everyone a screen to pick a song for settings.TimeToPick seconds.
 	When picked -> send to BE: { type: "game_action", action: "picked_song", payload: UserSong{} }
+	If not picked in time -> send to BE: { type: "game_action", action: "pick_time_out" }
 BE waits for everyone's UserSong.
 BE resend everyone a Rounds:
   * { type: "game_action", action: "rounds", payload: [UserSong{...}, UserSong{}] }
@@ -75,7 +76,7 @@ type Stats struct {
 
 type UserStat struct {
 	User       string `json:"user"`
-	GuessType  uint   `json:"guessedIn,omitempty"` // guessed in this amount of millisec; only set if guessed
+	GuessedIn  uint   `json:"guessedIn,omitempty"` // guessed in this amount of millisec; only set if guessed
 	RoundScore uint   `json:"roundScore"`
 	TotalScore uint   `json:"totalScore"`
 }
