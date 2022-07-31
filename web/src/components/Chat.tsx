@@ -2,9 +2,7 @@ import { createEffect, createSignal, For } from 'solid-js';
 import { ChatMessage } from './ChatMessage';
 import emojisIcons from '../utils/smiles.json';
 import { IMessage } from '../utils/types';
-import {
-  chatInput, messages, sendMessage, setChatInput,
-} from '../store/chat';
+import { chatInput, messages, sendMessage, setChatInput } from '../store/chat';
 import { appState } from '../store/state';
 import { Translation } from '../store/localization';
 import { Spinner } from './Spinner';
@@ -48,7 +46,10 @@ export const Chat = (props: { lang: Translation }) => {
       </div>
 
       <ul class="chat__messages">
-        <For each={messages()} fallback={<span class="no_messages">{props.lang.nomessages}</span>}>
+        <For
+          each={messages()}
+          fallback={<span class="no_messages">{props.lang.nomessages}</span>}
+        >
           {(message: IMessage) => (
             <ChatMessage
               created={message.created}
@@ -86,7 +87,11 @@ export const Chat = (props: { lang: Translation }) => {
           placeholder="Ваше сообщение..."
         />
 
-        <button type="button" class="button" onClick={(e) => toggleSmilesView(e)}>
+        <button
+          type="button"
+          class="button"
+          onClick={(e) => toggleSmilesView(e)}
+        >
           <img src="/img/EmojisIcon.svg" />
         </button>
       </form>

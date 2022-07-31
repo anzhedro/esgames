@@ -1,9 +1,7 @@
 import { createSignal } from 'solid-js';
 import { setAppState, setRoom } from './state';
 import { addMessages } from './chat';
-import {
-  setCurrentGame, setTableState, setUsers, currentGame,
-} from './room';
+import { setCurrentGame, setTableState, setUsers, currentGame } from './room';
 import { byName } from '../games/games';
 import { IMessage, IPlayer } from '../utils/types';
 
@@ -18,7 +16,7 @@ interface wsMessage extends gameActionMessage {
 
 interface gameActionMessage {
   action: string;
-  payload?: any;
+  payload?: unknown;
 }
 
 const [socket, setSocket] = createSignal<WebSocket | null>(null);
@@ -47,7 +45,7 @@ export function connectToRoom(user: string, room: string, avatar: number) {
         user,
         room,
         avatar,
-      }),
+      })
     );
   };
 

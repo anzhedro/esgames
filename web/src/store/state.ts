@@ -5,7 +5,11 @@ import { loadUserInfo, saveUserInfo } from './localstorage';
 import { randomInteger } from '../utils/helpers';
 import { users } from './room';
 
-const savedUserInfo = loadUserInfo() || { name: '', avatar: randomInteger(1, 25), lastRoom: '' };
+const savedUserInfo = loadUserInfo() || {
+  name: '',
+  avatar: randomInteger(1, 25),
+  lastRoom: '',
+};
 export const [avatar, setAvatar] = createSignal(savedUserInfo.avatar);
 export const setRandomAvatar = () => {
   setAvatar(randomInteger(1, 25));

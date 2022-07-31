@@ -4,9 +4,10 @@ import { socket } from './socket';
 import { appState } from './state';
 
 // gonna remove when back ready
-export const formatDate = (d: Date) => `  ${d.getHours() < 10 ? `0${d.getHours()}` : d.getHours()}:${
-  d.getMinutes() < 10 ? `0${d.getMinutes()}` : d.getMinutes()
-}`;
+export const formatDate = (d: Date) =>
+  `  ${d.getHours() < 10 ? `0${d.getHours()}` : d.getHours()}:${
+    d.getMinutes() < 10 ? `0${d.getMinutes()}` : d.getMinutes()
+  }`;
 
 export const [messages, setMessages] = createSignal<IMessage[]>([]);
 export const [chatInput, setChatInput] = createSignal('');

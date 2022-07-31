@@ -43,7 +43,9 @@ export const PlayersTeams = () => {
       is_host: false,
     };
 
-    const newTeams = oldTeams.map((team, i) => (team = team.filter((p) => p.name !== me.name)));
+    const newTeams = oldTeams.map(
+      (team) => (team = team.filter((p) => p.name !== me.name))
+    );
     newTeams[idx].push(me);
 
     setTeams(newTeams);
@@ -52,14 +54,17 @@ export const PlayersTeams = () => {
 
   return (
     <div>
-      <For each={teams.filter((el: IPlayer[], idx: number) => idx > 0)} fallback={<div>Loading...</div>}>
+      <For
+        each={teams.filter((el: IPlayer[], idx: number) => idx > 0)}
+        fallback={<div>Loading...</div>}
+      >
         {(team: IPlayer[], idx) => (
           <div class="team">
             <button class="team_btn" onClick={() => handleSelectTeam(+idx)}>
               team {+idx + 1}
             </button>
             {team.map((player: IPlayer, index: number) => (
-              <div class={index & 2 ? 'player bg-dark' : 'player '}>
+              <div class={index % 2 ? 'player bg-dark' : 'player '}>
                 <Avatar avatar={player.avatar} isHost={player.is_host} />
                 <p>{player.name}</p>
               </div>
@@ -75,7 +80,7 @@ export const PlayersTeams = () => {
 
         <For each={teams[0]} fallback={<Spinner />}>
           {(player: IPlayer, idx) => (
-            <div class={+idx & 2 ? 'player bg-dark' : 'player '}>
+            <div class={+idx % 2 ? 'player bg-dark' : 'player '}>
               <Avatar avatar={player.avatar} isHost={player.is_host} />
               <p>{player.name}</p>
             </div>

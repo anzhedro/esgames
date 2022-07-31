@@ -1,5 +1,5 @@
 export const Spinner = () => (
-    <div class="spinner-container">
-      <div class="loading-spinner"></div>
-    </div>
+  <div class="spinner-container">
+    <div class="loading-spinner"></div>
+  </div>
 );

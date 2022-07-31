@@ -1,7 +1,7 @@
 export interface UserInfo {
-  name: string,
-  avatar: number,
-  lastRoom: string,
+  name: string;
+  avatar: number;
+  lastRoom: string;
 }
 
 function loadUserInfo(): UserInfo | null {

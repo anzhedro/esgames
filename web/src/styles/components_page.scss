@@ -1,7 +1,7 @@
 .isHost {
   display: flex;
   padding: 5px;
-  
+
   button {
     @include dfc;
     background: $black;

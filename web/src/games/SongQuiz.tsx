@@ -36,9 +36,16 @@ const Topics = () => (
         name="cellsWide"
         onChange={(e) => setCurrentTopic(e.currentTarget.value)}
       >
-        <For each={songQuizTopics}>{(topic) => <option value={topic}>{topic}</option>}</For>
+        <For each={songQuizTopics}>
+          {(topic) => <option value={topic}>{topic}</option>}
+        </For>
       </select>
-      <Show when={currentTopic() === 'Custom' || !songQuizTopics.includes(currentTopic())}>
+      <Show
+        when={
+          currentTopic() === 'Custom' ||
+          !songQuizTopics.includes(currentTopic())
+        }
+      >
         <input
           type="text"
           onKeyUp={(e) => setCurrentTopic(` ${e.currentTarget.value}`)}
@@ -55,11 +62,23 @@ const settings = () => (
   <>
     <div>
       <h3>Время на выбор песни</h3>
-      <input type="number" value="60" min="0" max="120" onChange={(e) => setTimeToPick(+e.currentTarget.value)} />
+      <input
+        type="number"
+        value="60"
+        min="0"
+        max="120"
+        onChange={(e) => setTimeToPick(+e.currentTarget.value)}
+      />
     </div>
     <div>
       <h3>Время для ответа</h3>
-      <input type="number" value="20" min="1" max="30" onChange={(e) => setTimeToGuess(+e.currentTarget.value)} />
+      <input
+        type="number"
+        value="20"
+        min="1"
+        max="30"
+        onChange={(e) => setTimeToGuess(+e.currentTarget.value)}
+      />
     </div>
     <Topics />
   </>
@@ -75,11 +94,11 @@ const game = () => <p>TODO: Implement SongQuiz</p>;
 // * giveup
 
 const actions = {
-  settings() { },
-  rounds() { },
-  play() { },
-  round_end() { },
-  game_over() { },
+  settings() {},
+  rounds() {},
+  play() {},
+  round_end() {},
+  game_over() {},
 };
 
 export const Game: IGame = {

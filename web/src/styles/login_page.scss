@@ -1,94 +1,94 @@
 .login__page {
-	@include sizes(100vh, 100%);
-	@include dfc;
-	@include flex-col;
-	background-color: $green;
+  @include sizes(100vh, 100%);
+  @include dfc;
+  @include flex-col;
+  background-color: $green;
 
-	.login_card {
-		border-radius: 15px;
-		overflow: hidden;
-		width: 450px;
+  .login_card {
+    border-radius: 15px;
+    overflow: hidden;
+    width: 450px;
 
-		.avatar {
-			@include dfc;
-			@include sizes(150px, 150px);
+    .avatar {
+      @include dfc;
+      @include sizes(150px, 150px);
 
-			.wrapper {
-				@include sizes(100px, 100px);
-				position: relative;
-			}
+      .wrapper {
+        @include sizes(100px, 100px);
+        position: relative;
+      }
 
-			img {
-				border-radius: 100%;
-			}
+      img {
+        border-radius: 100%;
+      }
 
-			button {
-				@include sizes(20px, 20px);
-				position: absolute;
-				bottom: 15px;
-				right: 15px;
-				font-size: 2rem;
-			}
-		}
+      button {
+        @include sizes(20px, 20px);
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+        font-size: 2rem;
+      }
+    }
 
-		.flex-col {
-			@include flex-col;
-			align-items: flex-start;
-			gap: 10px;
-			width: 220px;
+    .flex-col {
+      @include flex-col;
+      align-items: flex-start;
+      gap: 10px;
+      width: 220px;
 
-			input {
-				border-bottom: 3px $black solid;
-				padding-bottom: 5px;
-			}
+      input {
+        border-bottom: 3px $black solid;
+        padding-bottom: 5px;
+      }
 
-			input::placeholder {
-				color: $gray;
-			}
-		}
+      input::placeholder {
+        color: $gray;
+      }
+    }
 
-		.flex {
-			@include dfc;
-			background: $white;
-			padding: 10px;
-			gap: 30px;
-		}
+    .flex {
+      @include dfc;
+      background: $white;
+      padding: 10px;
+      gap: 30px;
+    }
 
-		.heading {
-			padding: 20px 0;
-		}
+    .heading {
+      padding: 20px 0;
+    }
 
-		.heading,
-		.footer {
-			@include dfc;
-			background-color: $black;
-			color: $white;
-		}
+    .heading,
+    .footer {
+      @include dfc;
+      background-color: $black;
+      color: $white;
+    }
 
-		.footer button {
-			@include dfc;
-			padding: 10px 30px;
-			margin: 10px 0;
-			border-radius: 10px;
-			transition: 0.3s;
-			background: $lightgray;
-			color: $black;
-			outline: unset;
+    .footer button {
+      @include dfc;
+      padding: 10px 30px;
+      margin: 10px 0;
+      border-radius: 10px;
+      transition: 0.3s;
+      background: $lightgray;
+      color: $black;
+      outline: unset;
 
-			img {
-				align-self: center;
-				@include sizes(25px, 25px);
-			}
+      img {
+        align-self: center;
+        @include sizes(25px, 25px);
+      }
 
-			span {
-				@include dfc;
-				padding-left: 5px;
-			}
+      span {
+        @include dfc;
+        padding-left: 5px;
+      }
 
-			&:hover {
-				background: $green;
-				transition: 0.3s;
-			}
-		}
-	}
+      &:hover {
+        background: $green;
+        transition: 0.3s;
+      }
+    }
+  }
 }

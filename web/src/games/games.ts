@@ -6,5 +6,14 @@ import { Game as GuessSong } from './GuessSong';
 import { Game as BoringGame } from './BoringGame';
 import { Game as Vladilen } from './Vladilen';
 
-export const Games = [Hat, Reaction, SongQuiz, Crocodile, GuessSong, BoringGame, Vladilen];
-export const byName = (gameId: string) => Games.find((x) => x.gameId === gameId);
+export const Games = [
+  Hat,
+  Reaction,
+  SongQuiz,
+  Crocodile,
+  GuessSong,
+  BoringGame,
+  Vladilen,
+];
+export const byName = (gameId: string) =>
+  Games.find((x) => x.gameId === gameId);

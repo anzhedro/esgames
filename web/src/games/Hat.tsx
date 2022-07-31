@@ -1,27 +1,31 @@
+import { createSignal, createEffect, Show, For } from 'solid-js';
 import {
-  createSignal, createEffect, Show, For, JSXElement,
-} from 'solid-js';
-import {
-  Difficulty, RoundCount, RoundTime, TeamsCount,
+  Difficulty,
+  RoundCount,
+  RoundTime,
+  TeamsCount,
 } from '../components/GameSettings';
 import { WordItem, WordsList } from '../pages/ComponentsPage';
 import { IGame } from '../utils/types';
 
 const settings = () => (
-    <>
-      <RoundTime />
-      <RoundCount />
-      <Difficulty />
-      <TeamsCount />
-    </>
+  <>
+    <RoundTime />
+    <RoundCount />
+    <Difficulty />
+    <TeamsCount />
+  </>
 );
 
 const rules = () => (
-    <>
-      <h2>Правила игры Hat</h2>
-      <p>Игроки по очереди объясняют друг другу слова, за каждое угаданное слово получает очки.</p>
-      <p>Команда набравшая больше очков побеждает</p>
-    </>
+  <>
+    <h2>Правила игры Hat</h2>
+    <p>
+      Игроки по очереди объясняют друг другу слова, за каждое угаданное слово
+      получает очки.
+    </p>
+    <p>Команда набравшая больше очков побеждает</p>
+  </>
 );
 
 const game = () => {
@@ -123,7 +127,13 @@ const initWord = {
   state: 0,
 };
 
-const greenButtonWords = ['Ждите', 'Старт', 'Следующее слово', 'Команда 2', 'Следующее слово'];
+const greenButtonWords = [
+  'Ждите',
+  'Старт',
+  'Следующее слово',
+  'Команда 2',
+  'Следующее слово',
+];
 
 const handleClick = () => {
   if (textInButton() === 'Ждите') {
@@ -165,7 +175,10 @@ const startGame = () => {
 
 const nextWordWithStatus = (status: number) => {
   const newArr = roundWords().slice(0, -1);
-  newArr.push({ word: roundWords()[roundWords().length - 1].word, state: status });
+  newArr.push({
+    word: roundWords()[roundWords().length - 1].word,
+    state: status,
+  });
   newArr.push({ word: words[wordsCounter()], state: 0 });
   setRoundWords(newArr);
   setWordsCounter(wordsCounter() + 1);

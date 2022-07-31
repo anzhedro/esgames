@@ -1,7 +1,9 @@
 import { createSignal, JSXElement, Show } from 'solid-js';
 import { skipWord } from '../games/Hat';
 
-export const WordsList = (props: { children: JSXElement }) => <div class="wordsList">{props.children}</div>;
+export const WordsList = (props: { children: JSXElement }) => (
+  <div class="wordsList">{props.children}</div>
+);
 
 type WordItemProps = {
   canEdit?: boolean;
@@ -48,7 +50,9 @@ export const WordItem = (props: WordItemProps) => {
   );
 };
 
-export const GreenButton = ({ text }: { text: string }) => <button class="green_btn">{text}</button>;
+export const GreenButton = ({ text }: { text: string }) => (
+  <button class="green_btn">{text}</button>
+);
 
 export const ComponentsPage = () => {
   const [isStoryteller, setIsStoryteller] = createSignal(false);
@@ -71,7 +75,9 @@ export const ComponentsPage = () => {
       </div>
 
       <div class="isHost">
-        <button onClick={toggleStoryTeller}>я {!isStoryteller() && 'не'} рассказчик</button>
+        <button onClick={toggleStoryTeller}>
+          я {!isStoryteller() && 'не'} рассказчик
+        </button>
       </div>
 
       <div style={{ display: 'flex', alignItems: 'flex-end', gap: '50px' }}>
@@ -95,9 +101,24 @@ export const ComponentsPage = () => {
         <WordsList>
           {/* {isStoryteller && ( */}
           <>
-            <WordItem canEdit={true} color="green" text="Владилен" countInit={1} />
-            <WordItem canEdit={true} color="green" text="Вадилен" countInit={1} />
-            <WordItem canEdit={true} color="green" text="Вадиен" countInit={0} />
+            <WordItem
+              canEdit={true}
+              color="green"
+              text="Владилен"
+              countInit={1}
+            />
+            <WordItem
+              canEdit={true}
+              color="green"
+              text="Вадилен"
+              countInit={1}
+            />
+            <WordItem
+              canEdit={true}
+              color="green"
+              text="Вадиен"
+              countInit={0}
+            />
             <WordItem canEdit={true} color="red" text="Вадим" countInit={-1} />
           </>
           {/* )} */}
