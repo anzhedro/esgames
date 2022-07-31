@@ -1,26 +1,6 @@
 import { createSignal, For, Show } from "solid-js";
 import { IGame } from "../utils/types";
 
-const [timeToPick, setTimeToPick] = createSignal<Number>(60);
-const TimeToPick = () => {
-  return (
-    <div>
-      <h3>Время на выбор песни</h3>
-      <input type="number" value="60" min="0" max="120" onChange={e => setTimeToPick(+e.currentTarget.value)} />
-    </div>
-  );
-};
-
-const [timeToGuess, setTimeToGuess] = createSignal<Number>(20);
-const TimeToGuess = () => {
-  return (
-    <div>
-      <h3>Время для ответа</h3>
-      <input type="number" value="20" min="1" max="30" onChange={e => setTimeToGuess(+e.currentTarget.value)} />
-    </div>
-  );
-};
-
 const songQuizTopics = [
   "No theme",
   "Custom",
@@ -60,7 +40,7 @@ const Topics = () => {
             setCurrentTopic(e.currentTarget.value);
           }}
         >
-          <For each={songQuizTopics}>{(topic, i) => <option value={topic}>{topic}</option>}</For>
+          <For each={songQuizTopics}>{topic => <option value={topic}>{topic}</option>}</For>
         </select>
         <Show when={currentTopic() === "Custom" || !songQuizTopics.includes(currentTopic())}>
           <input
@@ -75,22 +55,23 @@ const Topics = () => {
   );
 };
 
+const [timeToPick, setTimeToPick] = createSignal(60);
+const [timeToGuess, setTimeToGuess] = createSignal(20);
+
 const settings = () => {
   return (
     <>
-      <TimeToPick />
-      <TimeToGuess />
+      <div>
+        <h3>Время на выбор песни</h3>
+        <input type="number" value="60" min="0" max="120" onChange={e => setTimeToPick(+e.currentTarget.value)} />
+      </div>
+      <div>
+        <h3>Время для ответа</h3>
+        <input type="number" value="20" min="1" max="30" onChange={e => setTimeToGuess(+e.currentTarget.value)} />
+      </div>
       <Topics />
     </>
   );
-};
-
-const selectedGameSettings = () => {
-  return {
-    timeToPick: timeToPick(),
-    timeToGuess: timeToGuess(),
-    topic: currentTopic(),
-  };
 };
 
 const rules = () => {
@@ -101,35 +82,30 @@ const game = () => {
   return <p>TODO: Implement SongQuiz</p>;
 };
 
-const feActions = {
-  picked_song: (payload: any) => {},
-  ready: (payload: any) => {},
-  giveup: (payload: any) => {},
+// Kinds of messages we can send to the backend:
+// * picked_song
+// * ready
+// * giveup
+
+const actions = {
+  settings(payload: any) { },
+  rounds(payload: any) { },
+  play(payload: any) { },
+  round_end(payload: any) { },
+  game_over(payload: any) { },
 };
-
-function handleFEGameAction(action: keyof typeof feActions, payload?: any) {
-  feActions[action](payload);
-}
-
-const beActions = {
-  settings: (payload: any) => {},
-  rounds: (payload: any) => {},
-  play: (payload: any) => {},
-  round_end: (payload: any) => {},
-  game_over: (payload: any) => {},
-};
-
-function handleBEGameAction(action: keyof typeof beActions, payload?: any) {
-  beActions[action](payload);
-}
 
 export const Game: IGame = {
   gameId: "songquiz",
   title: "SongQuiz",
-  image: "/img/song_heart.svg",
-  selectedGameSettings,
-  handleBEGameAction,
-  settings,
-  rules,
-  game,
+  imageUrl: "/img/song_heart.svg",
+  settingsEl: settings,
+  rulesEl: rules,
+  gameEl: game,
+  getSettings: () => ({
+    timeToPick: timeToPick(),
+    timeToGuess: timeToGuess(),
+    topic: currentTopic(),
+  }),
+  onGameAction: (action, payload) => actions[action as keyof typeof actions](payload),
 };

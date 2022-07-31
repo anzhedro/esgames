@@ -181,8 +181,9 @@ const acceptWord = () => {
 export const Game: IGame = {
   gameId: "hat",
   title: "Hat",
-  image: "/img/hat.svg",
-  settings,
-  rules,
-  game,
+  imageUrl: "/img/hat.svg",
+  settingsEl: settings,
+  rulesEl: rules,
+  gameEl: game,
+  onGameAction: () => {},
 };

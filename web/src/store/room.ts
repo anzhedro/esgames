@@ -11,11 +11,12 @@ export const [showButton, setShowButton] = createSignal(false);
 export const [tableState, setTableState] = createSignal<GameTableState>("game_select");
 
 export function startGame() {
+  const game = currentGame()!;
   socket()!.send(
     JSON.stringify({
       type: "start_game",
-      game: currentGame()!.gameId,
-      settings: currentGame()!.selectedGameSettings(),
+      game: game.gameId,
+      settings: game.getSettings ? game.getSettings() : undefined,
     })
   );
 }

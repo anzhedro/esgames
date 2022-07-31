@@ -11,7 +11,8 @@ const game = () => {
 export const Game: IGame = {
   gameId: "crocodile",
   title: "Crocodile",
-  image: "/img/crocodile.svg",
-  rules,
-  game,
+  imageUrl: "/img/crocodile.svg",
+  rulesEl: rules,
+  gameEl: game,
+  onGameAction() {},
 };

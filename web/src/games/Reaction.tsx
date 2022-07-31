@@ -16,7 +16,7 @@ const game = () => {
           <button
             class="reaction_btn"
             style={{ position: "absolute", left: position().x + "%", top: position().y + "%" }}
-            onClick={() => handleFEGameAction("press_btn")}
+            onClick={press_btn}
           >
             <div class="dot"></div>
           </button>
@@ -35,39 +35,22 @@ const randomPosition = () => {
 
 const [position, setPosition] = createSignal(randomPosition());
 
-const selectedGameSettings = () => {
-  return {};
-};
-
-const feActions = {
-  press_btn: () => {
-    setPosition(randomPosition());
-    console.log(position());
-    // sendGameAction("click");
-    // setShowButton(false);
-  },
-};
-
-function handleFEGameAction(action: keyof typeof feActions, payload?: any) {
-  feActions[action](payload);
+const press_btn = () => {
+  setPosition(randomPosition());
+  console.log(position());
 }
 
-const beActions = {
+const actions = {
   press_btn: () => setShowButton(true),
   your_time_sec: (sec: number) => sendMsg(`My reaction time is ${sec}`),
   game_over: (total: number) => sendMsg(`Game over. Total time: ${total}`),
 };
 
-function handleBEGameAction(action: keyof typeof beActions, payload?: any) {
-  beActions[action](payload);
-}
-
 export const Game: IGame = {
   gameId: "reaction",
   title: "Reaction",
-  image: "/img/speed.svg",
-  selectedGameSettings,
-  handleBEGameAction,
-  rules,
-  game,
+  imageUrl: "/img/speed.svg",
+  rulesEl: rules,
+  gameEl: game,
+  onGameAction: (action, payload) => actions[action as keyof typeof actions](payload),
 };

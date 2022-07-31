@@ -11,7 +11,8 @@ const game = () => {
 export const Game: IGame = {
   gameId: "boring_game",
   title: "Boring game",
-  image: "/img/zzz.svg",
-  rules,
-  game,
+  imageUrl: "/img/zzz.svg",
+  rulesEl: rules,
+  gameEl: game,
+  onGameAction() {},
 };

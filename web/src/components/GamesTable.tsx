@@ -23,7 +23,7 @@ export const GamesTable = () => {
           </Match>
 
           <Match when={tableState() === "game_play"}>
-            <div class="game_play">{currentGame()!.game}</div>
+            <div class="game_play">{currentGame()!.gameEl}</div>
           </Match>
         </Switch>
       </div>

@@ -11,7 +11,8 @@ const game = () => {
 export const Game: IGame = {
   gameId: "guess_song",
   title: "Отгадай песню",
-  image: "/img/song.svg",
-  rules,
-  game,
+  imageUrl: "/img/song.svg",
+  rulesEl: rules,
+  gameEl: game,
+  onGameAction() {},
 };

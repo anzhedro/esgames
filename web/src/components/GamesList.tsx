@@ -25,7 +25,7 @@ export const GamesList = () => {
                 setTableState("game_rules");
               }}
             >
-              <img src={game.image} />
+              <img src={game.imageUrl} />
               <p>{game.title}</p>
             </div>
           )}

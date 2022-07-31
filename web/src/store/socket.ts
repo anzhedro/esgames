@@ -79,7 +79,7 @@ export function connectToRoom(user: string, room: string, avatar: number) {
         return;
       case "game_action":
         const { action, payload } = response as gameActionMessage;
-        currentGame()!.handleBEGameAction(action, payload);
+        currentGame()!.onGameAction(action, payload);
         return;
       case "kick_user":
         alert(response.reason);
@@ -89,7 +89,5 @@ export function connectToRoom(user: string, room: string, avatar: number) {
     }
   };
 }
-
-function handleGameAction(action: string, payload?: any) {}
 
 export { socket };

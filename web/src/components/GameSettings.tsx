@@ -95,7 +95,7 @@ export const TeamsCount = () => {
 
 export const GameSettings = () => {
   createEffect(() => {
-    console.log(currentGame()!.settings!);
+    console.log(currentGame()!.settingsEl!);
   });
 
   return (
@@ -103,14 +103,14 @@ export const GameSettings = () => {
       <div class="header" style={{ justifyContent: "space-around" }}>
         <button onClick={() => setTableState("game_rules")}>ПРАВИЛА</button>
 
-        <Show when={currentGame()?.settings}>
+        <Show when={currentGame()?.settingsEl}>
           <button onClick={() => setTableState("game_settings")}>НАСТРОЙКИ</button>
         </Show>
       </div>
       <div class="content game_settings">
         <h2>Настройки игры {currentGame()?.title}</h2>
-        <Show when={currentGame()?.settings} fallback={<p>No settings in this game</p>}>
-          {currentGame()!.settings!}
+        <Show when={currentGame()?.settingsEl} fallback={<p>No settings in this game</p>}>
+          {currentGame()!.settingsEl!}
         </Show>
       </div>
       <div class="footer">

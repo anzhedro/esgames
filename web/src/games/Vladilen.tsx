@@ -11,7 +11,8 @@ const game = () => {
 export const Game: IGame = {
   gameId: "Vladilen",
   title: "Vladilen",
-  image: "/img/vladilen.svg",
-  rules,
-  game,
+  imageUrl: "/img/vladilen.svg",
+  rulesEl: rules,
+  gameEl: game,
+  onGameAction: () => {},
 };
