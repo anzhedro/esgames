@@ -20,7 +20,7 @@ type Game struct {
 func NewGame(room *api.Room, settings json.RawMessage) (game.Game, error) {
 	var s Settings
 	if err := json.Unmarshal(settings, &s); err != nil {
-		return nil, fmt.Errorf("failed to parse settings: %v", err)
+		return nil, fmt.Errorf("failed to parse settings: %v. Raw: %s", err, string(settings))
 	}
 	if err := s.Validate(); err != nil {
 		return nil, fmt.Errorf("invalid settings: %v", err)
