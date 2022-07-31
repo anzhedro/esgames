@@ -1,12 +1,11 @@
-import { For, Show } from "solid-js";
-import { handleKick, users } from "../store/room";
-import { IPlayer } from "../utils/types";
-import { Avatar } from "./Avatar";
-import { name as CurrentUsername, iAmHost } from "../store/state";
-import { Spinner } from "./Spinner";
+import { For, Show } from 'solid-js';
+import { handleKick, users } from '../store/room';
+import { IPlayer } from '../utils/types';
+import { Avatar } from './Avatar';
+import { name as CurrentUsername, iAmHost } from '../store/state';
+import { Spinner } from './Spinner';
 
-export const PlayersList = () => {
-  return (
+export const PlayersList = () => (
     <div>
       <For each={users()} fallback={<Spinner />}>
         {(u: IPlayer) => (
@@ -25,5 +24,4 @@ export const PlayersList = () => {
         )}
       </For>
     </div>
-  );
-};
+);

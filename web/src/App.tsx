@@ -1,14 +1,13 @@
-import { Component } from "solid-js";
-import { Routes, Route, Navigate } from "solid-app-router";
-import { LoginPage } from "./pages/LoginPage";
-import { LobbyPage } from "./pages/LobbyPage";
+import { Component } from 'solid-js';
+import { Routes, Route, Navigate } from 'solid-app-router';
+import { LoginPage } from './pages/LoginPage';
+import { LobbyPage } from './pages/LobbyPage';
 
-import "./styles/styles.scss";
-import { ComponentsPage } from "./pages/ComponentsPage.jsx";
-import { SongGame } from "./pages/SongsPage";
+import './styles/styles.scss';
+import { ComponentsPage } from './pages/ComponentsPage';
+import { SongGame } from './pages/SongsPage';
 
-const App: Component = () => {
-  return (
+const App: Component = () => (
     <>
       <Routes>
         <Route path="/" element={<LoginPage />} />
@@ -18,7 +17,6 @@ const App: Component = () => {
         <Route path="s" element={<SongGame />} />
       </Routes>
     </>
-  );
-};
+);
 
 export default App;

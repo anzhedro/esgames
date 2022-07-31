@@ -5,8 +5,7 @@ export type ChatMessageProps = {
   ref: any;
 };
 
-export const ChatMessage = (props: ChatMessageProps) => {
-  return (
+export const ChatMessage = (props: ChatMessageProps) => (
     <li class="message" ref={props.ref}>
       <div class="message__meta">
         <span class="message__text message__text--time">{props.created}</span>
@@ -14,5 +13,4 @@ export const ChatMessage = (props: ChatMessageProps) => {
       </div>
       <p class="message__content">{props.text}</p>
     </li>
-  );
-};
+);

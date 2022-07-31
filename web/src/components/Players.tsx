@@ -1,7 +1,6 @@
-import { users } from "../store/room";
+import { users } from '../store/room';
 
-export const Players = (props: any) => {
-  return (
+export const Players = (props: any) => (
     <div class="players">
       <div class="header">
         <p>
@@ -11,5 +10,4 @@ export const Players = (props: any) => {
       <div class="content">{props.children}</div>
       <div class="footer"></div>
     </div>
-  );
-};
+);

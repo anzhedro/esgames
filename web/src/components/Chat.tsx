@@ -1,16 +1,18 @@
-import { ChatMessage } from "./ChatMessage";
-import emojisIcons from "../utils/smiles.json";
-import { IMessage } from "../utils/types";
-import { createEffect, createSignal, For } from "solid-js";
-import { chatInput, messages, sendMessage, setChatInput } from "../store/chat";
-import { appState } from "../store/state";
-import { Translation } from "../store/localization";
-import { Spinner } from "./Spinner";
+import { createEffect, createSignal, For } from 'solid-js';
+import { ChatMessage } from './ChatMessage';
+import emojisIcons from '../utils/smiles.json';
+import { IMessage } from '../utils/types';
+import {
+  chatInput, messages, sendMessage, setChatInput,
+} from '../store/chat';
+import { appState } from '../store/state';
+import { Translation } from '../store/localization';
+import { Spinner } from './Spinner';
 
 export const Chat = (props: { lang: Translation }) => {
   const [firstLoad, setFirstLoad] = createSignal(true);
   const [smilesView, setSmilesView] = createSignal(false);
-  let lastMessageRef: any = null;
+  const lastMessageRef: any = null;
 
   const toggleSmilesView = (e: MouseEvent) => {
     e.preventDefault();
@@ -27,9 +29,9 @@ export const Chat = (props: { lang: Translation }) => {
     if (messages().length === 0) return;
     if (lastMessageRef) {
       lastMessageRef.scrollIntoView({
-        behavior: firstLoad() ? "auto" : "smooth",
-        block: "start",
-        inline: "nearest",
+        behavior: firstLoad() ? 'auto' : 'smooth',
+        block: 'start',
+        inline: 'nearest',
       });
       setFirstLoad(false);
     }
@@ -48,7 +50,12 @@ export const Chat = (props: { lang: Translation }) => {
       <ul class="chat__messages">
         <For each={messages()} fallback={<span class="no_messages">{props.lang.nomessages}</span>}>
           {(message: IMessage) => (
-            <ChatMessage created={message.created} user={message.user} text={message.text} ref={lastMessageRef} />
+            <ChatMessage
+              created={message.created}
+              user={message.user}
+              text={message.text}
+              ref={lastMessageRef}
+            />
           )}
         </For>
       </ul>
@@ -71,9 +78,9 @@ export const Chat = (props: { lang: Translation }) => {
 
       <form class="chat-form" onSubmit={submmitHandler} autocomplete="off">
         <input
-          class={"input " + (appState() === "connected" ? "" : "input--error")}
+          class={`input ${appState() === 'connected' ? '' : 'input--error'}`}
           type="text"
-          id={"message"}
+          id={'message'}
           value={chatInput()}
           onChange={(e: any) => setChatInput(e.target.value)}
           placeholder="Ваше сообщение..."

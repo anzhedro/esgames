@@ -1,7 +1,5 @@
-export const Spinner = () => {
-  return (
+export const Spinner = () => (
     <div class="spinner-container">
       <div class="loading-spinner"></div>
     </div>
-  );
-};
+);

@@ -1,6 +1,6 @@
-import { createSignal, For, Show } from "solid-js";
-import { currentLanguage, handleSetCurrentLanguage, languages } from "../store/localization";
-import { Spinner } from "./Spinner";
+import { createSignal, For, Show } from 'solid-js';
+import { currentLanguage, handleSetCurrentLanguage, languages } from '../store/localization';
+import { Spinner } from './Spinner';
 
 export const LangSelector = () => {
   const [showLangSelector, setShowLangSelector] = createSignal(false);
@@ -12,7 +12,7 @@ export const LangSelector = () => {
           setShowLangSelector(!showLangSelector);
         }}
       >
-        <img src={"/img/globe.svg"} />
+        <img src={'/img/globe.svg'} />
 
         {currentLanguage().toUpperCase()}
       </button>

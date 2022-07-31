@@ -1,26 +1,25 @@
-
-import { Avatar } from "./Avatar";
-import { IPlayer } from "../utils/types";
-import { createStore } from "solid-js/store";
-import { For } from "solid-js";
-import { Spinner } from "./Spinner";
+import { createStore } from 'solid-js/store';
+import { For } from 'solid-js';
+import { Avatar } from './Avatar';
+import { IPlayer } from '../utils/types';
+import { Spinner } from './Spinner';
 
 const teamsMock = [
   [
     {
-      name: "Soth",
+      name: 'Soth',
       avatar: 16,
       is_host: true,
     },
     {
-      name: "John Doe",
+      name: 'John Doe',
       avatar: 2,
       is_host: false,
     },
   ],
   [
     {
-      name: "Soth",
+      name: 'Soth',
       avatar: 16,
       is_host: false,
     },
@@ -39,12 +38,12 @@ export const PlayersTeams = () => {
   const handleSelectTeam = (idx: number) => {
     const oldTeams = [...teams];
     const me = {
-      name: "sss",
+      name: 'sss',
       avatar: 2,
       is_host: false,
     };
 
-    let newTeams = oldTeams.map((team, i) => (team = team.filter((p) => p.name !== me.name)));
+    const newTeams = oldTeams.map((team, i) => (team = team.filter((p) => p.name !== me.name)));
     newTeams[idx].push(me);
 
     setTeams(newTeams);
@@ -60,7 +59,7 @@ export const PlayersTeams = () => {
               team {+idx + 1}
             </button>
             {team.map((player: IPlayer, index: number) => (
-              <div class={index & 2 ? "player bg-dark" : "player "}>
+              <div class={index & 2 ? 'player bg-dark' : 'player '}>
                 <Avatar avatar={player.avatar} isHost={player.is_host} />
                 <p>{player.name}</p>
               </div>
@@ -76,7 +75,7 @@ export const PlayersTeams = () => {
 
         <For each={teams[0]} fallback={<Spinner />}>
           {(player: IPlayer, idx) => (
-            <div class={+idx & 2 ? "player bg-dark" : "player "}>
+            <div class={+idx & 2 ? 'player bg-dark' : 'player '}>
               <Avatar avatar={player.avatar} isHost={player.is_host} />
               <p>{player.name}</p>
             </div>

@@ -1,11 +1,11 @@
-import { For } from "solid-js";
-import { setCurrentGame, setTableState } from "../store/room";
-import { copyToClipboard } from "../utils/helpers";
-import { Spinner } from "./Spinner";
+import { For } from 'solid-js';
+import { useParams } from 'solid-app-router';
+import { setCurrentGame, setTableState } from '../store/room';
+import { copyToClipboard } from '../utils/helpers';
+import { Spinner } from './Spinner';
 
-import { useParams } from "solid-app-router";
-import { IGame } from "../utils/types";
-import { Games } from "../games/games";
+import { IGame } from '../utils/types';
+import { Games } from '../games/games';
 
 export const GamesList = () => {
   const params = useParams();
@@ -22,7 +22,7 @@ export const GamesList = () => {
               class="game_card"
               onClick={() => {
                 setCurrentGame(game);
-                setTableState("game_rules");
+                setTableState('game_rules');
               }}
             >
               <img src={game.imageUrl} />
@@ -32,7 +32,7 @@ export const GamesList = () => {
         </For>
       </div>
       <div class="footer">
-        <button onClick={() => copyToClipboard(location.host + "/room/" + params.id)}>ПРИГЛАСИТЬ</button>
+        <button onClick={() => copyToClipboard(`${window.location.host}/room/${params.id}`)}>ПРИГЛАСИТЬ</button>
       </div>
     </>
   );

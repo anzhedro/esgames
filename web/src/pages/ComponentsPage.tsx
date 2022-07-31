@@ -1,13 +1,12 @@
-import { createSignal, JSXElement, Show } from "solid-js";
-import { skipWord } from "../games/Hat";
-export const WordsList = (props: { children: JSXElement }) => {
-  return <div class="wordsList">{props.children}</div>;
-};
+import { createSignal, JSXElement, Show } from 'solid-js';
+import { skipWord } from '../games/Hat';
+
+export const WordsList = (props: { children: JSXElement }) => <div class="wordsList">{props.children}</div>;
 
 type WordItemProps = {
   canEdit?: boolean;
-  color?: string | "";
-  text?: string | "";
+  color?: string | '';
+  text?: string | '';
   countInit?: number | 0;
   isShowSkip?: boolean | false;
   ref: any;
@@ -21,14 +20,14 @@ export const WordItem = (props: WordItemProps) => {
   const colorFromCount = () => {
     // if (!canEdit && color) return color;
     // return color;
-    if (count() === 0) return "white";
-    if (count() > 0) return "green";
-    if (count() < 0) return "red";
+    if (count() === 0) return 'white';
+    if (count() > 0) return 'green';
+    return 'red';
   };
 
   return (
     <div class="wordItemWrapper" ref={props.ref}>
-      <div class={"wordItem " + colorFromCount()}>
+      <div class={`wordItem ${colorFromCount()}`}>
         <p> {props.text}</p>
         <Show when={props.isShowSkip}>
           {/* button skip */}
@@ -49,9 +48,7 @@ export const WordItem = (props: WordItemProps) => {
   );
 };
 
-export const GreenButton = ({ text }: { text: string }) => {
-  return <button class="green_btn">{text}</button>;
-};
+export const GreenButton = ({ text }: { text: string }) => <button class="green_btn">{text}</button>;
 
 export const ComponentsPage = () => {
   const [isStoryteller, setIsStoryteller] = createSignal(false);
@@ -64,7 +61,7 @@ export const ComponentsPage = () => {
     setIsStoryteller(!isStoryteller());
   };
 
-  const stageTexts = ["Начать", "Следующее", "Закончить", "Заново"];
+  const stageTexts = ['Начать', 'Следующее', 'Закончить', 'Заново'];
 
   return (
     <div class="components_page">
@@ -74,10 +71,10 @@ export const ComponentsPage = () => {
       </div>
 
       <div class="isHost">
-        <button onClick={toggleStoryTeller}>я {!isStoryteller() && "не"} рассказчик</button>
+        <button onClick={toggleStoryTeller}>я {!isStoryteller() && 'не'} рассказчик</button>
       </div>
 
-      <div style={{ display: "flex", alignItems: "flex-end", gap: "50px" }}>
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: '50px' }}>
         <WordsList>
           <GreenButton text="Ждите" />
         </WordsList>

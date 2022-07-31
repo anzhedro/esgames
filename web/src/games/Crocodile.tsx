@@ -1,17 +1,13 @@
-import { IGame } from "../utils/types";
+import { IGame } from '../utils/types';
 
-const rules = () => {
-  return <p>Рисуйте и отгадывайте.</p>;
-};
+const rules = () => <p>Рисуйте и отгадывайте.</p>;
 
-const game = () => {
-  return <div></div>;
-};
+const game = () => <div></div>;
 
 export const Game: IGame = {
-  gameId: "crocodile",
-  title: "Crocodile",
-  imageUrl: "/img/crocodile.svg",
+  gameId: 'crocodile',
+  title: 'Crocodile',
+  imageUrl: '/img/crocodile.svg',
   rulesEl: rules,
   gameEl: game,
   onGameAction() {},

@@ -1,5 +1,7 @@
-import { createEffect, createResource, createSignal, For, Match, mergeProps, Show, Suspense, Switch } from "solid-js";
-import { Spinner } from "../components/Spinner";
+import {
+  createResource, createSignal, For, Match, Show, Suspense, Switch,
+} from 'solid-js';
+import { Spinner } from '../components/Spinner';
 
 interface SongItem {
   wrapperType: string;
@@ -40,28 +42,25 @@ interface fetchMusicResponse {
   resultCount: number;
 }
 
-const fetchMusic = async (searchTerm: string): Promise<fetchMusicResponse> => {
-  return (
-    await fetch(
-      `https://itunes.apple.com/search?` +
-        new URLSearchParams({
-          term: searchTerm,
-          limit: "20",
-          country: "gb",
-          media: "music",
-          entity: "musicTrack",
-          explicit: "yes",
-        })
-    )
-  ).json();
-};
+const fetchMusic = async (searchTerm: string): Promise<fetchMusicResponse> => (
+  await fetch(
+    `https://itunes.apple.com/search?${new URLSearchParams({
+      term: searchTerm,
+      limit: '20',
+      country: 'gb',
+      media: 'music',
+      entity: 'musicTrack',
+      explicit: 'yes',
+    })}`,
+  )
+).json();
 
-const [searchTerm, setSearchTerm] = createSignal("");
+const [searchTerm, setSearchTerm] = createSignal('');
 const [querySearchTerm, setQuerySearchTerm] = createSignal<string>();
 const [selectedSong, setSelectedSong] = createSignal<SongItem | null>(null);
-const [gameState, setGameState] = createSignal("pick_search");
+const [gameState, setGameState] = createSignal('pick_search');
 
-const [userGuess, setUserGuess] = createSignal("");
+const [userGuess, setUserGuess] = createSignal('');
 
 // const [songs] = createResource(querySearchTerm, fetchMusic);
 
@@ -97,7 +96,7 @@ const SongSearch = () => {
                 <div
                   classList={{
                     selected: selectedSong() === song,
-                    "quiz-game__pick__results__row": true,
+                    'quiz-game__pick__results__row': true,
                   }}
                   onClick={() => {
                     if (selectedSong() === song) return;
@@ -117,100 +116,94 @@ const SongSearch = () => {
   );
 };
 
-const SongPreview = () => {
-  return (
-    <>
-      <div class="quiz-game__player">
-        <div
-          class="quiz-game__pick__song__image"
-          style={{
-            "background-image": `url(${selectedSong()!.artworkUrl100})`,
-            height: "100px",
-            width: "100px",
-          }}
-        ></div>
-        <div class="quiz-game__pick__song__player__content">
-          <div class="quiz-game__pick__song__player__content__top">
-            <div class="quiz-game__pick__song__name">{selectedSong()!.trackName}</div>
-            <div class="quiz-game__pick__song__details">{selectedSong()!.artistName}</div>
-            <audio class="quiz-game__pick__song__audio" controls={true} style={{ height: "40px", width: "300px" }}>
-              {/* <source src={selectedSong()!.previewUrl} type="audio/mpeg" /> */}
-              <source src={selectedSong()!.previewUrl} type="audio/mpeg" />
-              Your browser does not support the audio element.
-            </audio>
-          </div>
+const SongPreview = () => (
+  <>
+    <div class="quiz-game__player">
+      <div
+        class="quiz-game__pick__song__image"
+        style={{
+          'background-image': `url(${selectedSong()!.artworkUrl100})`,
+          height: '100px',
+          width: '100px',
+        }}
+      ></div>
+      <div class="quiz-game__pick__song__player__content">
+        <div class="quiz-game__pick__song__player__content__top">
+          <div class="quiz-game__pick__song__name">{selectedSong()!.trackName}</div>
+          <div class="quiz-game__pick__song__details">{selectedSong()!.artistName}</div>
+          <audio class="quiz-game__pick__song__audio" controls={true} style={{ height: '40px', width: '300px' }}>
+            {/* <source src={selectedSong()!.previewUrl} type="audio/mpeg" /> */}
+            <source src={selectedSong()!.previewUrl} type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
         </div>
       </div>
-      <div class="quiz-game__pick__song__player__content__bottom">
-        {/* <button class="button --link " onClick={() => setGameState("pick_search")}>
+    </div>
+    <div class="quiz-game__pick__song__player__content__bottom">
+      {/* <button class="button --link " onClick={() => setGameState("pick_search")}>
             <span class="button__label --link">Cancel</span>
           </button> */}
+      <button
+        class="button --primary "
+        onClick={() => {
+          setGameState('confirm_song_title');
+          setUserGuess(selectedSong()!.trackName);
+        }}
+      >
+        <span class="button__label --primary">Pick Song</span>
+      </button>
+    </div>
+  </>
+);
+
+const SongTitleConfirm = () => (
+  <div class="quiz-game__chosen__song">
+    <div class="quiz-game__pick__stage">
+      <div class="input__container quiz-game__pick__song__edit-name">
+        <input
+          class="input__field"
+          type="text"
+          placeholder="Song name"
+          value={selectedSong()!.trackName}
+          onChange={(e) => setUserGuess(e.currentTarget.value)}
+        />
+      </div>
+      <div class="buttons">
+        <button class="button --link " onClick={() => setGameState('pick_search')}>
+          Back
+        </button>
         <button
           class="button --primary "
           onClick={() => {
-            setGameState("confirm_song_title");
-            setUserGuess(selectedSong()!.trackName);
+            console.log(userGuess());
+            // send ws message
           }}
         >
-          <span class="button__label --primary">Pick Song</span>
+          Choose this song!
         </button>
       </div>
-    </>
-  );
-};
-
-const SongTitleConfirm = () => {
-  return (
-    <div class="quiz-game__chosen__song">
-      <div class="quiz-game__pick__stage">
-        <div class="input__container quiz-game__pick__song__edit-name">
-          <input
-            class="input__field"
-            type="text"
-            placeholder="Song name"
-            value={selectedSong()!.trackName}
-            onChange={(e) => setUserGuess(e.currentTarget.value)}
-          />
-        </div>
-        <div class="buttons">
-          <button class="button --link " onClick={() => setGameState("pick_search")}>
-            Back
-          </button>
-          <button
-            class="button --primary "
-            onClick={() => {
-              console.log(userGuess());
-              // send ws message
-            }}
-          >
-            Choose this song!
-          </button>
-        </div>
-      </div>
     </div>
-  );
-};
+  </div>
+);
 
-export const SongGame = () => {
-  return (
-    <div class="quiz-container">
-      <Switch>
-        <Match when={gameState() === "pick_search"}>
-          <h2 class="title">Pick a song for others to guess:</h2>
-          <SongSearch />
-          <Show when={selectedSong()}>
-            <SongPreview />
-          </Show>
-        </Match>
-        {/* <Match when={gameState() === "pick_song_player"}>
+export const SongGame = () => (
+  <div class="quiz-container">
+    <Switch>
+      <Match when={gameState() === 'pick_search'}>
+        <h2 class="title">Pick a song for others to guess:</h2>
+        <SongSearch />
+        <Show when={selectedSong()}>
+          <SongPreview />
+        </Show>
+      </Match>
+      {/* <Match when={gameState() === "pick_song_player"}>
           <div class="title">Pick a song for others to guess:</div>
           <SongPreview />
         </Match> */}
-        <Match when={gameState() === "confirm_song_title"}>
-          <div class="title">Confirm the name other players will guess:</div>
-          <SongTitleConfirm />
-        </Match>
-      </Switch>
-    </div>
-  );
-};
+      <Match when={gameState() === 'confirm_song_title'}>
+        <div class="title">Confirm the name other players will guess:</div>
+        <SongTitleConfirm />
+      </Match>
+    </Switch>
+  </div>
+);

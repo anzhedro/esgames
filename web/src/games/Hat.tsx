@@ -1,43 +1,43 @@
-import { createSignal, createEffect, Show, For, JSXElement } from "solid-js";
-import { Difficulty, RoundCount, RoundTime, TeamsCount } from "../components/GameSettings";
-import { WordItem, WordsList } from "../pages/ComponentsPage";
-import { IGame } from "../utils/types";
+import {
+  createSignal, createEffect, Show, For, JSXElement,
+} from 'solid-js';
+import {
+  Difficulty, RoundCount, RoundTime, TeamsCount,
+} from '../components/GameSettings';
+import { WordItem, WordsList } from '../pages/ComponentsPage';
+import { IGame } from '../utils/types';
 
-const settings = () => {
-  return (
+const settings = () => (
     <>
       <RoundTime />
       <RoundCount />
       <Difficulty />
       <TeamsCount />
     </>
-  );
-};
+);
 
-const rules = () => {
-  return (
+const rules = () => (
     <>
       <h2>Правила игры Hat</h2>
       <p>Игроки по очереди объясняют друг другу слова, за каждое угаданное слово получает очки.</p>
       <p>Команда набравшая больше очков побеждает</p>
     </>
-  );
-};
+);
 
 const game = () => {
-  let lastWordRef: any = null;
+  const lastWordRef: any = null;
 
   createEffect(() => {
     setTimeout(() => {
-      setTextInButton("Старт");
+      setTextInButton('Старт');
     }, 1000);
   });
 
   const scrollToEnd = () => {
     if (roundWords().length === 0) return;
     lastWordRef.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
+      behavior: 'smooth',
+      block: 'end',
     });
   };
 
@@ -53,7 +53,7 @@ const game = () => {
                 countInit={word.state}
                 color="green"
                 text={word.word}
-                isShowSkip={index() == roundWords().length - 1}
+                isShowSkip={index() === roundWords().length - 1}
               />
             )}
           </For>
@@ -73,39 +73,39 @@ const game = () => {
   );
 };
 
-const [textInButton, setTextInButton] = createSignal("Ждите");
+const [textInButton, setTextInButton] = createSignal('Ждите');
 
 const words = [
-  "Владилен",
-  "React",
-  "Vue",
-  "Solidjs",
-  "Angular",
-  "jQuery",
-  "Владилен",
-  "React",
-  "Vue",
-  "Solidjs",
-  "Angular",
-  "jQuery",
-  "Владилен",
-  "React",
-  "Vue",
-  "Solidjs",
-  "Angular",
-  "jQuery",
-  "Владилен",
-  "React",
-  "Vue",
-  "Solidjs",
-  "Angular",
-  "jQuery",
-  "Владилен",
-  "React",
-  "Vue",
-  "Solidjs",
-  "Angular",
-  "jQuery",
+  'Владилен',
+  'React',
+  'Vue',
+  'Solidjs',
+  'Angular',
+  'jQuery',
+  'Владилен',
+  'React',
+  'Vue',
+  'Solidjs',
+  'Angular',
+  'jQuery',
+  'Владилен',
+  'React',
+  'Vue',
+  'Solidjs',
+  'Angular',
+  'jQuery',
+  'Владилен',
+  'React',
+  'Vue',
+  'Solidjs',
+  'Angular',
+  'jQuery',
+  'Владилен',
+  'React',
+  'Vue',
+  'Solidjs',
+  'Angular',
+  'jQuery',
 ];
 
 type WordsProp = {
@@ -123,23 +123,24 @@ const initWord = {
   state: 0,
 };
 
-const greenButtonWords = ["Ждите", "Старт", "Следующее слово", "Команда 2", "Следующее слово"];
+const greenButtonWords = ['Ждите', 'Старт', 'Следующее слово', 'Команда 2', 'Следующее слово'];
 
 const handleClick = () => {
-  if (textInButton() == "Ждите") {
+  if (textInButton() === 'Ждите') {
     return;
   }
 
   switch (textInButton()) {
-    case "Старт":
+    case 'Старт':
       startGame();
       break;
-    case "Следующее слово":
+    case 'Следующее слово':
       acceptWord();
       break;
-    case "Команда 2":
+    case 'Команда 2':
       startGame();
       break;
+    default:
   }
 
   // timer() === roundTime() ? startGame() : acceptWord();
@@ -149,22 +150,22 @@ const startGame = () => {
   const newArr = [{ word: words[wordsCounter()], state: 0 }];
   setRoundWords(newArr);
   setWordsCounter(wordsCounter() + 1);
-  setTextInButton("Следующее слово");
+  setTextInButton('Следующее слово');
   setTimer(timer() - 1);
   const t = setInterval(() => {
     if (timer() > 0) {
       setTimer(timer() - 1);
     } else {
       clearInterval(t);
-      setTextInButton("Команда 2");
+      setTextInButton('Команда 2');
       setTimer(roundTime());
     }
   }, 1000);
 };
 
 const nextWordWithStatus = (status: number) => {
-  let newArr = roundWords().slice(0, -1); // Удаляем последний элемент массива
-  newArr.push({ word: roundWords()[roundWords().length - 1].word, state: status }); // Добавляем в конец массива новый элемент
+  const newArr = roundWords().slice(0, -1);
+  newArr.push({ word: roundWords()[roundWords().length - 1].word, state: status });
   newArr.push({ word: words[wordsCounter()], state: 0 });
   setRoundWords(newArr);
   setWordsCounter(wordsCounter() + 1);
@@ -179,9 +180,9 @@ const acceptWord = () => {
 };
 
 export const Game: IGame = {
-  gameId: "hat",
-  title: "Hat",
-  imageUrl: "/img/hat.svg",
+  gameId: 'hat',
+  title: 'Hat',
+  imageUrl: '/img/hat.svg',
   settingsEl: settings,
   rulesEl: rules,
   gameEl: game,

@@ -1,4 +1,4 @@
-import { JSX } from "solid-js";
+import { JSX } from 'solid-js';
 
 export interface IPlayer {
   name: string;
@@ -17,8 +17,8 @@ export interface IGame {
   title: string; // game title
   imageUrl: string; // game's image url
   settingsEl?: JSX.Element;
-  rulesEl: JSX.Element; 
+  rulesEl: JSX.Element;
   gameEl: JSX.Element;
-  getSettings?: () => Object; // function that returns current game settings
-  onGameAction: (action: string, payload?: any) => void; // handle game action
+  getSettings?: () => Record<string, unknown>; // function that returns current game settings
+  onGameAction: (action: string, payload?: unknown) => void; // handle game action
 }
