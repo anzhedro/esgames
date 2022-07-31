@@ -152,14 +152,6 @@ func (s *waitReadyStage) Run(g *Game, events <-chan game.Event) (stage, error) {
 	return nil, errors.New("game ended unexpectedly")
 }
 
-// type funcStage struct {
-// 	run func(g *Game, events <-chan game.Event) (stage, error)
-// }
-
-// func (s *funcStage) Run(g *Game, events <-chan game.Event) (stage, error) {
-// 	return s.run(g, events)
-// }
-
 type roundStage struct {
 	*Game
 	Round   *UserSong
@@ -170,7 +162,7 @@ type roundStage struct {
 func (s *roundStage) Run(g *Game, events <-chan game.Event) (stage, error) {
 	s.Game = g
 	s.Round = g.Rounds[g.RoundId]
-	s.Guessed = make(map[string]int64)
+	s.Guessed = map[string]int64{s.Round.User: 0}
 	s.Start = time.Now()
 
 	// Send "play" to everyone.
@@ -193,8 +185,13 @@ func (s *roundStage) Run(g *Game, events <-chan game.Event) (stage, error) {
 					return next, nil
 				}
 			case *game.UserAction:
-				if next, ok := s.OnAction(ev.User, ev.Action, ev.Payload); ok {
-					return next, nil
+				if ev.Action == "giveup" {
+					if _, ok := s.Guessed[ev.User]; !ok {
+						s.Guessed[ev.User] = 0
+					}
+					if len(s.Guessed) == len(s.Users) {
+						return s.End(), nil
+					}
 				}
 			}
 		}
@@ -215,16 +212,8 @@ func (s *roundStage) OnChat(m *game.NewChatMessage) (stage, bool) {
 	s.Guessed[m.User] = time.Since(s.Start).Milliseconds()
 	msg := &game.NewChatMessage{User: "SYSTEM", Text: m.User + " guessed correctly!", Created: m.Created}
 	s.Room.SendGameChat(msg, s.Users...)
-	if len(s.Guessed)+1 == len(s.Users) {
+	if len(s.Guessed) == len(s.Users) {
 		return s.End(), true
-	}
-	return nil, false
-}
-
-func (s *roundStage) OnAction(user, action string, payload json.RawMessage) (stage, bool) {
-	switch action {
-	case "giveup":
-
 	}
 	return nil, false
 }
