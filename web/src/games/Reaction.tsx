@@ -1,5 +1,5 @@
 import { Show, createSignal } from 'solid-js';
-import { setShowButton, showButton } from '../store/room';
+import { setShowButton, showButton, sendGameAction } from '../store/room';
 import { IGame } from '../utils/types';
 import { sendMsg } from '../store/chat';
 import { randomInteger } from '../utils/helpers';
@@ -22,7 +22,20 @@ const game = () => (
             left: `${position().x}%`,
             top: `${position().y}%`,
           }}
-          onClick={onBtnPress}
+          onClick={
+            () => {
+              if (timesClicked() < 3) {
+                onBtnPress();
+                setTimesClicked(timesClicked() + 1);
+              }
+              else {
+                setShowButton(false);
+                setTimesClicked(0);
+                sendGameAction("btn_click");
+              }
+
+            }
+          }
         >
           <div class="dot"></div>
         </button>
@@ -37,6 +50,7 @@ const randomPosition = () => ({
 });
 
 const [position, setPosition] = createSignal(randomPosition());
+const [timesClicked, setTimesClicked] = createSignal(0);
 
 const onBtnPress = () => {
   setPosition(randomPosition());

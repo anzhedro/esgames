@@ -1,0 +1,151 @@
+.quiz-container {
+  @include dfc;
+  flex-direction: column;
+  height: 100%;
+
+  border: 3px solid #000;
+
+  .timer {
+    // allign timer to the top right
+    @include dfc;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    height: 10%;
+    width: 100%;
+
+    border: 3px solid #000;
+  }
+
+  .title {
+    margin-bottom: 10px;
+  }
+
+  .quiz-game__pick__song__player__content__bottom {
+
+    .button {
+      background-color: $red;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+
+      &:hover {
+        background-color: $lightred;
+      }
+    }
+  }
+}
+
+.quiz-game {
+  @include flex-col;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+
+
+  .quiz-game__pick__search {
+    background-color: $red;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 10px;
+    display: flex;
+
+    .wrapper {
+      padding: 5px 0px 5px 5px;
+    }
+
+    .input__field {
+      background-color: white;
+      padding: 5px;
+      margin-right: 5px;
+      cursor: pointer;
+      border-radius: 0.5rem;
+    }
+
+    .button {
+      cursor: pointer;
+      padding: 5px;
+
+      &:hover {
+        background-color: $lightred;
+      }
+    }
+  }
+
+  .quiz-game__pick__results {
+    @include flex-col;
+
+    background-color: $lightgray;
+    max-height: 350px;
+    overflow: auto;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 400px;
+
+    &::-webkit-scrollbar {
+      width: 12px;
+      /* width of the entire scrollbar */
+    }
+
+    &::-webkit-scrollbar-track {
+      background: $gray;
+      /* color of the tracking area */
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $darkgray;
+      /* color of the scroll thumb */
+      border-radius: 20px;
+      /* roundness of the scroll thumb */
+      /* creates padding around scroll thumb */
+    }
+
+    &__row {
+      overflow-wrap: break-word;
+      cursor: pointer;
+      padding: 20px 10px;
+      font-weight: 100;
+
+      -webkit-touch-callout: none;
+      /* iOS Safari */
+      -webkit-user-select: none;
+      /* Safari */
+      -khtml-user-select: none;
+      /* Konqueror HTML */
+      -moz-user-select: none;
+      /* Old versions of Firefox */
+      -ms-user-select: none;
+      /* Internet Explorer/Edge */
+      user-select: none;
+      /* Non-prefixed version, currently
+                                        supported by Chrome, Edge, Opera and Firefox */
+
+      &:hover {
+        background: $gray;
+      }
+
+      &__main {
+        font-weight: 900;
+        color: $black;
+      }
+    }
+
+    .selected {
+      background: $gray;
+    }
+
+    &__row:not(:last-child) {
+      border-bottom: 3px solid $black;
+    }
+  }
+
+  .button__label {
+    color: white;
+  }
+
+}

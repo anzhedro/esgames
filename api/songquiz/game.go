@@ -101,27 +101,34 @@ func (s *pickSongStage) Run(g *Game, events <-chan game.Event) (stage, error) {
 }
 
 func (s *pickSongStage) OnAction(user, action string, payload json.RawMessage) (stage, bool) {
-	if action != "picked_song" {
-		return nil, false
-	}
-	var song UserSong
-	if err := json.Unmarshal(payload, &song); err != nil {
-		log.Printf("Error parsing picked_song: %v. Raw: %s\n", err, string(payload))
-		return nil, false
-	}
-	song.User = user
-	s.choices[user] = &song
-	if len(s.choices) >= len(s.Users) {
-		s.End()
-		return &waitReadyStage{Next: &roundStage{}}, true
+	switch action {
+	case "pick_time_out":
+		s.choices[user] = nil
+		if len(s.choices) >= len(s.Users) {
+			s.End()
+			return &waitReadyStage{Next: &roundStage{}}, true
+		}
+	case "picked_song":
+		var song UserSong
+		if err := json.Unmarshal(payload, &song); err != nil {
+			log.Printf("Error parsing picked_song: %v. Raw: %s\n", err, string(payload))
+			return nil, false
+		}
+		song.User = user
+		s.choices[user] = &song
+		if len(s.choices) >= len(s.Users) {
+			s.End()
+			return &waitReadyStage{Next: &roundStage{}}, true
+		}
 	}
 	return nil, false
 }
 
 func (s *pickSongStage) End() {
-	// Resent everyone Rounds
 	for _, song := range s.choices {
-		s.Rounds = append(s.Rounds, song)
+		if song != nil {
+			s.Rounds = append(s.Rounds, song)
+		}
 	}
 	rand.Shuffle(len(s.Rounds), func(i, j int) {
 		s.Rounds[i], s.Rounds[j] = s.Rounds[j], s.Rounds[i]

@@ -201,6 +201,18 @@ const SongTitleConfirm = () => (
           onClick={() => {
             console.log(userGuess());
             // send ws message
+
+            setGameState('round')
+            // () => {
+            //   sendGameAction("picked_song", {
+            //     want: userGuess(),
+            //     pic: selectedSong()!.artworkUrl100,
+            //     audio: selectedSong()!.previewUrl,
+            //     track: selectedSong()!.trackName,
+            //     artist: selectedSong()!.artistName,
+            //   });
+            // }
+
           }}
         >
           Choose this song!
@@ -220,14 +232,17 @@ export const SongGame = () => (
           <SongPreview />
         </Show>
       </Match>
-      {/* <Match when={gameState() === "pick_song_player"}>
-          <div class="title">Pick a song for others to guess:</div>
-          <SongPreview />
-        </Match> */}
       <Match when={gameState() === 'confirm_song_title'}>
         <div class="title">Confirm the name other players will guess:</div>
         <SongTitleConfirm />
       </Match>
+      <Match when={gameState() === 'round'}>
+        <div class="title">Confirm the name other players will guess:</div>
+        <SongTitleConfirm />
+      </Match>
+
+
+
     </Switch>
   </div>
 );
