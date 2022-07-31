@@ -1,22 +1,22 @@
 import { createSignal, For, Show } from "solid-js";
 import { IGame } from "../utils/types";
 
-const [timeToPick, setTimeToPick] = createSignal(60);
+const [timeToPick, setTimeToPick] = createSignal<Number>(60);
 const TimeToPick = () => {
   return (
     <div>
       <h3>Время на выбор песни</h3>
-      <input type="number" value="60" min="0" max="120" onChange={(e: any) => setTimeToPick(e.target.value)} />
+      <input type="number" value="60" min="0" max="120" onChange={e => setTimeToPick(+e.currentTarget.value)} />
     </div>
   );
 };
 
-const [timeToGuess, setTimeToGuess] = createSignal(20);
+const [timeToGuess, setTimeToGuess] = createSignal<Number>(20);
 const TimeToGuess = () => {
   return (
     <div>
       <h3>Время для ответа</h3>
-      <input type="number" value="20" min="1" max="30" onChange={(e: any) => setTimeToGuess(e.target.value)} />
+      <input type="number" value="20" min="1" max="30" onChange={e => setTimeToGuess(+e.currentTarget.value)} />
     </div>
   );
 };
