@@ -34,14 +34,14 @@ func NewGame(room *api.Room, settings json.RawMessage) (game.Game, error) {
 func (g *Game) Run(events <-chan game.Event) {
 	start := time.Now()
 	var curPlayer int
-	g.Room.SendGameAction(g.Users[curPlayer], "press_btn", nil) // let the first player start the game
+	g.Room.SendGameAction("press_btn", nil, g.Users[curPlayer]) // let the first player start the game
 	g.lastUserStarted = start
 
 	defer func() {
 		elapsed := time.Since(start).Seconds()
 		// Send results to all users.
 		for _, user := range g.Users {
-			g.Room.SendGameAction(user, "game_over", elapsed)
+			g.Room.SendGameAction("game_over", elapsed, user)
 		}
 	}()
 
@@ -66,13 +66,13 @@ func (g *Game) onAction(user string) bool {
 	start := g.lastUserStarted
 	g.lastUserStarted = time.Now()
 	if g.curPlayer >= len(g.Users) {
-		g.Room.SendGameAction(user, "your_time_sec", time.Since(start).Seconds())
+		g.Room.SendGameAction("your_time_sec", time.Since(start).Seconds(), user)
 		return false
 	}
 	nextUser := g.Users[g.curPlayer]
 	alreadyPressed := g.Users[g.curPlayer-1:]
 
-	g.Room.SendGameAction(user, "your_time_sec", time.Since(start).Seconds())
-	g.Room.SendGameAction(nextUser, "press_btn", alreadyPressed)
+	g.Room.SendGameAction("your_time_sec", time.Since(start).Seconds(), user)
+	g.Room.SendGameAction("press_btn", alreadyPressed, nextUser)
 	return true
 }

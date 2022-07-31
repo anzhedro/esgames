@@ -183,11 +183,19 @@ func (r *Room) SendGameChat(user string, m game.NewChatMessage) {
 	}
 }
 
-func (r *Room) SendGameAction(user string, action string, payload any) {
+func (r *Room) SendGameAction(action string, payload any, users ...string) {
+	conns := make([]*User, 0, len(users))
 	r.mu.Lock()
-	u := r.users[user]
+	for _, name := range users {
+		if u := r.users[name]; u != nil {
+			conns = append(conns, u)
+		} else {
+			log.Printf("Failed to send game action %q to %s: user not found\n", action, name)
+		}
+	}
 	r.mu.Unlock()
-	if u == nil {
+
+	if len(conns) == 0 {
 		return
 	}
 
@@ -195,8 +203,15 @@ func (r *Room) SendGameAction(user string, action string, payload any) {
 	if payload != nil {
 		o["payload"] = payload
 	}
-	if err := u.C.WriteJSON(o); err != nil {
-		log.Printf("failed to send message to %s: %s\n", user, err)
+	blob, err := json.Marshal(o)
+	if err != nil {
+		log.Fatalf("Failed to marshal message %#v: %s", o, err)
+	}
+
+	for _, u := range conns {
+		if err := u.C.WriteMessage(websocket.TextMessage, blob); err != nil {
+			log.Printf("Failed to send a message to %s: %s\n", u.Name, err)
+		}
 	}
 }
 
