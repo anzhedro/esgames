@@ -7,6 +7,7 @@ import (
 	"log"
 	"math/rand"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/anzhedro/esgames/api"
@@ -199,7 +200,7 @@ func (s *roundStage) Run(g *Game, events <-chan game.Event) (stage, error) {
 }
 
 func (s *roundStage) OnChat(m *game.NewChatMessage) (stage, bool) {
-	if m.Text != s.Round.Want {
+	if !strings.EqualFold(m.Text, s.Round.Want) {
 		s.Room.SendGameChat(m, s.Users...)
 		return nil, false
 	}
