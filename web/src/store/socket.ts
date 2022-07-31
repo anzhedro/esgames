@@ -23,7 +23,8 @@ const [socket, setSocket] = createSignal<WebSocket | null>(null);
 
 export function connectToRoom(user: string, room: string, avatar: number) {
   setAppState('connecting');
-  const soc = new WebSocket(`ws://${window.location.host}/ws`);
+  const host = localStorage.getItem('host') ?? window.location.host;
+  const soc = new WebSocket(`ws://${host}/ws`);
   setSocket(soc);
 
   soc.onclose = (event) => {
