@@ -8,12 +8,11 @@ const rules = () => <p>Ждите с нетерпением появления �
 
 const game = () => (
   <Show when={showButton()} fallback={<div></div>}>
-    <div class="re" style={{ height: '100%' }}>
-      <div class="central_column" style={{ position: 'relative', height: '100%' }}>
+    <div class="reaction_game">
+      <div class="central_column">
         <button
           class="reaction_btn"
           style={{
-            position: 'absolute',
             left: `${position().x}%`,
             top: `${position().y}%`,
           }}

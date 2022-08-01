@@ -4,10 +4,7 @@ import { SongItem } from './types';
 export const SongPreview = (props: { song: SongItem }) => (
   <>
     <div class="quiz-game__player">
-      <div
-        class="quiz-game__pick__song__image"
-        style={{ 'background-image': `url(${props.song.artworkUrl100})` }}
-      ></div>
+      <img class="quiz-game__pick__song__image" src={props.song.artworkUrl100} />
       <div class="quiz-game__pick__song__player__content">
         <div class="quiz-game__pick__song__player__content__top">
           <div class="quiz-game__pick__song__name">{props.song.trackName}</div>

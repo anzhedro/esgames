@@ -89,7 +89,7 @@ export const TeamsCount = () => {};
 
 export const GameSettings = () => (
   <>
-    <div class="header" style={{ justifyContent: 'space-around' }}>
+    <div class="header">
       <button onClick={() => setTableState('game_rules')}>ПРАВИЛА</button>
 
       <Show when={currentGame()?.settingsEl}>
