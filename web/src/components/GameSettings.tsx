@@ -3,9 +3,7 @@ import { currentGame, setTableState, startGame } from '../store/room';
 import { iAmHost } from '../store/state';
 
 const difficultyOptions = ['Легко', 'Средне', 'Сложно'];
-const [currentDifficulty, setCurrentDifficulty] = createSignal(
-  difficultyOptions[0]
-);
+const [currentDifficulty, setCurrentDifficulty] = createSignal(difficultyOptions[0]);
 const [roundsCount, setRoundsCount] = createSignal(3);
 
 const roundsCountIncrement = () => {
@@ -45,10 +43,7 @@ export const Difficulty = () => {
     <div>
       <h3>Сложность</h3>
       <div class="select">
-        <div
-          class="currentOption option"
-          onclick={() => setIsSelectOpen(!isSelectOpen())}
-        >
+        <div class="currentOption option" onclick={() => setIsSelectOpen(!isSelectOpen())}>
           {currentDifficulty()}
         </div>
 
@@ -94,21 +89,16 @@ export const TeamsCount = () => {};
 
 export const GameSettings = () => (
   <>
-    <div class="header" style={{ justifyContent: 'space-around' }}>
+    <div class="header">
       <button onClick={() => setTableState('game_rules')}>ПРАВИЛА</button>
 
       <Show when={currentGame()?.settingsEl}>
-        <button onClick={() => setTableState('game_settings')}>
-          НАСТРОЙКИ
-        </button>
+        <button onClick={() => setTableState('game_settings')}>НАСТРОЙКИ</button>
       </Show>
     </div>
     <div class="content game_settings">
       <h2>Настройки игры {currentGame()?.title}</h2>
-      <Show
-        when={currentGame()?.settingsEl}
-        fallback={<p>No settings in this game</p>}
-      >
+      <Show when={currentGame()?.settingsEl} fallback={<p>No settings in this game</p>}>
         {currentGame()!.settingsEl!}
       </Show>
     </div>

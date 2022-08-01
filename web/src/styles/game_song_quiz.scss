@@ -21,8 +21,17 @@
     margin-bottom: 10px;
   }
 
-  .quiz-game__pick__song__player__content__bottom {
+  .quiz-game__pick__song__image {
+    width: 100%;
+    height: 100%;
+  }
 
+  .quiz-game__pick__song__audio {
+    height: 40px;
+    width: 300px;
+  }
+  
+  .quiz-game__pick__song__player__content__bottom {
     .button {
       background-color: $red;
       padding: 10px;
@@ -42,7 +51,6 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
-
 
   .quiz-game__pick__search {
     background-color: $red;
@@ -147,5 +155,4 @@
   .button__label {
     color: white;
   }
-
 }

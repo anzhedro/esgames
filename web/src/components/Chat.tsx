@@ -46,17 +46,9 @@ export const Chat = (props: { lang: Translation }) => {
       </div>
 
       <ul class="chat__messages">
-        <For
-          each={messages()}
-          fallback={<span class="no_messages">{props.lang.nomessages}</span>}
-        >
+        <For each={messages()} fallback={<span class="no_messages">{props.lang.nomessages}</span>}>
           {(message: IMessage) => (
-            <ChatMessage
-              created={message.created}
-              user={message.user}
-              text={message.text}
-              ref={lastMessageRef}
-            />
+            <ChatMessage created={message.created} user={message.user} text={message.text} ref={lastMessageRef} />
           )}
         </For>
       </ul>
@@ -87,11 +79,7 @@ export const Chat = (props: { lang: Translation }) => {
           placeholder="Ваше сообщение..."
         />
 
-        <button
-          type="button"
-          class="button"
-          onClick={(e) => toggleSmilesView(e)}
-        >
+        <button type="button" class="button" onClick={(e) => toggleSmilesView(e)}>
           <img src="/img/EmojisIcon.svg" />
         </button>
       </form>

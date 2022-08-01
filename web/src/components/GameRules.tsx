@@ -4,13 +4,11 @@ import { iAmHost } from '../store/state';
 
 export const GameRules = () => (
   <>
-    <div class="header" style={{ justifyContent: 'space-around' }}>
+    <div class="header">
       <button onClick={() => setTableState('game_rules')}>ПРАВИЛА</button>
 
       <Show when={currentGame()?.settingsEl}>
-        <button onClick={() => setTableState('game_settings')}>
-          НАСТРОЙКИ
-        </button>
+        <button onClick={() => setTableState('game_settings')}>НАСТРОЙКИ</button>
       </Show>
     </div>
     <div class="content game_rules">{currentGame()!.rulesEl}</div>

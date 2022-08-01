@@ -1,10 +1,5 @@
 import { createSignal, createEffect, Show, For } from 'solid-js';
-import {
-  Difficulty,
-  RoundCount,
-  RoundTime,
-  TeamsCount,
-} from '../components/GameSettings';
+import { Difficulty, RoundCount, RoundTime } from '../components/GameSettings';
 import { WordItem, WordsList } from '../pages/ComponentsPage';
 import { IGame } from '../utils/types';
 
@@ -13,17 +8,13 @@ const settings = () => (
     <RoundTime />
     <RoundCount />
     <Difficulty />
-    <TeamsCount />
   </>
 );
 
 const rules = () => (
   <>
     <h2>Правила игры Hat</h2>
-    <p>
-      Игроки по очереди объясняют друг другу слова, за каждое угаданное слово
-      получает очки.
-    </p>
+    <p>Игроки по очереди объясняют друг другу слова, за каждое угаданное слово получает очки.</p>
     <p>Команда набравшая больше очков побеждает</p>
   </>
 );
@@ -37,13 +28,13 @@ const game = () => {
     }, 1000);
   });
 
-  const scrollToEnd = () => {
-    if (roundWords().length === 0) return;
-    lastWordRef.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end',
-    });
-  };
+  // const scrollToEnd = () => {
+  //   if (roundWords().length === 0) return;
+  //   lastWordRef.scrollIntoView({
+  //     behavior: 'smooth',
+  //     block: 'end',
+  //   });
+  // };
 
   return (
     <div class="demo_hat">
@@ -122,19 +113,6 @@ const [wordsCounter, setWordsCounter] = createSignal(0);
 const [roundTime, setRoundTime] = createSignal(5);
 const [timer, setTimer] = createSignal(roundTime());
 
-const initWord = {
-  word: words[0],
-  state: 0,
-};
-
-const greenButtonWords = [
-  'Ждите',
-  'Старт',
-  'Следующее слово',
-  'Команда 2',
-  'Следующее слово',
-];
-
 const handleClick = () => {
   if (textInButton() === 'Ждите') {
     return;
@@ -152,8 +130,6 @@ const handleClick = () => {
       break;
     default:
   }
-
-  // timer() === roundTime() ? startGame() : acceptWord();
 };
 
 const startGame = () => {
