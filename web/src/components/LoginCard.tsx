@@ -1,12 +1,4 @@
-import {
-  login,
-  name,
-  room,
-  avatar,
-  setRandomAvatar,
-  setName,
-  setRoom,
-} from '../store/state';
+import { login, name, room, avatar, setRandomAvatar, setName, setRoom } from '../store/state';
 import { Translation } from '../store/localization';
 
 export const LoginCard = (props: { lang: Translation }) => (

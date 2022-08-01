@@ -8,9 +8,7 @@ export const GameRules = () => (
       <button onClick={() => setTableState('game_rules')}>ПРАВИЛА</button>
 
       <Show when={currentGame()?.settingsEl}>
-        <button onClick={() => setTableState('game_settings')}>
-          НАСТРОЙКИ
-        </button>
+        <button onClick={() => setTableState('game_settings')}>НАСТРОЙКИ</button>
       </Show>
     </div>
     <div class="content game_rules">{currentGame()!.rulesEl}</div>

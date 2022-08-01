@@ -153,9 +153,4 @@ const handleSetCurrentLanguage = (language: string) => {
   setCurrentLanguage(language);
 };
 
-export {
-  currentLanguage,
-  handleSetCurrentLanguage,
-  languages,
-  localizationMap,
-};
+export { currentLanguage, handleSetCurrentLanguage, languages, localizationMap };

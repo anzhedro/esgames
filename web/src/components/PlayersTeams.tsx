@@ -43,9 +43,7 @@ export const PlayersTeams = () => {
       is_host: false,
     };
 
-    const newTeams = oldTeams.map(
-      (team) => (team = team.filter((p) => p.name !== me.name))
-    );
+    const newTeams = oldTeams.map((team) => (team = team.filter((p) => p.name !== me.name)));
     newTeams[idx].push(me);
 
     setTeams(newTeams);
@@ -54,10 +52,7 @@ export const PlayersTeams = () => {
 
   return (
     <div>
-      <For
-        each={teams.filter((el: IPlayer[], idx: number) => idx > 0)}
-        fallback={<div>Loading...</div>}
-      >
+      <For each={teams.filter((el: IPlayer[], idx: number) => idx > 0)} fallback={<div>Loading...</div>}>
         {(team: IPlayer[], idx) => (
           <div class="team">
             <button class="team_btn" onClick={() => handleSelectTeam(+idx)}>

@@ -1,9 +1,5 @@
 import { createSignal, For, Show } from 'solid-js';
-import {
-  currentLanguage,
-  handleSetCurrentLanguage,
-  languages,
-} from '../store/localization';
+import { currentLanguage, handleSetCurrentLanguage, languages } from '../store/localization';
 import { Spinner } from './Spinner';
 
 export const LangSelector = () => {

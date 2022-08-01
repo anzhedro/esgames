@@ -3,7 +3,7 @@ import {
   Difficulty,
   RoundCount,
   RoundTime,
-  TeamsCount,
+  // TeamsCount,
 } from '../components/GameSettings';
 import { WordItem, WordsList } from '../pages/ComponentsPage';
 import { IGame } from '../utils/types';
@@ -13,7 +13,6 @@ const settings = () => (
     <RoundTime />
     <RoundCount />
     <Difficulty />
-    <TeamsCount />
   </>
 );
 
@@ -37,13 +36,13 @@ const game = () => {
     }, 1000);
   });
 
-  const scrollToEnd = () => {
-    if (roundWords().length === 0) return;
-    lastWordRef.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end',
-    });
-  };
+  // const scrollToEnd = () => {
+  //   if (roundWords().length === 0) return;
+  //   lastWordRef.scrollIntoView({
+  //     behavior: 'smooth',
+  //     block: 'end',
+  //   });
+  // };
 
   return (
     <div class="demo_hat">
@@ -122,18 +121,18 @@ const [wordsCounter, setWordsCounter] = createSignal(0);
 const [roundTime, setRoundTime] = createSignal(5);
 const [timer, setTimer] = createSignal(roundTime());
 
-const initWord = {
-  word: words[0],
-  state: 0,
-};
+// const initWord = {
+//   word: words[0],
+//   state: 0,
+// };
 
-const greenButtonWords = [
-  'Ждите',
-  'Старт',
-  'Следующее слово',
-  'Команда 2',
-  'Следующее слово',
-];
+// const greenButtonWords = [
+//   'Ждите',
+//   'Старт',
+//   'Следующее слово',
+//   'Команда 2',
+//   'Следующее слово',
+// ];
 
 const handleClick = () => {
   if (textInButton() === 'Ждите') {

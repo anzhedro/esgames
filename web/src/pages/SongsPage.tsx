@@ -1,12 +1,4 @@
-import {
-  createResource,
-  createSignal,
-  For,
-  Match,
-  Show,
-  Suspense,
-  Switch,
-} from 'solid-js';
+import { createResource, createSignal, For, Match, Show, Suspense, Switch } from 'solid-js';
 import { Spinner } from '../components/Spinner';
 
 interface SongItem {
@@ -75,10 +67,7 @@ const SongSearch = () => {
   const [songs] = createResource(querySearchTerm, fetchMusic);
   return (
     <div class="quiz-game">
-      <form
-        class="quiz-game__pick__search"
-        onSubmit={(e) => e.preventDefault()}
-      >
+      <form class="quiz-game__pick__search" onSubmit={(e) => e.preventDefault()}>
         <div class="wrapper">
           <input
             class="input__field"
@@ -115,10 +104,7 @@ const SongSearch = () => {
                     // setGameState("pick_song_player");
                   }}
                 >
-                  <span class="quiz-game__pick__results__row__main">
-                    {song.trackName}
-                  </span>{' '}
-                  - {song.artistName}
+                  <span class="quiz-game__pick__results__row__main">{song.trackName}</span> - {song.artistName}
                 </div>
               )}
             </For>
@@ -142,17 +128,9 @@ const SongPreview = () => (
       ></div>
       <div class="quiz-game__pick__song__player__content">
         <div class="quiz-game__pick__song__player__content__top">
-          <div class="quiz-game__pick__song__name">
-            {selectedSong()!.trackName}
-          </div>
-          <div class="quiz-game__pick__song__details">
-            {selectedSong()!.artistName}
-          </div>
-          <audio
-            class="quiz-game__pick__song__audio"
-            controls={true}
-            style={{ height: '40px', width: '300px' }}
-          >
+          <div class="quiz-game__pick__song__name">{selectedSong()!.trackName}</div>
+          <div class="quiz-game__pick__song__details">{selectedSong()!.artistName}</div>
+          <audio class="quiz-game__pick__song__audio" controls={true} style={{ height: '40px', width: '300px' }}>
             {/* <source src={selectedSong()!.previewUrl} type="audio/mpeg" /> */}
             <source src={selectedSong()!.previewUrl} type="audio/mpeg" />
             Your browser does not support the audio element.
@@ -190,10 +168,7 @@ const SongTitleConfirm = () => (
         />
       </div>
       <div class="buttons">
-        <button
-          class="button --link "
-          onClick={() => setGameState('pick_search')}
-        >
+        <button class="button --link " onClick={() => setGameState('pick_search')}>
           Back
         </button>
         <button
@@ -202,7 +177,7 @@ const SongTitleConfirm = () => (
             console.log(userGuess());
             // send ws message
 
-            setGameState('round')
+            setGameState('round');
             // () => {
             //   sendGameAction("picked_song", {
             //     want: userGuess(),
@@ -212,7 +187,6 @@ const SongTitleConfirm = () => (
             //     artist: selectedSong()!.artistName,
             //   });
             // }
-
           }}
         >
           Choose this song!
@@ -240,9 +214,6 @@ export const SongGame = () => (
         <div class="title">Confirm the name other players will guess:</div>
         <SongTitleConfirm />
       </Match>
-
-
-
     </Switch>
   </div>
 );

@@ -32,13 +32,7 @@ export const GamesList = () => {
         </For>
       </div>
       <div class="footer">
-        <button
-          onClick={() =>
-            copyToClipboard(`${window.location.host}/room/${params.id}`)
-          }
-        >
-          ПРИГЛАСИТЬ
-        </button>
+        <button onClick={() => copyToClipboard(`${window.location.host}/room/${params.id}`)}>ПРИГЛАСИТЬ</button>
       </div>
     </>
   );

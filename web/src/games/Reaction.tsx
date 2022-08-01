@@ -4,17 +4,12 @@ import { IGame } from '../utils/types';
 import { sendMsg } from '../store/chat';
 import { randomInteger } from '../utils/helpers';
 
-const rules = () => (
-  <p>Ждите с нетерпением появления кнопки и жмякните её быстрее всех.</p>
-);
+const rules = () => <p>Ждите с нетерпением появления кнопки и жмякните её быстрее всех.</p>;
 
 const game = () => (
   <Show when={showButton()} fallback={<div></div>}>
     <div class="re" style={{ height: '100%' }}>
-      <div
-        class="central_column"
-        style={{ position: 'relative', height: '100%' }}
-      >
+      <div class="central_column" style={{ position: 'relative', height: '100%' }}>
         <button
           class="reaction_btn"
           style={{
@@ -22,20 +17,16 @@ const game = () => (
             left: `${position().x}%`,
             top: `${position().y}%`,
           }}
-          onClick={
-            () => {
-              if (timesClicked() < 3) {
-                onBtnPress();
-                setTimesClicked(timesClicked() + 1);
-              }
-              else {
-                setShowButton(false);
-                setTimesClicked(0);
-                sendGameAction("btn_click");
-              }
-
+          onClick={() => {
+            if (timesClicked() < 3) {
+              onBtnPress();
+              setTimesClicked(timesClicked() + 1);
+            } else {
+              setShowButton(false);
+              setTimesClicked(0);
+              sendGameAction('btn_click');
             }
-          }
+          }}
         >
           <div class="dot"></div>
         </button>
@@ -68,6 +59,5 @@ export const Game: IGame = {
   imageUrl: '/img/speed.svg',
   rulesEl: rules,
   gameEl: game,
-  onGameAction: (action, payload) =>
-    actions[action as keyof typeof actions](payload),
+  onGameAction: (action, payload) => actions[action as keyof typeof actions](payload),
 };
