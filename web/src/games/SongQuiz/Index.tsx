@@ -1,4 +1,5 @@
 import { Match, Show, Switch } from 'solid-js';
+import { CircularCountdownTimer } from '../../components/CircularCountDownTimer';
 import { Spinner } from '../../components/Spinner';
 import { IGame } from '../../utils/types';
 import { RoundResults } from './RoundResults';
@@ -16,12 +17,24 @@ import {
   curRound,
   rounds,
   actions,
-  timeLeft,
+  showHint,
 } from './store';
 
 const GameComponent = () => (
   <div class="quiz-container">
-    <div class="timer">{timeLeft() >= 0 ? timeLeft() : 0}</div>
+    <Switch>
+      <Match when={gameState() === 'pick_song' || gameState() === 'confirm_song_title'}>
+        <div class="timer">
+          <CircularCountdownTimer time={timeToPick()} />
+        </div>
+      </Match>
+      <Match when={gameState() === 'round_play'}>
+        <div class="timer">
+          <CircularCountdownTimer time={timeToGuess()} />
+        </div>
+      </Match>
+    </Switch>
+
     <Switch>
       <Match when={gameState() === 'pick_song'}>
         <div class="quiz-game__pick__theme">
@@ -58,16 +71,41 @@ const GameComponent = () => (
         <div class="title">
           Round {curRound()} - {rounds()[curRound()].user} picked this song!
         </div>
+        <div class="title">HERE</div>
+        <Show
+          when={showHint()}
+          fallback={
+            <div class="title">
+              {rounds()
+                [curRound()].want.split(' ')
+                .map((word) =>
+                  word
+                    .split('')
+                    .map((ch) => (['!', '?', '.', ',', '(', ')'].includes(ch) ? ch : '_'))
+                    .join('')
+                )
+                .join(' ')}
+            </div>
+          }
+        >
+          <div class="title">
+            {rounds()
+              [curRound()].want.split(' ')
+              .map((word) =>
+                word
+                  .split('')
+                  .map((ch, i) => (['!', '?', '.', ',', '(', ')'].includes(ch) || !i ? ch : '_'))
+                  .join('')
+              )
+              .join(' ')}
+          </div>
+        </Show>
+        <div class="title">AfTER</div>
         {rounds()[curRound()].audioEl}
       </Match>
     </Switch>
   </div>
 );
-
-// Kinds of messages we can send to the backend:
-// * picked_song
-// * ready
-// * giveup
 
 export const Game: IGame = {
   gameId: 'songquiz',

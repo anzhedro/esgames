@@ -2,12 +2,10 @@ import { createSignal } from 'solid-js';
 import { sendGameAction } from '../../store/room';
 import { RoundStats, Settings, SongItem, UserSong, UserStat } from './types';
 
-const [pickTimeout, setPickTimeout] = createSignal<NodeJS.Timeout | undefined>();
-const [guessTimeout, setGuessTimeout] = createSignal<NodeJS.Timeout | undefined>();
-const [secondsTicker, setSecondsTicker] = createSignal<NodeJS.Timeout | undefined>();
-// let pickTimeout: number | undefined;
-// let guessTimeout: number | undefined;
-// let secondsTicker: number | undefined;
+const [pickTimeout, setPickTimeout] = createSignal<number | undefined>();
+let guessTimeout: number | undefined;
+let hintTimeout: number | undefined;
+export const [showHint, setShowHint] = createSignal<boolean>(false);
 
 const [currentTopic, setCurrentTopic] = createSignal('No theme');
 const [timeToPick, setTimeToPick] = createSignal(60);
@@ -18,7 +16,6 @@ const [selectedSong, setSelectedSong] = createSignal<SongItem | null>(null);
 const [userGuess, setUserGuess] = createSignal('');
 const [gameState, setGameState] = createSignal('');
 
-const [timeLeft, setTimeLeft] = createSignal(60);
 const [curRound, setCurRound] = createSignal(0);
 const [rounds, setRounds] = createSignal<UserSong[]>([]);
 const [roundStats, setRoundStats] = createSignal<UserStat[]>([]);
@@ -39,19 +36,12 @@ const actions: Record<string, (params: any) => void> = {
     setTimeToPick(settings.timeToPick);
     setTimeToGuess(settings.timeToGuess);
 
-    setTimeLeft(settings.timeToPick);
-
     setGameState('pick_song');
     setPickTimeout(
       setTimeout(() => {
         if (gameState() === 'waiting_for_other_players') return;
         sendGameAction('pick_time_out');
       }, settings.timeToPick * 1000)
-    );
-    setSecondsTicker(
-      setInterval(() => {
-        setTimeLeft(timeLeft() - 1);
-      }, 1000)
     );
   },
   rounds(songs: UserSong[]) {
@@ -70,18 +60,27 @@ const actions: Record<string, (params: any) => void> = {
   },
   play() {
     setGameState('round_play');
+
+    guessTimeout = setTimeout(() => {
+      sendGameAction('giveup');
+    }, timeToGuess() * 1000);
+
+    hintTimeout = setTimeout(() => {
+      setShowHint(true);
+    }, (timeToGuess() * 1000) / 2);
+
     rounds()[curRound()].audioEl?.play();
-    setGuessTimeout(
-      setTimeout(() => {
-        sendGameAction('giveup');
-      }, timeToGuess() * 1000)
-    );
   },
   round_end(stats: RoundStats) {
     if (guessTimeout) {
-      clearTimeout(guessTimeout());
-      setGuessTimeout(undefined);
+      clearTimeout(guessTimeout);
+      guessTimeout = undefined;
     }
+    if (hintTimeout) {
+      clearTimeout(hintTimeout);
+      hintTimeout = undefined;
+    }
+    setShowHint(false);
     setRoundStats(stats.users);
     setGameState('round_preload');
     if (curRound() + 1 < rounds().length) {
@@ -92,7 +91,9 @@ const actions: Record<string, (params: any) => void> = {
       el.load();
     }
   },
-  game_over() {},
+  game_over() {
+    setGameState('');
+  },
 };
 
 export {
@@ -113,9 +114,6 @@ export {
   gameState,
   setGameState,
   pickTimeout,
-  guessTimeout,
-  secondsTicker,
-  setSecondsTicker,
   roundStats,
   setRoundStats,
   curRound,
@@ -123,7 +121,5 @@ export {
   rounds,
   setRounds,
   actions,
-  timeLeft,
-  setTimeLeft,
   setPickTimeout,
 };

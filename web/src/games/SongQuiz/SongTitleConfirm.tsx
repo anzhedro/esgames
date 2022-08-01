@@ -1,13 +1,5 @@
 import { sendGameAction } from '../../store/room';
-import {
-  setUserGuess,
-  setGameState,
-  pickTimeout,
-  secondsTicker,
-  userGuess,
-  setPickTimeout,
-  setSecondsTicker,
-} from './store';
+import { setUserGuess, setGameState, pickTimeout, userGuess, setPickTimeout } from './store';
 import { SongItem } from './types';
 
 export const SongTitleConfirm = (props: { song: SongItem }) => (
@@ -31,8 +23,6 @@ export const SongTitleConfirm = (props: { song: SongItem }) => (
           onClick={() => {
             clearTimeout(pickTimeout());
             setPickTimeout(undefined);
-            clearInterval(secondsTicker());
-            setSecondsTicker(undefined);
             sendGameAction('picked_song', {
               want: userGuess(),
               pic: props.song.artworkUrl100,
