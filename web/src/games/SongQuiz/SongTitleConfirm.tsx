@@ -3,11 +3,10 @@ import { setUserGuess, setGameState, pickTimeout, userGuess, setPickTimeout } fr
 import { SongItem } from './types';
 
 export const SongTitleConfirm = (props: { song: SongItem }) => (
-  <div class="quiz-game__chosen__song">
-    <div class="quiz-game__pick__stage">
-      <div class="input__container quiz-game__pick__song__edit-name">
+  <div class="chosen__song">
+    <div class="pick__stage">
+      <div class="edit-name">
         <input
-          class="input__field"
           type="text"
           placeholder="Song name"
           value={props.song.trackName}
@@ -15,11 +14,8 @@ export const SongTitleConfirm = (props: { song: SongItem }) => (
         />
       </div>
       <div class="buttons">
-        <button class="button --link " onClick={() => setGameState('pick_song')}>
-          Back
-        </button>
+        <button onClick={() => setGameState('pick_song')}>Back</button>
         <button
-          class="button --primary "
           onClick={() => {
             clearTimeout(pickTimeout());
             setPickTimeout(undefined);

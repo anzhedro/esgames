@@ -1,5 +1,5 @@
 import { Match, Show, Switch } from 'solid-js';
-import { CircularCountdownTimer } from '../../components/CircularCountDownTimer';
+import { CircularCountdownTimer } from '../../components/CircularCountdownTimer';
 import { Spinner } from '../../components/Spinner';
 import { IGame } from '../../utils/types';
 import { RoundResults } from './RoundResults';
@@ -20,88 +20,114 @@ import {
   showHint,
 } from './store';
 
+const Timer = () => (
+  <Switch>
+    <Match when={gameState() === 'pick_song' || gameState() === 'confirm_song_title'}>
+      <CircularCountdownTimer time={timeToPick()} />
+    </Match>
+    <Match when={gameState() === 'round_play'}>
+      <CircularCountdownTimer time={timeToGuess()} />
+    </Match>
+  </Switch>
+);
+
+const PickSong = () => (
+  <div class="pick_song">
+    <div class="pick__theme">
+      The theme is: <strong>{currentTopic()}</strong>
+    </div>
+    <h2 class="title">Pick a song for others to guess:</h2>
+    <SongSearch />
+    <Show when={selectedSong()}>{(song) => <SongPreview song={song} />}</Show>
+  </div>
+);
+
+const SongQuizConfirm = () => (
+  <div class="confirm">
+    <div class="pick__theme">
+      The theme is: <strong>{currentTopic()}</strong>
+    </div>
+    <div class="title">Confirm the name other players will guess:</div>
+    <Show when={selectedSong()}>{(song) => <SongTitleConfirm song={song} />}</Show>
+  </div>
+);
+
+const Waiting = () => <div class="title">Waiting for other players... </div>;
+
+const RoundPreload = () => (
+  <>
+    <div class="pick__theme">
+      The theme is: <strong>{currentTopic()}</strong>
+    </div>
+    <div class="title">
+      Round {curRound()} - {rounds()[curRound()].user} picked this song!
+    </div>
+    <RoundResults />
+    <Spinner />
+  </>
+);
+
+const RoundPlay = () => (
+  <>
+    <div class="pick__theme">
+      The theme is: <strong>{currentTopic()}</strong>
+    </div>
+    <div class="title">
+      Round {curRound()} - {rounds()[curRound()].user} picked this song!
+    </div>
+    <div class="title">HERE</div>
+    <Show
+      when={showHint()}
+      fallback={
+        <div class="title">
+          {rounds()
+            [curRound()].want.split(' ')
+            .map((word) =>
+              word
+                .split('')
+                .map((ch) => (['!', '?', '.', ',', '(', ')'].includes(ch) ? ch : '_'))
+                .join('')
+            )
+            .join(' ')}
+        </div>
+      }
+    >
+      <div class="title">
+        {rounds()
+          [curRound()].want.split(' ')
+          .map((word) =>
+            word
+              .split('')
+              .map((ch, i) => (['!', '?', '.', ',', '(', ')'].includes(ch) || !i ? ch : '_'))
+              .join('')
+          )
+          .join(' ')}
+      </div>
+    </Show>
+    <div class="title">AfTER</div>
+    {rounds()[curRound()].audioEl}
+  </>
+);
+
 const GameComponent = () => (
   <div class="quiz-container">
-    <Switch>
-      <Match when={gameState() === 'pick_song' || gameState() === 'confirm_song_title'}>
-        <div class="timer">
-          <CircularCountdownTimer time={timeToPick()} />
-        </div>
-      </Match>
-      <Match when={gameState() === 'round_play'}>
-        <div class="timer">
-          <CircularCountdownTimer time={timeToGuess()} />
-        </div>
-      </Match>
-    </Switch>
+    <Timer />
 
     <Switch>
       <Match when={gameState() === 'pick_song'}>
-        <div class="quiz-game__pick__theme">
-          The theme is: <strong>{currentTopic()}</strong>
-        </div>
-        <h2 class="title">Pick a song for others to guess:</h2>
-        <SongSearch />
-        <Show when={selectedSong()}>{(song) => <SongPreview song={song} />}</Show>
+        <PickSong />
       </Match>
       <Match when={gameState() === 'confirm_song_title'}>
-        <div class="quiz-game__pick__theme">
-          The theme is: <strong>{currentTopic()}</strong>
-        </div>
-        <div class="title">Confirm the name other players will guess:</div>
-        <Show when={selectedSong()}>{(song) => <SongTitleConfirm song={song} />}</Show>
+        <SongQuizConfirm />
       </Match>
       <Match when={gameState() === 'waiting_for_other_players'}>
-        <div class="title">Waiting for other players... </div>
+        <Waiting />
       </Match>
       <Match when={gameState() === 'round_preload'}>
-        <div class="quiz-game__pick__theme">
-          The theme is: <strong>{currentTopic()}</strong>
-        </div>
-        <div class="title">
-          Round {curRound()} - {rounds()[curRound()].user} picked this song!
-        </div>
-        <RoundResults />
-        <Spinner />
+        <RoundPreload />
       </Match>
       <Match when={gameState() === 'round_play'}>
-        <div class="quiz-game__pick__theme">
-          The theme is: <strong>{currentTopic()}</strong>
-        </div>
-        <div class="title">
-          Round {curRound()} - {rounds()[curRound()].user} picked this song!
-        </div>
-        <div class="title">HERE</div>
-        <Show
-          when={showHint()}
-          fallback={
-            <div class="title">
-              {rounds()
-                [curRound()].want.split(' ')
-                .map((word) =>
-                  word
-                    .split('')
-                    .map((ch) => (['!', '?', '.', ',', '(', ')'].includes(ch) ? ch : '_'))
-                    .join('')
-                )
-                .join(' ')}
-            </div>
-          }
-        >
-          <div class="title">
-            {rounds()
-              [curRound()].want.split(' ')
-              .map((word) =>
-                word
-                  .split('')
-                  .map((ch, i) => (['!', '?', '.', ',', '(', ')'].includes(ch) || !i ? ch : '_'))
-                  .join('')
-              )
-              .join(' ')}
-          </div>
-        </Show>
-        <div class="title">AfTER</div>
-        {rounds()[curRound()].audioEl}
+        <RoundPlay />
       </Match>
     </Switch>
   </div>

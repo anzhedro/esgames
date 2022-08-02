@@ -10,7 +10,9 @@ import { Spinner } from './Spinner';
 export const Chat = (props: { lang: Translation }) => {
   const [firstLoad, setFirstLoad] = createSignal(true);
   const [smilesView, setSmilesView] = createSignal(false);
-  const lastMessageRef: any = null;
+
+  // eslint-disable-next-line prefer-const
+  let lastMessageRef: any = null;
 
   const toggleSmilesView = (e: MouseEvent) => {
     e.preventDefault();
@@ -37,6 +39,17 @@ export const Chat = (props: { lang: Translation }) => {
 
   createEffect(() => {
     scrollToEnd();
+    if (messages().length === 0) return;
+    if (lastMessageRef) {
+      lastMessageRef.scrollIntoView({
+        behavior: firstLoad() ? 'auto' : 'smooth',
+        // block: 'start',
+        block: 'end',
+
+        inline: 'nearest',
+      });
+      setFirstLoad(false);
+    }
   });
 
   return (

@@ -42,7 +42,7 @@ export const Topics = () => (
 );
 
 export const Settings = () => (
-  <>
+  <div class="quiz_game_settings">
     <div>
       <h3>Время на выбор песни</h3>
       <input type="number" value="60" min="0" max="120" onChange={(e) => setTimeToPick(+e.currentTarget.value)} />
@@ -52,5 +52,5 @@ export const Settings = () => (
       <input type="number" value="20" min="1" max="30" onChange={(e) => setTimeToGuess(+e.currentTarget.value)} />
     </div>
     <Topics />
-  </>
+  </div>
 );

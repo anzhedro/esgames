@@ -16,7 +16,7 @@ export function CircularCountdownTimer(props: { time: number }) {
   });
 
   return (
-    <div class="item">
+    <div class="timer">
       <h2>{count() + 1}</h2>
       <svg viewBox="0 0 122.6 122.6" xmlns="http://www.w3.org/2000/svg">
         <circle

@@ -189,6 +189,10 @@
       &.game_settings {
         @include flex-col;
 
+        * {
+          max-width: 100%;
+        }
+
         .round_count {
           .row {
             display: flex;

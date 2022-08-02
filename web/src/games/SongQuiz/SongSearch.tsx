@@ -1,4 +1,4 @@
-import { createResource, Suspense, Show, For } from 'solid-js';
+import { createResource, Suspense, Show, For, createEffect } from 'solid-js';
 import { Spinner } from '../../components/Spinner';
 import { querySearchTerm, setSearchTerm, setQuerySearchTerm, searchTerm, setSelectedSong, selectedSong } from './store';
 import { fetchMusicResponse, SongItem } from './types';
@@ -19,37 +19,36 @@ export const SongSearch = () => {
     ).json();
   const [songs] = createResource(querySearchTerm, fetchMusic);
 
+  createEffect(() => {
+    console.log(songs());
+  });
+
   return (
-    <div class="quiz-game">
-      <form class="quiz-game__pick__search" onSubmit={(e) => e.preventDefault()}>
-        <div class="wrapper">
-          <input
-            class="input__field"
-            type="text"
-            placeholder="Song / artist"
-            onChange={(e) => setSearchTerm(e.currentTarget.value)}
-          />
+    <div class="song_search">
+      <form onSubmit={(e) => e.preventDefault()}>
+        <div>
+          <input type="text" placeholder="Song / artist" onChange={(e) => setSearchTerm(e.currentTarget.value)} />
         </div>
 
         <button
-          class="button --secondary "
           onClick={() => {
             setQuerySearchTerm(searchTerm);
             setSelectedSong(null);
           }}
         >
-          <span class="button__label --secondary">Search</span>
+          <span>Search</span>
         </button>
       </form>
       <Suspense fallback={<Spinner />}>
-        <Show when={songs()} fallback={<div></div>}>
-          <div class="quiz-game__pick__results">
+        <Show when={songs() && songs()?.results.length}>
+          <div class="pick__results">
             <For each={songs()?.results}>
               {(song: SongItem) => (
                 <div
                   classList={{
                     selected: selectedSong() === song,
-                    'quiz-game__pick__results__row': true,
+                    // ?
+                    row: true,
                   }}
                   onClick={() => {
                     if (selectedSong() === song) return;
@@ -58,7 +57,7 @@ export const SongSearch = () => {
                     // setGameState("pick_song_player");
                   }}
                 >
-                  <span class="quiz-game__pick__results__row__main">{song.trackName}</span> - {song.artistName}
+                  <span class="row__main">{song.trackName}</span> - {song.artistName}
                 </div>
               )}
             </For>

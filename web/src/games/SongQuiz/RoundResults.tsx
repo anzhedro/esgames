@@ -8,10 +8,10 @@ export const RoundResults = () => (
       <For each={roundStats()}>
         {(stat: UserStat) => (
           <div class="results__row">
-            <div class="results__row__user">{stat.user}</div>
-            <div class="results__row__guessedId">{stat.guessedIn ? `${stat.guessedIn} ms` : '-'}</div>
-            <div class="results__row__roundScore">{stat.roundScore}</div>
-            <div class="results__row__totalScore">{stat.totalScore}</div>
+            <div class="user">{stat.user}</div>
+            <div class="guessedId">{stat.guessedIn ? `${stat.guessedIn} ms` : '-'}</div>
+            <div class="roundScore">{stat.roundScore}</div>
+            <div class="totalScore">{stat.totalScore}</div>
           </div>
         )}
       </For>
