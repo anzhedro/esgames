@@ -6,8 +6,9 @@ const [pickTimeout, setPickTimeout] = createSignal<number | undefined>();
 let guessTimeout: number | undefined;
 let hintTimeout: number | undefined;
 export const [showHint, setShowHint] = createSignal<boolean>(false);
+const showAnswerTime = 3;
 
-const [currentTopic, setCurrentTopic] = createSignal('No theme');
+const [currentTopic, setCurrentTopic] = createSignal('Custom');
 const [timeToPick, setTimeToPick] = createSignal(60);
 const [timeToGuess, setTimeToGuess] = createSignal(20);
 const [searchTerm, setSearchTerm] = createSignal('');
@@ -81,17 +82,25 @@ const actions: Record<string, (params: any) => void> = {
       hintTimeout = undefined;
     }
     setShowHint(false);
-    setRoundStats(stats.users);
-    setGameState('round_preload');
-    if (curRound() + 1 < rounds().length) {
-      setCurRound(curRound() + 1);
-      const el = rounds()[curRound()].audioEl;
-      if (!el) return;
-      el.oncanplaythrough = () => setTimeout(() => sendGameAction('ready'), 5000);
-      el.load();
-    }
+
+    setGameState('show_answer');
+
+    setTimeout(() => {
+      setRoundStats(stats.users);
+      setGameState('round_preload');
+      if (curRound() + 1 < rounds().length) {
+        setCurRound(curRound() + 1);
+        const el = rounds()[curRound()].audioEl;
+        if (!el) return;
+        el.oncanplaythrough = () => setTimeout(() => sendGameAction('ready'), 5000);
+        el.load();
+      }
+    }, showAnswerTime * 1000);
   },
   game_over() {
+    // setTimeout(() => {
+    //   sendGameAction('giveup');
+    // }, timeToGuess() * 1000);
     setGameState('');
   },
 };
@@ -122,4 +131,5 @@ export {
   setRounds,
   actions,
   setPickTimeout,
+  showAnswerTime,
 };

@@ -1,8 +1,8 @@
-import { For, Show } from 'solid-js';
+import { For, onMount, Show } from 'solid-js';
+import { startGameDisabled, setStartGameDisabled } from '../../components/GameSettings';
 import { setTimeToPick, setTimeToGuess, currentTopic, setCurrentTopic } from './store';
 
 const songQuizTopics = [
-  'No theme',
   'Custom',
   'Lockdown',
   'Disney',
@@ -27,19 +27,46 @@ const songQuizTopics = [
   'One-word artist names',
 ];
 
-export const Topics = () => (
-  <div>
-    <h3>Тема игры</h3>
-    <div>
-      <select name="cellsWide" onChange={(e) => setCurrentTopic(e.currentTarget.value)}>
-        <For each={songQuizTopics}>{(topic) => <option value={topic}>{topic}</option>}</For>
-      </select>
-      <Show when={currentTopic() === 'Custom' || !songQuizTopics.includes(currentTopic())}>
-        <input type="text" onKeyUp={(e) => setCurrentTopic(` ${e.currentTarget.value}`)} />
-      </Show>
+export const Topics = () => {
+  // eslint-disable-next-line prefer-const
+
+  const handleType = (e: KeyboardEvent) => {
+    const input = e.target as HTMLInputElement;
+    if (input.value.length > 25) {
+      setStartGameDisabled(true);
+      input.style.color = 'red';
+      return;
+    }
+    input.style.color = 'black';
+    setStartGameDisabled(false);
+    setCurrentTopic(` ${input.value}`);
+  };
+
+  onMount(() => {});
+
+  return (
+    <div class="topics">
+      <h3>Тема игры</h3>
+      <div>
+        <select name="cellsWide" onChange={(e) => setCurrentTopic(e.currentTarget.value)}>
+          <For each={songQuizTopics}>
+            {(topic) => (
+              <option selected={currentTopic() === topic} value={topic}>
+                {topic}
+              </option>
+            )}
+          </For>
+        </select>
+        <Show when={currentTopic() === 'Custom' || !songQuizTopics.includes(currentTopic())}>
+          <input type="text" onKeyUp={(e) => handleType(e)} class="customTopic" />
+        </Show>
+        <Show when={startGameDisabled()}>
+          <p>*custom topic max length: 25</p>
+        </Show>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export const Settings = () => (
   <div class="quiz_game_settings">

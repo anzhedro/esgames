@@ -1,5 +1,43 @@
+.topics {
+  div {
+    @include flex-col;
+    width: 100%;
+  }
+
+  p {
+    color: red;
+  }
+
+  select {
+    border: 3px $black solid;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 5px 0;
+
+    &:hover {
+      border: 3px $darkgreen solid;
+    }
+  }
+
+  input.customTopic {
+    padding: 5px;
+    width: 100% !important;
+  }
+}
+
 .quiz-container {
   @include dfc;
+  @include flex-col;
+
+  img {
+    @include sizes(130px, 130px);
+    margin: 30px 0;
+
+    &.blured {
+      filter: blur(5px);
+    }
+  }
+
   position: relative;
   height: 100%;
 
@@ -25,6 +63,10 @@
   .title {
     margin-bottom: 10px;
     text-align: center;
+
+    &.hint {
+      letter-spacing: 5px !important;
+    }
   }
 
   .chosen__song {
@@ -291,7 +333,28 @@
   }
 
   .round_results {
+    width: 80%;
+    margin: 0 auto;
+
     .results__row {
+      margin: 25px 0;
+      padding: 25px 0;
+      border-bottom: 3px solid $gray;
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+
+      // only odd
+      &:nth-child(odd) {
+        border-bottom: 3px solid $darkgray;
+        color: $darkgray;
+      }
+
+      * {
+        width: 25%;
+      }
+
       .user {
       }
       .guessedId {

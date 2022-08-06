@@ -18,6 +18,7 @@ import {
   rounds,
   actions,
   showHint,
+  showAnswerTime,
 } from './store';
 
 const Timer = () => (
@@ -27,6 +28,9 @@ const Timer = () => (
     </Match>
     <Match when={gameState() === 'round_play'}>
       <CircularCountdownTimer time={timeToGuess()} />
+    </Match>
+    <Match when={gameState() === 'show_answer'}>
+      <CircularCountdownTimer time={showAnswerTime} />
     </Match>
   </Switch>
 );
@@ -59,10 +63,10 @@ const RoundPreload = () => (
     <div class="pick__theme">
       The theme is: <strong>{currentTopic()}</strong>
     </div>
-    <div class="title">
-      Round {curRound()} - {rounds()[curRound()].user} picked this song!
-    </div>
     <RoundResults />
+    <div class="title">
+      Next round: {curRound()} - {rounds()[curRound()].user} picked this song!
+    </div>
     <Spinner />
   </>
 );
@@ -75,11 +79,14 @@ const RoundPlay = () => (
     <div class="title">
       Round {curRound()} - {rounds()[curRound()].user} picked this song!
     </div>
-    <div class="title">HERE</div>
+
+    <img src={rounds()[curRound()].pic} alt="song cover" class="blured" />
+
+    <div class="title">Hint:</div>
     <Show
       when={showHint()}
       fallback={
-        <div class="title">
+        <div class="title hint">
           {rounds()
             [curRound()].want.split(' ')
             .map((word) =>
@@ -92,7 +99,7 @@ const RoundPlay = () => (
         </div>
       }
     >
-      <div class="title">
+      <div class="title hint">
         {rounds()
           [curRound()].want.split(' ')
           .map((word) =>
@@ -104,8 +111,21 @@ const RoundPlay = () => (
           .join(' ')}
       </div>
     </Show>
-    <div class="title">AfTER</div>
+
     {rounds()[curRound()].audioEl}
+  </>
+);
+
+const ShowAnswer = () => (
+  <>
+    <img src={rounds()[curRound()].pic} alt="song cover" />
+    <h2 class="title">{rounds()[curRound()].user} guessed: </h2>
+    <h2 class="title">{rounds()[curRound()].want}</h2>
+    <h2 class="title">Track: </h2>
+    <h3 class="title">
+      {rounds()[curRound()].track}
+      {rounds()[curRound()].artist}
+    </h3>
   </>
 );
 
@@ -122,6 +142,9 @@ const GameComponent = () => (
       </Match>
       <Match when={gameState() === 'waiting_for_other_players'}>
         <Waiting />
+      </Match>
+      <Match when={gameState() === 'show_answer'}>
+        <ShowAnswer />
       </Match>
       <Match when={gameState() === 'round_preload'}>
         <RoundPreload />

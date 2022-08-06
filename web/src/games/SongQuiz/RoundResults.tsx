@@ -5,6 +5,12 @@ import { UserStat } from './types';
 export const RoundResults = () => (
   <Show when={roundStats().length > 0}>
     <div class="round_results">
+      <div class="results__row">
+        <div class="user">User</div>
+        <div class="guessedId"></div>
+        <div class="roundScore">round</div>
+        <div class="totalScore">total</div>
+      </div>
       <For each={roundStats()}>
         {(stat: UserStat) => (
           <div class="results__row">

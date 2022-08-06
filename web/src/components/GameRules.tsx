@@ -1,6 +1,5 @@
 import { Show } from 'solid-js';
-import { setTableState, startGame, currentGame } from '../store/room';
-import { iAmHost } from '../store/state';
+import { currentGame, setTableState } from '../store/room';
 
 export const GameRules = () => (
   <>
@@ -14,10 +13,10 @@ export const GameRules = () => (
     <div class="content game_rules">{currentGame()!.rulesEl}</div>
     <div class="footer">
       <button onClick={() => setTableState('game_select')}>НАЗАД</button>
-
+      {/* 
       <Show when={iAmHost()} fallback={<div></div>}>
         <button onClick={() => startGame()}>НАЧАТЬ</button>
-      </Show>
+      </Show> */}
     </div>
   </>
 );
