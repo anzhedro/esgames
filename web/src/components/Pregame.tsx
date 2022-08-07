@@ -19,7 +19,9 @@ export const Pregame: Component<{ game: IGame }> = (p) => {
     </Switch>
     <div class="footer">
       <Switch>
-        <Match when={!iAmHost()}><div></div></Match>
+        <Match when={!iAmHost()}>
+          <div>-- only host can start a game --</div>
+        </Match>
         <Match when={p.game.settingsEl && mode() === 'rules'}>
           <div></div>
           <button onClick={() => setMode('settings')}>Настройки</button>
