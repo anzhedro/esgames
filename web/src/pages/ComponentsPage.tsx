@@ -9,7 +9,7 @@ type WordItemProps = {
   text?: string | '';
   countInit?: number | 0;
   isShowSkip?: boolean | false;
-  ref?: any;
+  ref?: HTMLDivElement | undefined;
 };
 
 const [isHost, setIsHost] = createSignal(false);
