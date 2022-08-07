@@ -26,3 +26,21 @@ export function copyToClipboard(str: string): Promise<void> {
     textArea.remove();
   });
 }
+
+export class Timer {
+  private id?: number;
+  constructor() {}
+  stop() {
+    if (this.id !== undefined) {
+      clearTimeout(this.id);
+      this.id = undefined;
+    }
+  }
+  start(ms: number, cb: () => void) {
+    this.stop();
+    this.id = setTimeout(() => {
+      this.id = undefined;
+      cb();
+    }, ms);
+  }
+};

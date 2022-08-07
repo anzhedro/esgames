@@ -1,5 +1,4 @@
-import { sendGameAction } from '../../store/room';
-import { setUserGuess, setGameState, pickTimeout, userGuess, setPickTimeout } from './store';
+import { setUserGuess, setGameState, pickSong} from './store';
 import { SongItem } from './types';
 
 export const SongTitleConfirm = (props: { song: SongItem }) => (
@@ -16,18 +15,7 @@ export const SongTitleConfirm = (props: { song: SongItem }) => (
       <div class="buttons">
         <button onClick={() => setGameState('pick_song')}>Back</button>
         <button
-          onClick={() => {
-            clearTimeout(pickTimeout());
-            setPickTimeout(undefined);
-            sendGameAction('picked_song', {
-              want: userGuess(),
-              pic: props.song.artworkUrl100,
-              audio: props.song.previewUrl,
-              track: props.song.trackName,
-              artist: props.song.artistName,
-            });
-            setGameState('waiting_for_other_players');
-          }}
+          onClick={() => pickSong(props.song)}
         >
           Choose this song!
         </button>

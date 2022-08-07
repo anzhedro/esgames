@@ -135,6 +135,7 @@ func (r *Room) Handle(c *websocket.Conn, l *LoginReq) error {
 				r.game.Unlock()
 				close(events)
 
+				log.Printf("[%s]: game %q is over", r.Name, msg.Game)
 				r.broadcastRoomChange()
 			}()
 

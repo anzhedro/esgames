@@ -65,7 +65,7 @@ const RoundPreload = () => (
     </div>
     <RoundResults />
     <div class="title">
-      Next round: {curRound()} - {rounds()[curRound()].user} picked this song!
+      Next round: {curRound()+1} - {rounds()[curRound()].user} picked this song!
     </div>
     <Spinner />
   </>
@@ -85,7 +85,7 @@ const RoundPlay = () => (
       The theme is: <strong>{currentTopic()}</strong>
     </div>
     <div class="title">
-      Round {curRound()} - {rounds()[curRound()].user} picked this song!
+      Round {curRound()+1} - {rounds()[curRound()].user} picked this song!
     </div>
 
     <img src={rounds()[curRound()].pic} alt="song cover" class="blured" />
