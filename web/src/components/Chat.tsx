@@ -12,7 +12,7 @@ export const Chat = (props: { lang: Translation }) => {
   const [smilesView, setSmilesView] = createSignal(false);
 
   // eslint-disable-next-line prefer-const
-  let lastMessageRef: any = null;
+  let lastMessageRef: HTMLLIElement | undefined;
 
   const toggleSmilesView = (e: MouseEvent) => {
     e.preventDefault();
@@ -70,7 +70,7 @@ export const Chat = (props: { lang: Translation }) => {
         <div class="smiles-board">
           <div class="smiles-board-list">
             <For each={emojisIcons} fallback={<Spinner />}>
-              {(emoji: any) => (
+              {(emoji: string) => (
                 <button onClick={() => setChatInput(`${chatInput()} ${emoji}`)}>
                   <span>{emoji}</span>
                 </button>
@@ -88,7 +88,7 @@ export const Chat = (props: { lang: Translation }) => {
           type="text"
           id={'message'}
           value={chatInput()}
-          onChange={(e: any) => setChatInput(e.target.value)}
+          onChange={(e) => setChatInput(e.currentTarget.value)}
           placeholder="Ваше сообщение..."
         />
 

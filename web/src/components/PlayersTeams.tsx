@@ -31,8 +31,8 @@ export const PlayersTeams = () => {
   const [teams, setTeams] = createStore<IPlayer[][]>(teamsMock);
 
   const updLastTeam = (newTeams: IPlayer[][]) => {
-    const teams = newTeams.filter((team: IPlayer[]) => team.length > 0);
-    setTeams([...teams, []]);
+    const ret = newTeams.filter((team: IPlayer[]) => team.length > 0);
+    setTeams([...ret, []]);
   };
 
   const handleSelectTeam = (idx: number) => {

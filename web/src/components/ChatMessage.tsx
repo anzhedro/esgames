@@ -2,7 +2,7 @@ export type ChatMessageProps = {
   created: string;
   user: string;
   text: string;
-  ref: any;
+  ref: HTMLLIElement | undefined;
 };
 
 export const ChatMessage = (props: ChatMessageProps) => (

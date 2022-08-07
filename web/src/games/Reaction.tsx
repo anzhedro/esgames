@@ -46,10 +46,10 @@ const onBtnPress = () => {
   setPosition(randomPosition());
 };
 
-const actions = {
+const actions: Record<string, (params: any) => void> = {
   press_btn: () => setShowButton(true),
-  your_time_sec: (sec: number) => sendMsg(`My reaction time is ${sec}`),
-  game_over: (total: number) => {sendMsg(`Game over. Total time: ${total}`)},
+  your_time_sec(sec: number) { sendMsg(`My reaction time is ${sec}`) },
+  game_over(total: number) { { sendMsg(`Game over. Total time: ${total}`) } },
 };
 
 export const Game: IGame = {

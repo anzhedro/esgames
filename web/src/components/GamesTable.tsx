@@ -3,8 +3,8 @@ import { GamesList } from './GamesList';
 import { Pregame } from './Pregame';
 import { currentGame as cur, getGame } from '../store/room';
 
-export const GamesTable : Component = () => {
-  return <div class="games_table">
+export const GamesTable: Component = () => (
+  <div class="games_table">
     <div class="games_table_wrapper">
       <Switch fallback={''}>
         <Match when={cur().state === 'lobby'}>
@@ -12,13 +12,13 @@ export const GamesTable : Component = () => {
         </Match>
 
         <Match when={cur().state === 'pregame'}>
-          <Pregame game={getGame(cur())!}/>
+          <Pregame game={getGame(cur())!} />
         </Match>
-        
+
         <Match when={cur().state === 'playing'}>
           <div class="game_play">{getGame(cur())!.gameEl}</div>
         </Match>
       </Switch>
     </div>
   </div>
-};
+);

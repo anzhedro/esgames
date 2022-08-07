@@ -1,5 +1,5 @@
-import { children, Component, createSignal, Show, splitProps, Switch, Match } from 'solid-js';
-import { setCurrentGame, startGame } from '../store/room';
+import { Component, createSignal, Switch, Match } from 'solid-js';
+import { startGame } from '../store/room';
 import { iAmHost } from '../store/state';
 import { IGame } from '../utils/types';
 

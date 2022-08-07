@@ -19,7 +19,7 @@ export const LangSelector = () => {
 
       <Show when={showLangSelector()} fallback={<Spinner />}>
         <For each={languages} fallback={<Spinner />}>
-          {(lang: any) => (
+          {(lang) => (
             <button
               onClick={() => {
                 handleSetCurrentLanguage(lang);
