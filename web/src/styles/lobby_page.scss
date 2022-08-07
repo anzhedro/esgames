@@ -16,7 +16,7 @@
 }
 
 @mixin button {
-  margin: 30px;
+  margin: 10px;
   transition: 0.3s;
   padding: 15px 10px;
   background: $white;
@@ -130,12 +130,16 @@
       }
 
       .footer {
+        @include sizes(100px, 100%);
+  
+        background: $black;
+        color: $white;
+        
+        border-radius: 0 0 15px 15px;
         display: flex;
-        justify-content: space-around;
-
-        margin-bottom: 5px;
-        width: 100%;
-
+        align-items: center;
+        justify-content: space-between;
+  
         button {
           @include button;
         }
@@ -167,7 +171,7 @@
       color: $white;
 
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
 
       button {
@@ -245,7 +249,6 @@
 
         button {
           @include button;
-          @include sizes(50px, 50px);
           @include dfc;
 
           margin: 0px;

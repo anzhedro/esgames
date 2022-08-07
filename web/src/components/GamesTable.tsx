@@ -1,29 +1,24 @@
-import { Match, Switch } from 'solid-js';
+import { Component, Match, Switch } from 'solid-js';
 import { GamesList } from './GamesList';
-import { GameRules } from './GameRules';
-import { GameSettings } from './GameSettings';
-import { tableState, currentGame } from '../store/room';
+import { Pregame } from './Pregame';
+import { currentGame as cur, getGame } from '../store/room';
 
-export const GamesTable = () => (
-  <div class="games_table">
+export const GamesTable : Component = () => {
+  return <div class="games_table">
     <div class="games_table_wrapper">
       <Switch fallback={''}>
-        <Match when={tableState() === 'game_select'}>
+        <Match when={cur().state === 'lobby'}>
           <GamesList />
         </Match>
 
-        <Match when={tableState() === 'game_settings'}>
-          <GameSettings />
+        <Match when={cur().state === 'pregame'}>
+          <Pregame game={getGame(cur())!}/>
         </Match>
-
-        <Match when={tableState() === 'game_rules'}>
-          <GameRules />
-        </Match>
-
-        <Match when={tableState() === 'game_play'}>
-          <div class="game_play">{currentGame()!.gameEl}</div>
+        
+        <Match when={cur().state === 'playing'}>
+          <div class="game_play">{getGame(cur())!.gameEl}</div>
         </Match>
       </Switch>
     </div>
   </div>
-);
+};

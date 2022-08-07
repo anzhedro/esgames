@@ -46,7 +46,7 @@ func NewRoom(registry map[string]StartGameFn, name, host string) *Room {
 func (r *Room) Handle(c *websocket.Conn, l *LoginReq) error {
 	if ok := r.join(l, c); !ok {
 		resp := LoginResp{
-			Type:   "login_failed",
+			Type:   "login_fail",
 			Reason: fmt.Sprintf("user %s already exists in room %s", l.User, r.Name),
 		}
 		if err := c.WriteJSON(resp); err != nil {

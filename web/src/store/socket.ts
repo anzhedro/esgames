@@ -1,23 +1,9 @@
 import { createSignal } from 'solid-js';
 import { setAppState, setRoom } from './state';
 import { addMessages } from './chat';
-import { setCurrentGame, setTableState, setUsers, currentGame } from './room';
+import { setCurrentGame, setUsers, currentGame } from './room';
 import { byName } from '../games/games';
 import { IMessage, IPlayer } from '../utils/types';
-
-interface wsMessage extends gameActionMessage {
-  type: string;
-  room: string;
-  messages: IMessage[];
-  users: IPlayer[];
-  game: string;
-  reason: string;
-}
-
-interface gameActionMessage {
-  action: string;
-  payload?: unknown;
-}
 
 const [socket, setSocket] = createSignal<WebSocket | null>(null);
 
@@ -55,11 +41,11 @@ export function connectToRoom(user: string, room: string, avatar: number) {
   };
 
   soc.onmessage = (event) => {
-    const response = JSON.parse(event.data) as wsMessage;
-    console.log('ws GOT: ', response);
-    switch (response.type) {
+    const m = JSON.parse(event.data) as messageType;
+    console.log('ws GOT: ', m);
+    switch (m.type) {
       case 'login_success':
-        setRoom(response.room);
+        setRoom(m.room);
         setAppState('connected');
         return;
       case 'login_fail':
@@ -67,30 +53,61 @@ export function connectToRoom(user: string, room: string, avatar: number) {
         setAppState('start');
         return;
       case 'chat':
-        addMessages(response.messages);
+        addMessages(m.messages);
         return;
       case 'room':
-        setUsers(response.users);
-        if (response.game) {
-          setCurrentGame(byName(response.game));
-          setTableState('game_play');
-        } else {
-          setTableState('game_select');
+        setUsers(m.users);
+        const cur = currentGame();
+        if (!m.game) {
+          if (cur.state === 'playing') {
+            setCurrentGame({ state: 'lobby' });
+          }
+          return;
         }
+        // BE thinks we are playing a game.
+        if (cur.state === 'playing' && cur.game.gameId === m.game) {
+          return;
+        }
+        setCurrentGame({ state: 'playing', game: byName(m.game)! });
         return;
       case 'game_action': {
-        const { action, payload } = response as gameActionMessage;
-        currentGame()!.onGameAction(action, payload);
+        const { action, payload } = m;
+        const cur = currentGame();
+        if (cur.state === 'playing') {
+          cur.game.onGameAction(action, payload);
+        }
         return;
       }
       case 'kick_user':
-        alert(response.reason);
+        alert(m.reason);
         setSocket(null);
         setAppState('start');
         break;
       default:
     }
   };
+}
+
+type messageType = {
+  type: 'login_success';
+  room: string;
+} | {
+  type: 'login_fail';
+  reason: string;
+} | {
+  type: 'chat';
+  messages: IMessage[];
+} | {
+  type: 'room';
+  users: IPlayer[];
+  game: string;
+} | {
+  type: 'game_action';
+  action: string;
+  payload?: unknown;
+} | {
+  type: 'kick_user';
+  reason: string;
 }
 
 export { socket };

@@ -71,6 +71,14 @@ const RoundPreload = () => (
   </>
 );
 
+const replaceWithUnderscores = (str: string) => {
+  return str.split('').map((ch) => ('!? .,()'.indexOf(ch) >= 0 ? ch : '_')).join('');
+};
+
+const replaceWithUnderscoresNotFirst = (str: string) => {
+  return str ? str[0] + replaceWithUnderscores(str.slice(1)) : "";
+}
+
 const RoundPlay = () => (
   <>
     <div class="pick__theme">
@@ -87,28 +95,12 @@ const RoundPlay = () => (
       when={showHint()}
       fallback={
         <div class="title hint">
-          {rounds()
-            [curRound()].want.split(' ')
-            .map((word) =>
-              word
-                .split('')
-                .map((ch) => (['!', '?', '.', ',', '(', ')'].includes(ch) ? ch : '_'))
-                .join('')
-            )
-            .join(' ')}
+          {replaceWithUnderscores(rounds()[curRound()].want)}
         </div>
       }
     >
       <div class="title hint">
-        {rounds()
-          [curRound()].want.split(' ')
-          .map((word) =>
-            word
-              .split('')
-              .map((ch, i) => (['!', '?', '.', ',', '(', ')'].includes(ch) || !i ? ch : '_'))
-              .join('')
-          )
-          .join(' ')}
+        {rounds()[curRound()].want.split(` `).map(replaceWithUnderscoresNotFirst).join(' ')}
       </div>
     </Show>
 

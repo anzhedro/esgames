@@ -1,6 +1,4 @@
-import { createSignal, For, onMount, Show } from 'solid-js';
-import { currentGame, setTableState, startGame } from '../store/room';
-import { iAmHost } from '../store/state';
+import { createSignal, For, Show } from 'solid-js';
 
 const difficultyOptions = ['Легко', 'Средне', 'Сложно'];
 const [currentDifficulty, setCurrentDifficulty] = createSignal(difficultyOptions[0]);
@@ -69,7 +67,7 @@ export const Difficulty = () => {
   );
 };
 
-export const TeamsCount = () => {};
+export const TeamsCount = () => { };
 //  const [currentCount, setCurrentCount] = createSignal(selectedGameSettings().teamsCount);
 //   (
 //     <div class="commands_count">
@@ -86,46 +84,3 @@ export const TeamsCount = () => {};
 //       </div> }
 //     </div>
 //   );
-
-const [startGameDisabled, setStartGameDisabled] = createSignal(false);
-
-export const GameSettings = () => {
-  onMount(() => {
-    setStartGameDisabled(false);
-    console.log('zxc');
-  });
-
-  return (
-    <>
-      <div class="header">
-        <button onClick={() => setTableState('game_rules')}>ПРАВИЛА</button>
-
-        <Show when={currentGame()?.settingsEl}>
-          <button onClick={() => setTableState('game_settings')}>НАСТРОЙКИ</button>
-        </Show>
-      </div>
-      <div class="content game_settings">
-        <h2>Настройки игры {currentGame()?.title}</h2>
-        <Show when={currentGame()?.settingsEl} fallback={<p>No settings in this game</p>}>
-          {currentGame()!.settingsEl!}
-        </Show>
-      </div>
-      <div class="footer">
-        <button onClick={() => setTableState('game_select')}>НАЗАД</button>
-
-        <Show
-          when={iAmHost() && !startGameDisabled()}
-          fallback={
-            <button disabled={true} style={{ color: 'red' }}>
-              НАЧАТЬ
-            </button>
-          }
-        >
-          <button onClick={() => startGame()}>НАЧАТЬ</button>
-        </Show>
-      </div>
-    </>
-  );
-};
-
-export { startGameDisabled, setStartGameDisabled };

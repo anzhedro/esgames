@@ -49,7 +49,7 @@ const onBtnPress = () => {
 const actions = {
   press_btn: () => setShowButton(true),
   your_time_sec: (sec: number) => sendMsg(`My reaction time is ${sec}`),
-  game_over: (total: number) => sendMsg(`Game over. Total time: ${total}`),
+  game_over: (total: number) => {sendMsg(`Game over. Total time: ${total}`)},
 };
 
 export const Game: IGame = {

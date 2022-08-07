@@ -39,6 +39,17 @@ for each Round in Rounds:
 		- continue
 
 BE sends { type: "game_action", action: "game_over" }
+
+
+BE: nil     -> FE: lobby=nil || browsing pre-game = game_id+(rules|settings)
+BE: game_id -> FE: game
+
+state1: nil (lobby)
+state2: game_id + rules
+state3: game_id + settings
+state4: game_id started
+
+const [currentGame, setCurrentGame] = createState<null | game_rules | game_settings | game>(null);
 */
 
 type Settings struct {

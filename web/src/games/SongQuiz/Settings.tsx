@@ -1,5 +1,4 @@
-import { For, onMount, Show } from 'solid-js';
-import { startGameDisabled, setStartGameDisabled } from '../../components/GameSettings';
+import { createSignal, For, onMount, Show } from 'solid-js';
 import { setTimeToPick, setTimeToGuess, currentTopic, setCurrentTopic } from './store';
 
 const songQuizTopics = [
@@ -27,18 +26,20 @@ const songQuizTopics = [
   'One-word artist names',
 ];
 
+const [settingsValid, setSettingsValid] = createSignal(true);
+
 export const Topics = () => {
   // eslint-disable-next-line prefer-const
 
   const handleType = (e: KeyboardEvent) => {
     const input = e.target as HTMLInputElement;
     if (input.value.length > 25) {
-      setStartGameDisabled(true);
+      setSettingsValid(true);
       input.style.color = 'red';
       return;
     }
     input.style.color = 'black';
-    setStartGameDisabled(false);
+    setSettingsValid(false);
     setCurrentTopic(` ${input.value}`);
   };
 
@@ -60,7 +61,7 @@ export const Topics = () => {
         <Show when={currentTopic() === 'Custom' || !songQuizTopics.includes(currentTopic())}>
           <input type="text" onKeyUp={(e) => handleType(e)} class="customTopic" />
         </Show>
-        <Show when={startGameDisabled()}>
+        <Show when={!settingsValid()}>
           <p>*custom topic max length: 25</p>
         </Show>
       </div>

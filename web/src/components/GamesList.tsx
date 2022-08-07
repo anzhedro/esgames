@@ -1,7 +1,6 @@
 import { For } from 'solid-js';
 import { useParams } from 'solid-app-router';
-import { setCurrentGame, setTableState } from '../store/room';
-import { copyToClipboard } from '../utils/helpers';
+import { setCurrentGame } from '../store/room';
 import { Spinner } from './Spinner';
 
 import { IGame } from '../utils/types';
@@ -12,27 +11,20 @@ export const GamesList = () => {
   return (
     <>
       <div class="header">
-        <button>ИГРЫ</button>
+        Welcome to room "{params.id}"
       </div>
-
       <div class="content">
         <For each={Games} fallback={<Spinner />}>
           {(game: IGame) => (
             <div
               class="game_card"
-              onClick={() => {
-                setCurrentGame(game);
-                setTableState('game_rules');
-              }}
+              onClick={() => setCurrentGame({ state: 'pregame', game: game })}
             >
               <img src={game.imageUrl} />
               <p>{game.title}</p>
             </div>
           )}
         </For>
-      </div>
-      <div class="footer">
-        <button onClick={() => copyToClipboard(`${window.location.host}/room/${params.id}`)}>ПРИГЛАСИТЬ</button>
       </div>
     </>
   );
